@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use kartik\widgets\ActiveForm;
 use kartik\grid\GridView;
 use kartik\builder\TabularForm;
@@ -101,7 +102,8 @@ $skuForm = ActiveForm::begin([
     ?>
 
 <?php
-
+$saveSkuUrl = Url::toRoute(['/wishgoodssku/savesku']);
+$deleteUrl = Url::toRoute(['/wishgoodssku/delete']);
 $js2 = <<<JS
 
 
@@ -111,7 +113,7 @@ $js2 = <<<JS
         $.ajax({
         cache:true,
             type:"POST",
-            url:'/wishgoodssku/savesku',
+            url:'{$saveSkuUrl}',
             data:skudata,
             success:function(data){
                 alert(data);
@@ -125,7 +127,7 @@ $js2 = <<<JS
    $(this).parents('tr').remove();
    $.ajax({
        cache:true,
-       url:'/wishgoodssku/delete',
+       url:'{$deleteUrl}',
        type:'post',
        data:{id:id},
        async: true, 
@@ -149,7 +151,7 @@ $js2 = <<<JS
                 alert(itermid);
                 $(this).closest('tr').remove();
                 $.ajax({
-                    url:'/wishgoodssku/delete',
+                    url:'{$deleteUrl}',
                     type:'post',
                     data: {id:itermid},
                     success:function(res) {

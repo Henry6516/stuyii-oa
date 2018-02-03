@@ -14,8 +14,8 @@ nbproject
 .project
 .settings
 
-/common/config
-/backend/config
+#/common/config
+#/backend/config
 
 # windows thumbnail cache
 Thumbs.db

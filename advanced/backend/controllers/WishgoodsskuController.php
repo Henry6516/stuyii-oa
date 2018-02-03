@@ -100,17 +100,18 @@ class WishgoodsskuController extends Controller
         try{
             if($request->isPost){
                 $skuRows = $request->post()['Wishgoodssku'];
+                //print_r($skuRows);exit;
                 foreach($skuRows as $key=>$value){
                     $sku_model = $model->find()->where(['itemid'=>$key])->one();
                     $sku_model->sku = $value['sku'];
-                    $sku_model->color = $value['color'];
-                    $sku_model->size = $value['size'];
-                    $sku_model->inventory = $value['inventory'];
-                    $sku_model->price = $value['price'];
-                    $sku_model->shipping = $value['shipping'];
-                    $sku_model->msrp = $value['msrp'];
-                    $sku_model->shipping_time = $value['shipping_time'];
-                    $sku_model->linkurl = $value['linkurl'];
+                    $sku_model->color = isset($value['color'])?$value['color']:'';
+                    $sku_model->size = isset($value['size'])?$value['size']:'';
+                    $sku_model->inventory = isset($value['inventory'])?$value['inventory']:'';
+                    $sku_model->price = isset($value['price'])?$value['price']:'';
+                    $sku_model->shipping = isset($value['shipping'])?$value['shipping']:'';
+                    $sku_model->msrp = isset($value['msrp'])?$value['msrp']:'';
+                    $sku_model->shipping_time = isset($value['shipping_time'])?$value['shipping_time']:'';
+                    $sku_model->linkurl = isset($value['linkurl'])?$value['linkurl']:'';
                     $sku_model->update(false);
                 }
                 echo '保存成功!';
