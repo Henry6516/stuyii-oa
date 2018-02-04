@@ -6,6 +6,7 @@ use kartik\grid\GridView;
 use kartik\builder\TabularForm;
 $skuForm = ActiveForm::begin([
     'id'=>'sku-info',
+    'action' => Url::toRoute(['/wishgoodssku/savesku']),
     'method'=>'post',]);
 
 ?>
@@ -110,9 +111,11 @@ $js2 = <<<JS
     //sku信息保存
     $('#save-sku').on('click',function(){
     var skudata = $('#sku-info').serialize();
+    //console.log(skudata);return;
         $.ajax({
-        cache:true,
+        cache:false,
             type:"POST",
+            dataType:"text",
             url:'{$saveSkuUrl}',
             data:skudata,
             success:function(data){
@@ -188,7 +191,7 @@ $js2 = <<<JS
             for (var i=3; i<inputNames.length + 3;i++){
                 var td = $('<td class="kv-align-top" data-col-seq="'+ i +'" >' +
                              '<div class="form-group">' +
-                                '<input type="text"  name="Goodssku[New-'+ row_count +']['+ inputNames[i-3] +']" class="form-control  '+ inputNames[i-3] +'">' +
+                                '<input type="text"  name="Wishgoodssku[New-'+ row_count +']['+ inputNames[i-3] +']" class="form-control  '+ inputNames[i-3] +'">' +
                                  
                              '</div>' +
                            '</td>');

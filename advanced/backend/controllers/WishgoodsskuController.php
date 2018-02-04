@@ -94,33 +94,51 @@ class WishgoodsskuController extends Controller
         }
     }
 
-    public function actionSavesku(){
+    public function actionSavesku()
+    {
         $request = Yii::$app->request;
-        $model =  new Wishgoodssku();
-        try{
-            if($request->isPost){
+        $model = new Wishgoodssku();
+        try {
+            if ($request->isPost) {
+                //print_r($request->post());exit;
                 $skuRows = $request->post()['Wishgoodssku'];
                 //print_r($skuRows);exit;
-                foreach($skuRows as $key=>$value){
-                    $sku_model = $model->find()->where(['itemid'=>$key])->one();
-                    $sku_model->sku = $value['sku'];
-                    $sku_model->color = isset($value['color'])?$value['color']:'';
-                    $sku_model->size = isset($value['size'])?$value['size']:'';
-                    $sku_model->inventory = isset($value['inventory'])?$value['inventory']:'';
-                    $sku_model->price = isset($value['price'])?$value['price']:'';
-                    $sku_model->shipping = isset($value['shipping'])?$value['shipping']:'';
-                    $sku_model->msrp = isset($value['msrp'])?$value['msrp']:'';
-                    $sku_model->shipping_time = isset($value['shipping_time'])?$value['shipping_time']:'';
-                    $sku_model->linkurl = isset($value['linkurl'])?$value['linkurl']:'';
-                    $sku_model->update(false);
+                foreach ($skuRows as $key => $value) {
+                    if (strpos($key, 'New') === false) {
+                        $sku_model = $model->find()->where(['itemid' => $key])->one();
+                        $sku_model->sku = $value['sku'];
+                        $sku_model->color = isset($value['color']) ? $value['color'] : '';
+                        $sku_model->size = isset($value['size']) ? $value['size'] : '';
+                        $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
+                        $sku_model->price = isset($value['price']) ? $value['price'] : '';
+                        $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
+                        $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
+                        $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
+                        $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
+                        //$sku_model->update(false);
+                        $sku_model->save(false);
+                    } else {
+                        $sku_model = $model;
+                        $sku_model->sku = $value['sku'];
+                        $sku_model->color = isset($value['color']) ? $value['color'] : '';
+                        $sku_model->size = isset($value['size']) ? $value['size'] : '';
+                        $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
+                        $sku_model->price = isset($value['price']) ? $value['price'] : '';
+                        $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
+                        $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
+                        $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
+                        $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
+                        //$sku_model->update(false);
+                        $ss = $sku_model->save(false);
+                        print_r($ss);exit;
+                    }
                 }
                 echo '保存成功!';
-            }
-            else{
+            } else {
                 echo '保存失败!';
             }
-        }catch(Exception $e){
-           echo $e;
+        } catch (Exception $e) {
+            echo $e;
         }
 
 
@@ -134,17 +152,17 @@ class WishgoodsskuController extends Controller
     public function actionDelete()
     {
         $id = $_POST['id'];
-        $model =  new Wishgoodssku();
-       $result =  $model->find()->where(['itemid'=>$id])->one();
+        $model = new Wishgoodssku();
+        $result = $model->find()->where(['itemid' => $id])->one();
 
-      $res = $this->findModel($id)->delete();
-      if(!empty($res)){
-          echo '删除成功!';
-      }else{
-          echo '删除失败!';
-      }
+        $res = $this->findModel($id)->delete();
+        if (!empty($res)) {
+            echo '删除成功!';
+        } else {
+            echo '删除失败!';
+        }
 
-        return $this->redirect(['channel/update','id' => $result->pid]);
+        return $this->redirect(['channel/update', 'id' => $result->pid]);
     }
 
     /**
