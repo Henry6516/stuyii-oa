@@ -32,7 +32,6 @@ $skuForm = ActiveForm::begin([
             ],
         ],
         'attributes'=>[
-
             'sku'=>['label'=>'SKU', 'type'=>TabularForm::INPUT_TEXT,
                 'options'=>['class'=>'sku'],
             ],
@@ -68,7 +67,9 @@ $skuForm = ActiveForm::begin([
                     'options' => ['class' => 'image'],
                     'value'=>function($data){return "<img weight='50' height='50' src='".$data->linkurl."'>";}
                 ],
-
+            'pid'=>['label' => '', 'type'=>TabularForm::INPUT_HIDDEN,
+                'options'=>['class'=>'sku'],
+            ],
 
         ],
 
@@ -197,7 +198,10 @@ $js2 = <<<JS
                            '</td>');
                 row.append(td);
             }
-            
+            //隐藏PID列
+            var pidTd = $('<td class="kv-align-top" data-col-seq="'+ i +'" ><div class="form-group">' +
+                                '<input type="hidden"  name="Wishgoodssku[New-'+ row_count +'][pid]" class="form-control pid" value="' + {$id} + '"></div></td>');
+            row.append(pidTd);
             //添加行内容到行元素
             skuTable.append(row); 
             row_count++; 

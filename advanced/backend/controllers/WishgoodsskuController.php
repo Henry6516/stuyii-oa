@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\Goodssku;
 use PHPUnit\Framework\Exception;
 use Yii;
 use backend\models\Wishgoodssku;
@@ -100,9 +101,7 @@ class WishgoodsskuController extends Controller
         $model = new Wishgoodssku();
         try {
             if ($request->isPost) {
-                //print_r($request->post());exit;
                 $skuRows = $request->post()['Wishgoodssku'];
-                //print_r($skuRows);exit;
                 foreach ($skuRows as $key => $value) {
                     if (strpos($key, 'New') === false) {
                         $sku_model = $model->find()->where(['itemid' => $key])->one();
@@ -115,22 +114,40 @@ class WishgoodsskuController extends Controller
                         $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
                         $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
                         $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
-                        //$sku_model->update(false);
                         $sku_model->save(false);
                     } else {
-                        $sku_model = $model;
-                        $sku_model->sku = $value['sku'];
-                        $sku_model->color = isset($value['color']) ? $value['color'] : '';
-                        $sku_model->size = isset($value['size']) ? $value['size'] : '';
-                        $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
-                        $sku_model->price = isset($value['price']) ? $value['price'] : '';
-                        $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
-                        $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
-                        $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
-                        $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
-                        //$sku_model->update(false);
-                        $ss = $sku_model->save(false);
-                        print_r($ss);exit;
+                        $info = Goodssku::findOne(['sku' => $value['sku'], 'pid' => $value['pid']]);
+                        if(!$info){
+                            $command = Yii::$app->db;
+                            $transaction = $command->beginTransaction();
+                            try {
+                                //保存到goodssku
+                                $goodssku = new Goodssku();
+                                $goodssku->pid = $value['pid'];
+                                $goodssku->sku = $value['sku'];
+                                $goodssku->property1 = $value['color'];
+                                $goodssku->property2 = $value['size'];
+                                $goodssku->linkurl = $value['linkurl'];
+                                $goodssku->save();
+                                //保存到wishgoodssku
+                                $sku_model = $model;
+                                $sku_model->sku = $value['sku'];
+                                $sku_model->sid = $goodssku->sid;
+                                $sku_model->pid = $value['pid'];
+                                $sku_model->color = isset($value['color']) ? $value['color'] : '';
+                                $sku_model->size = isset($value['size']) ? $value['size'] : '';
+                                $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
+                                $sku_model->price = isset($value['price']) ? $value['price'] : '';
+                                $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
+                                $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
+                                $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
+                                $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
+                                $sku_model->save(false);
+                                $transaction->commit();
+                            } catch (Exception $e) {
+                                $transaction->rollBack();
+                            }
+                        }
                     }
                 }
                 echo '保存成功!';

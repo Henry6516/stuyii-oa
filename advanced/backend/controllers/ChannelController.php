@@ -145,7 +145,7 @@ class ChannelController extends Controller
         ]);
         return $this->renderAjax('variations', [
             'dataProvider' => $dataProvider,
-
+            'id' => $id,
         ]);
 
     }
