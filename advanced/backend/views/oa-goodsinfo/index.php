@@ -104,6 +104,12 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'achieveStatus',
                 'width' => '100px',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>['待处理' => '待处理', '已完善' => '已完善', '已导入' => '已导入'],
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions' => ['placeholder' => '属性状态'],
             ],
             'GoodsName',
             'developer',

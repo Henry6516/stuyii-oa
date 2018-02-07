@@ -150,7 +150,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]
             ],
-            'completeStatus',
+            //'completeStatus',
+            [
+                'attribute' => 'completeStatus',
+                //'value'=>'oa_goods.completeStatus',
+                'width' => '150px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善', 'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['multiple' => true, 'placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
+            ],
             'DictionaryName',
             'isVar',
         ],

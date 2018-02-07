@@ -123,7 +123,7 @@ $this->title = '销售走势';
         var data = eval("(" + row_data + ")");
         var salername, value, CreateDate,role;
         if(id == 'sales'){
-            role = '销量(款数)';
+            role = '销量(个)';
         }else if(id == 'sales-volume'){
             role = '销售额($)';
         }

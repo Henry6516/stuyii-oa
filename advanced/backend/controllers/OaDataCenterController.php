@@ -42,7 +42,7 @@ class OaDataCenterController extends Controller
     public function actionProducts()
     {
         $searchModel = new ChannelSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'','平台信息');
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'oa-data-center','平台信息');
 
         return $this->render('products', [
             'searchModel' => $searchModel,

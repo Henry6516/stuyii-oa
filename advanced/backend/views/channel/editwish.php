@@ -79,19 +79,11 @@ if (empty($sku->randomKeywords)) {
 
     ?>
     <div class="form-group blockTitle">
-
-        <button class="btn btn-info update-info" type="button">
-            更新
-        </button>
-        <button class="btn btn-primary wish-sign" type="button">
-            保存并完善
-        </button>
-        <button class="btn btn-success export" type="button">
-            导出ibay模版
-        </button>
-        <button class="btn btn-warning joom-csv" type="button">
-            导出joom(csv)
-        </button>
+        <button class="btn btn-info update-info" type="button">更新</button>
+        <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
+        <button class="btn btn-success export" type="button">导出ibay模版</button>
+        <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
+        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>
     </div>
     <div class="blockTitle">
         <span>基本信息</span>
@@ -248,19 +240,11 @@ if (empty($sku->randomKeywords)) {
 
 </div>
 <div class="form-group blockTitle">
-
-    <button class="btn btn-info update-info" type="button">
-        更新
-    </button>
-    <button class="btn btn-primary wish-sign" type="button">
-        保存并完善
-    </button>
-    <button class="btn btn-success export" type="button">
-        导出ibay模版
-    </button>
-    <button class="btn btn-warning joom-csv" type="button">
-        导出joom(csv)
-    </button>
+    <button class="btn btn-info update-info" type="button">更新</button>
+    <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
+    <button class="btn btn-success export" type="button">导出ibay模版</button>
+    <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
+    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>
 </div>
 <?php ActiveForm::end(); ?>
 
@@ -343,6 +327,7 @@ $updateUrl = Url::toRoute(['update', 'id' => $sku->infoid]);
 $exportUrl = Url::to(['export', 'id' => $sku->infoid]);
 $joomUrl = Url::to(['export-joom', 'id' => $sku->infoid]);
 $wishUrl = Url::toRoute(['wish-sign', 'id' => $sku->infoid]);
+$shopeeUrl = Url::toRoute(['export-shopee', 'id' => $sku->infoid]);
 $js = <<< JS
 //主图赋值
 $('.main-image').val($('.tem-page').val());
@@ -405,11 +390,9 @@ function addImages() {
 }
    //绑定增加按钮事件
 $('body').on('click','.add-images',function() {
-    
     addImages();
     return false;
-    });
-
+});
    //绑定上移事件
 $('body').on('click','.up-btn',function() {
     var point = $(this).closest('div .form-group').find('strong').text().replace('#','');
@@ -417,7 +400,6 @@ $('body').on('click','.up-btn',function() {
         var temp = $(this).closest('div .all-images').clone(true);
         $(this).closest('div .all-images').prev().before(temp);
         $(this).closest('div .all-images').remove();
-       
     }
     return false;
 });
@@ -429,7 +411,6 @@ $('body').on('click','.down-btn',function() {
         var temp = $(this).closest('div .all-images').clone(true);
         $(this).closest('div .all-images').next().after(temp);
         $(this).closest('div .all-images').remove();
-       
     }
     return false;
 });
@@ -454,6 +435,12 @@ $('body').on('click','.down-btn',function() {
     $('.joom-csv').on('click',function(){
         alert('确定导出Joom模板?');
          window.location.href = '{$joomUrl}';
+    });
+    
+    //导出数据shopee
+    $('.shopee-csv').on('click',function(){
+        alert('确定导出Shopee模板?');
+         window.location.href = '{$shopeeUrl}';
     });
     
     //标记wish已完成

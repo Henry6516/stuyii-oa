@@ -47,7 +47,9 @@ class ChannelController extends Controller
     public function actionIndex()
     {
         $searchModel = new ChannelSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'','平台信息');
+        $params = Yii::$app->request->queryParams;
+        //var_dump($params);exit;
+        $dataProvider = $searchModel->search($params,'channel','平台信息');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -903,12 +905,10 @@ class ChannelController extends Controller
         fclose($fp);
     }
 
-    /*
+    /**
      * 导出Joom
      * @param int $id 商品id
-     *
      */
-
     public function actionExportJoom($id)
     {
         $da = $this->actionNameTags($id,'oa_wishgoods');
@@ -926,5 +926,112 @@ class ChannelController extends Controller
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom模板csv';
         $this->actionExportCsv($data, $header_data, $file_name);
 
+    }
+
+    /**
+     * 导出Shopee
+     * @param int $id 商品id
+     */
+    public function actionExportShopee($id)
+    {
+        $objPHPExcel = new \PHPExcel();
+        $sheet = 0;
+        $objPHPExcel->setActiveSheetIndex($sheet);
+        $foos[0] = OaWishgoods::find()->where(['infoid'=>$id])->all();
+        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid='.$id.')';
+
+        $db = yii::$app->db;
+        $query = $db->createCommand($sql);
+        $cate = $query->queryAll();
+
+        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid='.$id;
+        $dataGoodsCode = $db->createCommand($sql_GoodsCode)->queryAll();
+        $GoodsCode = $dataGoodsCode[0]['GoodsCode'];
+        $isVar = $dataGoodsCode[0]['isVar'];
+
+        $columnNum = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
+        //$colName = ['sku', 'selleruserid', 'name', 'inventory', 'price', 'msrp', 'shipping', 'shipping_time', 'main_image', 'extra_images',
+        //    'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc'];
+        $colName = ['mubanid', 'selleruserid', 'categoryid', 'name', 'sku', 'price', 'stock', 'weight', 'package_width', 'package_length', 'package_height',
+            'shipdays', 'imgurl', 'description', 'attributes', 'logistics', 'variation'];
+        $combineArr = array_combine($columnNum, $colName);
+        //var_dump($foos[0]);exit;
+        $sub = 1;
+        foreach ($columnNum as $key => $value) {
+            $objPHPExcel->getActiveSheet()->getColumnDimension($value)->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getStyle($value . $sub)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->setTitle($foos[0][0]['SKU'])
+                ->setCellValue($value . $sub, $combineArr[$value]);
+        }
+        $suffixAll = WishSuffixDictionary::find()
+            ->asArray()
+            ->where("ParentCategory like :cate")
+            ->orWhere("ParentCategory is null")
+            ->addParams([':cate' => '%' . $cate[0]['cate'] . '%'])
+            ->all();
+        //var_dump($suffixAll);exit;
+        //获取关键字
+        $data =  $this->actionNameTags($id,'oa_wishgoods');
+        $title_list = [];
+        foreach($suffixAll as $key=>$value){
+            //标题关键字
+            while(true){
+                $title = $this->actionNonOrder($data,'Wish');
+                if(!in_array($title,$title_list)||empty($title)){
+                    $name = $title;
+                    array_push($title_list,$title);
+                    break;
+                }
+            }
+
+            //价格判断
+            $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
+            if ($totalprice <= 2) {
+                $foos[0][0]['price'] = 1;
+                $foos[0][0]['shipping'] = 1;
+            } elseif (2 < $totalprice && $totalprice <= 3) {
+                $foos[0][0]['price'] = 2;
+                $foos[0][0]['shipping'] = 1;
+            } else {
+                $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
+                $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
+
+            }
+            //主图用商品编码 拼接
+            if($isVar=='是'){
+                $strvariant = $this->actionVariationWish($id,$value['Suffix'],$value['Rate']);
+            }else{
+                $strvariant = '';
+            }
+            //var_dump($foos[0][0]);
+            //var_dump($value);exit;
+            $row = $key+2;
+            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/'.$GoodsCode.'-_'.$value['MainImg'].'_.jpg' ;
+            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$foos[0][0]['SKU']);                  //模板ID SKU
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['selleruserid']);              //卖家简称
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$value['ParentCategory']);            //分类
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$name);                               //商品名称
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$foos[0][0]['SKU'].$value['Suffix']); //唯一SKU
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$foos[0][0]['price']);                 //价格 price
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$foos[0][0]['shippingtime']);             //stock
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,'7-21');                              //重量
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,5);                                   //包裹宽度
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,5);                                   //包裹长度
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,5);                                   //包裹高度
+            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,'7-21');                              //shipdays 7-21天
+            $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,$foos[0][0]['main_image']);           // 图片imgurl  ？主图
+            $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,$foos[0][0]['description']);          //描述
+            $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,'');                                  //attributes属性？
+            $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,'');                                  //logistics ？物流
+            $objPHPExcel->getActiveSheet()->setCellValue('Q'.$row,$strvariant);                         //variation
+
+        }
+
+        header('Content-Type: application/vnd.ms-excel');
+        $filename = $foos[0][0]['SKU'] . '-Shopee模版' . date("YmdHis") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $filename . ' ');
+        header('Cache-Control: max-age=0');
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter->save('php://output');
     }
 }

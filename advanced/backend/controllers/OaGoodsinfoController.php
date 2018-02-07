@@ -52,7 +52,13 @@ class OaGoodsinfoController extends Controller
     public function actionIndex()
     {
         $searchModel = new OaGoodsinfoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'','属性信息');
+        $params = Yii::$app->request->queryParams;
+        $condition = [];
+        //有搜索条件，但没有图片状态条件，或没有搜索条件，则添加默认显示图片状态条件
+        if($params && isset($params['OaGoodsinfoSearch']) && !$params['OaGoodsinfoSearch']['achieveStatus'] || !isset($params['OaGoodsinfoSearch'])){
+            $condition = ['or',['achieveStatus' => '待处理'],['achieveStatus' => '已导入']];
+        }
+        $dataProvider = $searchModel->search($params,$condition,'属性信息');
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -357,6 +363,7 @@ class OaGoodsinfoController extends Controller
 
     public function actionInput($id)
     {
+        var_dump(111);exit;
         $input_goods = "P_OaGoodsToBGoods '{$id}'";
         $udpate_status = "update oa_goodsinfo set picstatus= '待处理' ,achieveStatus='已导入' where pid = '{$id}'";
         $connection = Yii::$app->db;

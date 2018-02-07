@@ -24,15 +24,16 @@ class ChannelSearch extends Channel
     {
         return $this->AliasCnName;
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['stockUp','pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid'], 'integer'],
-            [['introducer','isVar','cate','subCate','description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName', 'SupplierName', 'StoreName',
-               'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName','cate','subCat'], 'safe'],
+            [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid'], 'integer'],
+            [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName', 'SupplierName', 'StoreName',
+                'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate', 'subCat'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -53,13 +54,21 @@ class ChannelSearch extends Channel
      * @param  $model_name
      * @return ActiveDataProvider
      */
-    public function search($params,$model_name ='',$unit = '')
+    public function search($params, $model_name = '', $unit = '')
     {
         $query = ChannelSearch::find()->orderBy('devDatetime desc');
 
         //如果是数据中中心模块则只返回已完善数据
-        if($model_name == 'oa-data-center'){
-            $query->where(['<>','completeStatus','']);
+        if ($model_name == 'oa-data-center') {
+            $query->where(['<>', 'completeStatus', '']);
+        }
+
+        //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
+        if ($model_name == 'channel') {
+            //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
+            if ($params && isset($params['ChannelSearch']) && !$params['ChannelSearch']['completeStatus'] || !isset($params['ChannelSearch'])) {
+                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善' , 'Wish已完善'];
+            }
         }
         $query->joinWith(['oa_goods']);
         $query->joinWith(['oa_templates']);
@@ -82,14 +91,14 @@ class ChannelSearch extends Channel
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
-    if($unit == '平台信息'){
-            if($role[0]['item_name']=='部门主管'){
+        if ($unit == '平台信息') {
+            if ($role[0]['item_name'] == '部门主管') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif ($role[0]['item_name']=='产品开发'){
+            } elseif ($role[0]['item_name'] == '产品开发') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发组长'){
+            } elseif ($role[0]['item_name'] == '产品开发组长') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif ($role[0]['item_name']=='美工'){
+            } elseif ($role[0]['item_name'] == '美工') {
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
@@ -128,12 +137,12 @@ class ChannelSearch extends Channel
                     'desc' => ['oa_goods.cate' => SORT_DESC],
                     'label' => '主分类'
                 ],
-                'subCate'=> [
+                'subCate' => [
                     'asc' => ['oa_goods.subCate' => SORT_ASC],
                     'desc' => ['oa_goods.subCate' => SORT_DESC],
                     'label' => '子分类'
                 ],
-                'introducer'=> [
+                'introducer' => [
                     'asc' => ['oa_goods.introducer' => SORT_ASC],
                     'desc' => ['oa_goods.introducer' => SORT_DESC],
                     'label' => '推荐人'
@@ -152,7 +161,7 @@ class ChannelSearch extends Channel
         }
 
         // grid filtering conditions
-      $query->andFilterWhere([
+        $query->andFilterWhere([
             'pid' => $this->pid,
             'IsLiquid' => $this->IsLiquid,
             'IsPowder' => $this->IsPowder,
@@ -166,7 +175,7 @@ class ChannelSearch extends Channel
             'isVar' => $this->isVar,
         ]);
 
-        if($this->devDatetime){
+        if ($this->devDatetime) {
             $createDate = explode('/', $this->devDatetime);
             $query->andFilterWhere([
                 'and',
@@ -174,7 +183,7 @@ class ChannelSearch extends Channel
                 ['<=', 'convert(varchar(10),devDatetime,121)', $createDate[1]],
             ]);
         }
-        if($this->updateTime){
+        if ($this->updateTime) {
             $updateDate = explode('/', $this->updateTime);
             $query->andFilterWhere([
                 'and',
@@ -183,6 +192,28 @@ class ChannelSearch extends Channel
             ]);
         }
 
+
+        //完成状态
+        if ($this->completeStatus && is_array($this->completeStatus)) {
+            //var_dump($this->completeStatus);exit;
+            $completeStatus = ['or'];
+            foreach ($this->completeStatus as $k => $v){
+                if ($v == '未设置') {
+                    $completeStatus[$k+1] = ['or', ['completeStatus' => null],['completeStatus' => '']];
+                }
+                if ($v == 'eBay已完善') {
+                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'eBay已完善'], ['not like', 'completeStatus', 'Wish已完善']];
+                }
+                if ($v == 'Wish已完善') {
+                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'Wish已完善'], ['not like', 'completeStatus', 'eBay已完善']];
+                }
+                if ($v == 'Wish已完善|eBay已完善') {
+                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'eBay已完善'], ['like', 'completeStatus', 'Wish已完善']];
+                }
+
+            }
+            $query->andWhere($completeStatus);
+        }
 
         $query
             ->andFilterWhere(['like', 'description', $this->description])
@@ -205,10 +236,9 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'AttributeName', $this->AttributeName])
             ->andFilterWhere(['like', 'oa_goods.cate', $this->cate])
             ->andFilterWhere(['like', 'oa_goods.subCate', $this->subCate])
-            ->andFilterWhere(['like', 'completeStatus', $this->completeStatus])
             ->andFilterWhere(['like', 'stockUp', $this->stockUp])
             ->andFilterWhere(['like', 'oa_goods.introducer', $this->introducer]);
-        Yii::$app->db->cache(function($db) use($dataProvider){
+        Yii::$app->db->cache(function ($db) use ($dataProvider) {
             $dataProvider->prepare();
         }, 60);
         return $dataProvider;

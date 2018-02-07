@@ -51,7 +51,12 @@ class OaPicinfoController extends Controller
     {
         $searchModel = new OaGoodsinfoSearch();
         $condition = ['<>','picStatus',''];
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$condition,'图片信息');
+        $params = Yii::$app->request->queryParams;
+        //有搜索条件，但没有图片状态条件，或没有搜索条件，则添加默认显示图片状态条件
+        if($params && isset($params['OaGoodsinfoSearch']) && !$params['OaGoodsinfoSearch']['picStatus'] || !isset($params['OaGoodsinfoSearch'])){
+            $params['OaGoodsinfoSearch']['picStatus'] = '待处理';
+        }
+        $dataProvider = $searchModel->search($params,$condition,'图片信息');
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -193,7 +193,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
             ],
-            'picStatus',
+            [
+                'attribute' => 'picStatus',
+                'width' => '100px',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>['待处理' => '待处理', '已完善' => '已完善'],
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions'=>['placeholder'=>'图片状态'],
+            ],
             'developer',
             [
                 'attribute' => 'devDatetime',

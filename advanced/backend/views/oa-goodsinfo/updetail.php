@@ -846,9 +846,21 @@ echo FormGrid::widget([ // continuation fields to row above without labels
    
 // 导入普源事件
     $('#data-input').on('click', function() {
+        var isStop = 0;
+        $('.RetailPrice').each(function(){
+            if($(this).val().length == 0) {
+                isStop = 1;
+                alert('零售价不能为空!');
+                return false;//终止循环
+            };
+           $(this).val(newRetailprice);
+       });
+        if(isStop){
+            return false;//终止导入到普元
+        }
         $.get('{$inputUrl}',{id:'{$pid}'},function(data){
-                alert(data);
-                });
+            alert(data);
+        });
     });
 
 JS;

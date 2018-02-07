@@ -145,14 +145,14 @@ $this->registerJs($js);
             var myChart = echarts.init(document.getElementById(id));
             var data = eval("(" + row_data + ")");
             var catNumber, catName, maxValue;
+            maxValue = data.maxValue;
             if (id == 'catNum') {
                 role = '款数';
-                maxValue = data.maxValue;
+                maxValue = 4000;
                 catNumber = data.catNum;
                 catName = data.name;
             } else if (id == 'catAmt') {
                 role = '销售额($)';
-                maxValue = data.maxValue;
                 catNumber = data.catAmt;
                 catName = data.name;
             }
@@ -179,13 +179,17 @@ $this->registerJs($js);
                         dataView: {show: true, readOnly: false},
                         magicType: {
                             show: true,
-                            type: ['pie', 'funnel'],
+                            type: ['funnel', 'pie'],
                             option: {
                                 funnel: {
                                     x: '25%',
                                     width: '50%',
                                     funnelAlign: 'left',
                                     max: maxValue
+                                },
+                                pie:{
+                                    radius: '55%',
+                                    center: ['50%', '60%']
                                 }
                             }
                         },
@@ -197,9 +201,11 @@ $this->registerJs($js);
                 series: [
                     {
                         name: '访问来源',
-                        type: 'pie',
-                        radius: '55%',
-                        center: ['50%', '60%'],
+                        type: 'funnel',
+                        x: '25%',
+                        width: '50%',
+                        funnelAlign: 'left',
+                        max: maxValue,
                         data: catNumber
                     }
                 ]
