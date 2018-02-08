@@ -915,16 +915,30 @@ class ChannelController extends Controller
         $name = $this->actionNonOrder($da,'Joom');
         $name = str_replace("'","''",$name);
         $sql = 'P_oa_toJoom @pid=' . $id.",@name='".$name."'";
+        $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $joomRes = $query->queryAll();
+        $adjust_ret = $db->createCommand($adjust_sql)->queryAll();
         if (empty($joomRes)) {
             return;
         }
-        $data = $joomRes;
+
+        // adjust price according to weight
+        $filter_ret = [];
+        foreach ($joomRes as $joom) {
+            $weight = $joom['Shipping weight'] * 1000 ;
+            foreach ($adjust_ret as $adjust) {
+                if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
+                    $joom['*Price'] += $adjust['added_price'] ;
+                    break;
+                }
+            }
+            array_push($filter_ret,$joom) ;
+        }
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom模板csv';
-        $this->actionExportCsv($data, $header_data, $file_name);
+        $this->actionExportCsv($filter_ret, $header_data, $file_name);
 
     }
 
