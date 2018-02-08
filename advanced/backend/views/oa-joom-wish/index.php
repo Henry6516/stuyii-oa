@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\OaJoomWishSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Oa Joom Wishes';
+$this->title = 'Joom对比Wish价格';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="oa-joom-wish-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Oa Joom Wish', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('创建条目', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

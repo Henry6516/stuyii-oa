@@ -8,11 +8,22 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
+<?php
+
+$css =<<< CSS
+
+input {
+    size: 40px;
+}
+
+CSS;
+
+$this->registerCss($css);
+?>
+
 <div class="oa-joom-wish-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'nid')->textInput() ?>
 
     <?= $form->field($model, 'greater_equal')->textInput() ?>
 
@@ -20,14 +31,16 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'added_price')->textInput() ?>
 
-    <?= $form->field($model, 'createDate')->textInput() ?>
+    <?= $form->field($model, 'createDate')->textInput(['readOnly' => true]) ?>
 
-    <?= $form->field($model, 'updateDate')->textInput() ?>
-
+    <?= $form->field($model, 'updateDate')->textInput(['readOnly' => true]) ?>
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('保存', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
+
+
+
