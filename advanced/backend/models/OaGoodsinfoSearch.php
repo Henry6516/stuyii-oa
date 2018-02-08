@@ -187,7 +187,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
         $query->andFilterWhere(['like', 'description', $this->description]);
         $query->andFilterWhere(['like', 'AliasCnName', $this->AliasCnName]);
         $query->andFilterWhere(['like', 'vendor1', $this->vendor1]);
-        $query->andFilterWhere(['like', 'stockUp', $this->stockUp]);
+        $query->andFilterWhere(['like', 'oa_goodsInfo.stockUp', $this->stockUp]);
         $query->andFilterWhere(['like', 'oa_goods.developer', $this->developer]);
 
         return $dataProvider;
