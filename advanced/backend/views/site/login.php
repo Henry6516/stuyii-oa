@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
@@ -37,24 +38,27 @@ JS;
 $this->registerJs($js);
 ?>
 
+
 <div class="login-box">
-    <!-- /.login-logo -->
+    <div class="login-logo">
+        <a href="#"><img src="../img/logo.png"/></a>
+    </div>
     <div class="login-box-body">
         <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientValidation' => false]); ?>
 
         <?= $form
-            ->field($model, 'username',$fieldOptions1)
+            ->field($model, 'username', $fieldOptions1)
             ->label(false)
             ->textInput(['placeholder' => $model->getAttributeLabel('用户名')]) ?>
 
         <?= $form
-            ->field($model, 'password',$fieldOptions2)
+            ->field($model, 'password', $fieldOptions2)
             ->label(false)
             ->passwordInput(['placeholder' => $model->getAttributeLabel('密码')]) ?>
 
         <div class="row">
             <div class="col-xs-8">
-                <?= $form->field($model, 'rememberMe',$checkOption)->checkbox() ?>
+                <?= $form->field($model, 'rememberMe', $checkOption)->checkbox() ?>
             </div>
             <!-- /.col -->
             <div class="col-xs-4">
@@ -67,7 +71,9 @@ $this->registerJs($js);
         <?php ActiveForm::end(); ?>
 
 
-    <!-- /.login-box-body -->
-</div><!-- /.login-box -->
+        <!-- /.login-box-body -->
+    </div>
+</div>
+<!-- /.login-box -->
 
 
