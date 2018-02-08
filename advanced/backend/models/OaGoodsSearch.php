@@ -112,8 +112,8 @@ class OaGoodsSearch extends OaGoods
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
             //设置显示的数据  默认显示 待审核和待提交数据
-            //有搜索条件，但没有产品状态条件，或没有搜索条件，则添加默认显示产品状态条件
-            if($params && isset($params['OaGoodsSearch']) && !$params['OaGoodsSearch']['checkStatus'] || !isset($params['OaGoodsSearch'])){
+            //没有搜索条件，则添加默认显示产品状态条件
+            if(!isset($params['OaGoodsSearch'])){
                 $query->andWhere(['or',['checkStatus' => '待审批'],['checkStatus' => '待提交']]);
             }
         }

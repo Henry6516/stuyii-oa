@@ -54,8 +54,8 @@ class OaGoodsinfoController extends Controller
         $searchModel = new OaGoodsinfoSearch();
         $params = Yii::$app->request->queryParams;
         $condition = [];
-        //有搜索条件，但没有图片状态条件，或没有搜索条件，则添加默认显示图片状态条件
-        if($params && isset($params['OaGoodsinfoSearch']) && !$params['OaGoodsinfoSearch']['achieveStatus'] || !isset($params['OaGoodsinfoSearch'])){
+        //没有搜索条件，则添加默认显示图片状态条件
+        if(!isset($params['OaGoodsinfoSearch'])){
             $condition = ['or',['achieveStatus' => '待处理'],['achieveStatus' => '已导入']];
         }
         $dataProvider = $searchModel->search($params,$condition,'属性信息');
