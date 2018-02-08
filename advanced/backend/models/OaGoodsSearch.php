@@ -101,7 +101,7 @@ class OaGoodsSearch extends OaGoods
             }elseif ($role[0]['item_name']=='美工'){
                 $query->andWhere(['in', 'introducer', $users]);
             }
-        }elseif($unit == '正向开发'||$unit = '逆向开发'){
+        }elseif($unit == '正向开发'||$unit == '逆向开发'){
             if($role[0]['item_name']=='部门主管'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
@@ -117,7 +117,6 @@ class OaGoodsSearch extends OaGoods
                 $query->andWhere(['or',['checkStatus' => '待审批'],['checkStatus' => '待提交']]);
             }
         }
-
 
         // add conditions that should always apply here
         $dataProvider = new ActiveDataProvider([
