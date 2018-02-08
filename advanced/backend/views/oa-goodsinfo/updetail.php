@@ -853,7 +853,6 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 alert('零售价不能为空!');
                 return false;//终止循环
             };
-           $(this).val(newRetailprice);
        });
         if(isStop){
             return false;//终止导入到普元

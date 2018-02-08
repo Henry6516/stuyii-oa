@@ -363,7 +363,6 @@ class OaGoodsinfoController extends Controller
 
     public function actionInput($id)
     {
-        var_dump(111);exit;
         $input_goods = "P_OaGoodsToBGoods '{$id}'";
         $udpate_status = "update oa_goodsinfo set picstatus= '待处理' ,achieveStatus='已导入' where pid = '{$id}'";
         $connection = Yii::$app->db;
