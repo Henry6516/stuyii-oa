@@ -59,7 +59,9 @@ krajeeYiiConfirm = function(dialog) {
      krajeeDialog.confirm("确定删除此条记录?", function (result) {
         if (result) {
             id = $(self).closest('tr').data('key');
-            $.post('delete',{id:id,type:'index'},function() {
+            $.post('delete',{id:id,type:'index'},function(ret) {
+                alert(ret);
+                window.location.reload(); 
             });
             }
             });

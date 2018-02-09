@@ -513,6 +513,11 @@ class OaGoodsController extends Controller
 
     }
 
+
+    /**
+     * @brief delete products in oa_goodsInfo
+     */
+
     /**
      * Deletes an existing OaGoods model.
      * If deletion is successful echo
@@ -527,16 +532,19 @@ class OaGoodsController extends Controller
             $completeStatus = $complete_status_query->completeStatus;
             if(empty($completeStatus)){
                 $this->findModel($id)->delete();
-                echo '删除成功!';
+                $msg = '删除成功!';
             }else{
-                echo '已完善的产品不能轻易删除!';
+                $msg = '已完善的产品不能轻易删除!';
             }
         }else{
             $this->findModel($id)->delete();
-            echo '删除成功!';
+            $msg = '删除成功!';
         }
 
+        return $msg ;
+
     }
+
 
 
     /**
