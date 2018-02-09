@@ -8,7 +8,7 @@ use kartik\grid\GridView;
 $this->title = Yii::t('app', '平台信息');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="channel-index">
+<div class="channel-index" style="width: 8000px">
     <p>
         <?= Html::a(Yii::t('app', '标记已完善'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         //'pjax'=>true,
         'striped'=>true,
-        'responsive'=>true,
+        //'responsive'=>true,
         'hover'=>true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -84,9 +84,28 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=> 'subCate',
                 'value'=>'oa_goods.subCate'
             ],
-
-             'SupplierName',
-             'StoreName',
+            [
+                'attribute' => 'SupplierName',
+                'width' => '100px',
+                'format' => 'raw',
+                'headerOptions' => ['width' => '100px'],
+                'value' => function ($model) {
+                    return mb_substr(strval($model->SupplierName), 0, 10) . "<br>" . mb_substr(strval($model->SupplierName), 10, 30);
+                },
+            ],
+            [
+                'attribute' => 'completeStatus',
+                //'label' => '完成状况        ',
+                'width' => '500px',
+                //'filterType' => GridView::FILTER_SELECT2,
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善', 'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['class' => 'col-lg-8','style' => "width:500px", /*'multiple' => true,*/ 'placeholder' => '-请选择-'],
+                'headerOptions' => ['width' => '20%'],
+            ],
             [
                 'attribute'=> 'introducer',
                 'value'=>'oa_goods.introducer'
@@ -155,19 +174,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]*/
                     ]
                 ]
-            ],
-            //'completeStatus',
-            [
-                'attribute' => 'completeStatus',
-                //'value'=>'oa_goods.completeStatus',
-                'width' => '150px',
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善', 'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善'],
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['multiple' => true, 'placeholder' => '-请选择-'],
-                //'group'=>true,  // enable grouping
             ],
             'DictionaryName',
             'isVar',
