@@ -65,7 +65,9 @@ class OaJoomWishController extends Controller
     public function actionCreate()
     {
         $model = new OaJoomWish();
-
+        $today = date('Y-m-d', time()) ;
+        $model->createDate = $today ;
+        $model->updateDate = $today ;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->nid]);
         }
@@ -86,6 +88,8 @@ class OaJoomWishController extends Controller
     {
         $model = $this->findModel($id);
 
+        $today = date('Y-m-d', time()) ;
+        $model->updateDate = $today ;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->nid]);
         }

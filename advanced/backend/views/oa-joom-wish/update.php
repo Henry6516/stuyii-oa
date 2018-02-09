@@ -5,10 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\OaJoomWish */
 
-$this->title = 'Update Oa Joom Wish: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Oa Joom Wishes', 'url' => ['index']];
+$this->title = '更新规则';
+$this->params['breadcrumbs'][] = ['label' => 'Joom对比Wish价格', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->nid, 'url' => ['view', 'id' => $model->nid]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->params['breadcrumbs'][] = '更新';
 ?>
 <div class="oa-joom-wish-update">
 

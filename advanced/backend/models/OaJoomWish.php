@@ -43,7 +43,7 @@ class OaJoomWish extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'nid' => '编号',
+            'nid' => '规则编号',
             'greater_equal' => '大于等于重量(g)',
             'less' => '小于重量(g)',
             'added_price' => '价格增加($)',

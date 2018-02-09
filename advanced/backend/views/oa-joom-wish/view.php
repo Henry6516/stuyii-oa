@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\OaJoomWish */
 
-$this->title = $model->nid;
-$this->params['breadcrumbs'][] = ['label' => 'Oa Joom Wishes', 'url' => ['index']];
+$this->title = '规则编号：' . $model->nid;
+$this->params['breadcrumbs'][] = ['label' => 'Joom对比Wish价格', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="oa-joom-wish-view">
@@ -15,8 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->nid], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->nid], [
+        <?= Html::a('更新', ['update', 'id' => $model->nid], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['delete', 'id' => $model->nid], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
