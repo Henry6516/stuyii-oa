@@ -343,7 +343,7 @@ function centerFormat($name) {
                     return "<span class='cell'>" . strval($model->checkStatus) . "</span>";
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>['待审批' => '待审批', '待提交' => '待提交', '已审批' => '已审批'],
+                'filter'=>['已认领' => '已认领','待审批' => '待审批', '待提交' => '待提交', '已审批' => '已审批'],
                 'filterWidgetOptions'=>[
                     'pluginOptions'=>['allowClear'=>true],
                 ],
