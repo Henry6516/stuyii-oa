@@ -7,6 +7,7 @@ use backend\models\User;
 use Yii;
 use backend\models\OaTask;
 use backend\models\OaTaskSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -98,12 +99,17 @@ class TaskController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
+        //已处理人员列表
         $completeArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => '已处理'])->asArray()->all();
+        //未处理人员列表
         $unfinishedArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => ''])->asArray()->all();
+        //任务进度
+        $schedule = round(count($completeArr)/(count($completeArr)+count($unfinishedArr)) * 100, 2);
         return $this->render('view', [
             'model' => $model,
             'completeName' => $completeArr,
-            'unfinishedName' => $unfinishedArr
+            'unfinishedName' => $unfinishedArr,
+            'schedule' => $schedule
         ]);
     }
 
@@ -140,7 +146,7 @@ class TaskController extends Controller
                 $transaction->rollBack();
                 throw $e;
             }
-            return $this->redirect(['index']);
+            return $this->redirect(['my-task']);
         }
         return $this->render('create', [
             'model' => $model,
@@ -167,7 +173,9 @@ class TaskController extends Controller
                 $model->createdate = date('Y-m-d H:i:s');
                 $model->save();
 
-                //保存接收人
+                //删除原有接收人
+                OaTaskSendee::deleteAll(['taskid' => $id]);
+                //保存新的接收人
                 foreach ($post['OaTask']['sendee'] as $value){
                     $sendModel = new OaTaskSendee();
                     $sendModel->userid = $value;
@@ -181,12 +189,16 @@ class TaskController extends Controller
                 $transaction->rollBack();
                 throw $e;
             }
-            return $this->redirect(['index']);
+            return $this->redirect(['my-task']);
         }
+        //设置执行人初始值
+        $sendeeList = OaTaskSendee::findAll(['taskid' => $id]);
+        $sendeeList = ArrayHelper::getColumn($sendeeList, 'userid');
+        $model->sendee = $sendeeList;
 
         return $this->render('update', [
             'model' => $model,
-            'userList' => OaTask::getUserList()
+            'userList' => OaTask::getUserList(),
         ]);
     }
 
@@ -199,9 +211,20 @@ class TaskController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $transaction  = Yii::$app->db->beginTransaction();
+        try {
+            //删除任务接收人
+            OaTaskSendee::deleteAll(['taskid' => $id]);
+            //删除任务
+            $this->findModel($id)->delete();
+            //提交
+            $transaction->commit();
+        } catch (\Exception $e) {
+            //回滚
+            $transaction->rollBack();
+            throw $e;
+        }
+        return $this->redirect(['my-task']);
     }
 
     /**
@@ -219,4 +242,37 @@ class TaskController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    /**
+     *单个处理任务
+     */
+    public function actionComplete($id){
+        $userid = Yii::$app->user->identity->getId();
+        $info = OaTaskSendee::findOne(['taskid' => $id, 'userid' => $userid]);
+
+        $info->status = '已处理';
+        $info->updatetime = date('Y-m-d H:i:s');
+        $ret = $info->save(false);
+        return $ret ? "任务处理成功!" : '任务处理失败!';
+    }
+    /**
+     * 批量处理任务
+     */
+    public function actionCompleteLots(){
+        $userid = Yii::$app->user->identity->getId();
+        $ids = $_GET['ids'];
+        try {
+            foreach ($ids as $id) {
+                $model = OaTaskSendee::findOne(['taskid' => $id, 'userid' => $userid]);
+                $model->status = '已处理';
+                $model->updatetime = date('Y-m-d H:i:s', time());
+                $model->save(false);
+            }
+            echo "批量标记完成";
+        } catch (\Exception $e) {
+            echo "批量任务处理失败";
+        }
+    }
+
+
 }

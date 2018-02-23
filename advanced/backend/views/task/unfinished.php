@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="oa-goodsinfo-index" style="margin-top: 20px">
     <p>
-        <?= Html::button('批量处理任务', ['id' => 'input-lots', 'class' => 'btn btn-info']) ?>
+        <?= Html::button('批量处理任务', ['id' => 'complete-lots', 'class' => 'btn btn-info']) ?>
         <?= Html::a('发起任务', 'create', ['id' => 'task-create', 'class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
@@ -72,6 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'aria-label' => '处理任务',
                             'data-id' => $key,
                             'class' => 'index-input',
+                            'id' => 'index-complete',
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-send"></span>', '#', $options);
                     },
@@ -126,27 +127,36 @@ $this->params['breadcrumbs'][] = $this->title;
     $completeLotsUrl = Url::toRoute('complete-lots');
     $js = <<<JS
 //单个处理
-$(".index-complete").on('click',function() {
-    id = $(this).closest('tr').data('key');
-    $.ajax({
-        url:'{$completeUrl}',
-        type:'get',
-        data:{id:id},
-        success:function(res) {
-            alert(res);//传回结果信息
-        }
-    });
+$("#index-complete").on('click',function() {
+    var id = $(this).closest('tr').data('key');
+    var flag = confirm('确定处理该任务?');
+    if(flag){
+        $.ajax({
+            url:'{$completeUrl}',
+            type:'get',
+            data:{id:id},
+            success:function(res) {
+                alert(res);//传回结果信息
+                location.reload();
+            }
+        });
+    }
 });
 
 //批量处理
 $("#complete-lots").on('click',function() {
-    ids = $("#oa-goodsinfo").yiiGridView('getSelectedRows');
+    ids = $("#oa-task").yiiGridView('getSelectedRows');
+    if(ids.length == 0) {
+        alert('请选择要处理的任务！');
+        return false;
+    }
     $.ajax({
         url:'{$completeLotsUrl}',
         type:'get',
         data:{ids:ids},
         success:function(res) {
             alert(res);
+            location.reload();
         }
     });
 });

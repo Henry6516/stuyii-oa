@@ -19,14 +19,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <h2><?= Html::encode($this->title) ?></h2>
                     <h3 class="box-title">
                         <?= Html::a('创建', ['create'], ['class' => 'btn btn-success']) ?>
-                        <?= Html::a('更新', ['update', 'id' => $model->taskid], ['class' => 'btn btn-primary']) ?>
-                        <?= Html::a('删除', ['delete', 'id' => $model->taskid], [
-                            'class' => 'btn btn-danger',
-                            'data' => [
-                                'confirm' => '确定要删除该项任务？',
-                                'method' => 'post',
-                            ],
-                        ]) ?>
+                        <?php if($model->userid == Yii::$app->user->identity->getId()){ ?>
+                            <?= Html::a('更新', ['update', 'id' => $model->taskid], ['class' => 'btn btn-primary']);?>
+                            <?= Html::a('删除', ['delete', 'id' => $model->taskid], [
+                                'class' => 'btn btn-danger',
+                                'data' => [
+                                    'confirm' => '确定要删除该项任务？',
+                                    'method' => 'post',
+                                ],
+                            ]) ?>
+                        <?php } ?>
                     </h3>
                 </div>
                 <div class="box-body">
@@ -56,11 +58,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             <td>任务进度(%)</td>
                             <td>
                                 <div class="col-xs-4">
-                                    <div class="progress progress-xs progress-striped active" style="width: 90%;float: left">
-                                        <div class="progress-bar progress-bar-success" style="width: <?= $model->schedule ?$model->schedule . '%':'0%'; ?>"></div>
+                                    <div class="progress progress-xs progress-striped active" style="width: 85%;float: left">
+                                        <div class="progress-bar progress-bar-success" style="width: <?= $schedule ? $schedule . '%':'0%'; ?>"></div>
                                     </div>
                                     <div style="float: right">
-                                        <span class="badge bg-green"><?= $model->schedule ?$model->schedule . '%': '0%'; ?></span>
+                                        <span class="badge bg-green"><?= $schedule ? $schedule . '%': '0%'; ?></span>
                                     </div>
                                 </div>
 

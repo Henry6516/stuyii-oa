@@ -31,7 +31,7 @@ class OaTaskSendee extends \yii\db\ActiveRecord
             [['taskid','userid'], 'required'],
             [['taskid', 'userid'], 'integer'],
             [['status'], 'string'],
-            [['updatedate'], 'safe'],
+            [['updatetime'], 'safe'],
         ];
     }
 
@@ -46,5 +46,13 @@ class OaTaskSendee extends \yii\db\ActiveRecord
             'status' => 'Status',
             'updatedate' => 'Updatedate',
         ];
+    }
+
+    /** 关联任务
+     */
+    public function getTask()
+    {
+        //同样第一个参数指定关联的子表模型类名
+        return $this->hasOne(OaTask::className(), ['taskid' => 'taskid']);
     }
 }

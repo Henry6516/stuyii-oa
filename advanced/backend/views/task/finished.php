@@ -63,29 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'kartik\grid\SerialColumn'],
             [
                 'class' => 'kartik\grid\ActionColumn',
-                'template' => '{view} {update} {complete}',
-                'buttons' => [
-                    /*'view' => function ($url, $model, $key) {
-                        $options = [
-                            'title' => '查看',
-                            'aria-label' => '查看',
-                            'data-toggle' => 'modal',
-                            'data-target' => '#index-modal',
-                            'data-id' => $key,
-                            'class' => 'index-view',
-                        ];
-                        return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '#', $options);
-                    },*/
-                    'complete' => function ($url, $model, $key) {
-                        $options = [
-                            'title' => '处理任务',
-                            'aria-label' => '处理任务',
-                            'data-id' => $key,
-                            'class' => 'index-input',
-                        ];
-                        return Html::a('<span  class="glyphicon glyphicon-send"></span>', '#', $options);
-                    },
-                ],
+                'template' => '{view}',
             ],
             [
                 'attribute' => 'title',

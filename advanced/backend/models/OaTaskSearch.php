@@ -48,16 +48,16 @@ class OaTaskSearch extends OaTask
         $userid = Yii::$app->user->identity->getId();
         //按模块显示
         if($unit == 'index'){
-            $query = OaTask::find()->joinWith('user')->joinWith('taskSendee');
+            $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')->orderBy('createdate DESC');
         }elseif ($unit == 'unfinished'){
             $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')
-            ->where(['oa_taskSendee.userid' => $userid, 'oa_taskSendee.status' => '']);
+            ->where(['oa_taskSendee.userid' => $userid, 'oa_taskSendee.status' => ''])->orderBy('createdate DESC');
         } elseif ($unit == 'finished'){
             $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')
-            ->where(['oa_taskSendee.userid' => $userid, 'oa_taskSendee.status' => '已处理']);
+            ->where(['oa_taskSendee.userid' => $userid, 'oa_taskSendee.status' => '已处理'])->orderBy('createdate DESC');
         }else{
             $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')
-            ->where(['oa_task.userid' => $userid]);
+            ->where(['oa_task.userid' => $userid])->orderBy('createdate DESC');
         }
 
         // add conditions that should always apply here

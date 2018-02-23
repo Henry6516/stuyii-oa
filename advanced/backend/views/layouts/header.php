@@ -1,8 +1,22 @@
 <?php
+
 use yii\helpers\Html;
+use yii\helpers\Url;
+use backend\models\OaTaskSendee;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+
+$userid = yii::$app->user->identity->getId();
+//获取待处理任务数量
+$task_num = OaTaskSendee::find()->where(['userid' => $userid, 'status' => ''])->count();
+//获取最新待处理的五个任务
+$task_latest_list = OaTaskSendee::find()->joinWith('task')
+    ->where(['oa_taskSendee.userid' => $userid, 'status' => ''])
+    ->orderBy('oa_task.createdate DESC')
+    ->limit(5)
+    ->asArray()->all();
+//var_dump($task_latest_list);exit;
 ?>
 
 <header class="main-header">
@@ -25,85 +39,57 @@ use yii\helpers\Html;
                 <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-suitcase"></i>
-                        <span class="label label-success">50</span>
+                        <span class="label label-danger"><?= $task_num ?></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">你有几个新品待认领</li>
+                        <li class="header">你有几个待处理的任务</li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li><!-- start message -->
+                                <!-- start message -->
+                                <?php if ($task_latest_list) {
+                                    foreach ($task_latest_list as $res) { ?>
+                                        <li>
+                                            <a href="<?= Url::toRoute(['/task/view', 'id' => $res['taskid']]) ?>">
+                                                <div class="pull-left">
+                                                    <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg"
+                                                         class="img-circle"
+                                                         alt="User Image"/>
+                                                </div>
+                                                <h4>
+                                                    <?= $res['task']['title'] ?>
+                                                    <small>
+                                                        <i class="fa fa-clock-o"></i> <?= substr(strval($res['task']['createdate']), 0, 16) ?>
+                                                    </small>
+                                                </h4>
+                                                <p><?= mb_substr(strip_tags($res['task']['description']), 0, 15) ?></p>
+                                            </a>
+                                        </li>
+                                    <?php }
+                                } ?>
+                                <!-- end message -->
+                                <!--<li>
                                     <a href="#">
                                         <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
+                                            <img src="<?/*= $directoryAsset */?>/img/user4-128x128.jpg"
+                                                 class="img-circle"
                                                  alt="User Image"/>
                                         </div>
                                         <h4>
-                                            Support Team
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                            1111111111
+                                            <small>
+                                                <i class="fa fa-clock-o"></i> 3分钟前 ?>
+                                            </small>
                                         </h4>
-                                        <p>Why not buy a new awesome theme?</p>
+                                        <p>123啊盛大盛大速度速度</p>
                                     </a>
-                                </li>
-                                <!-- end message -->
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            AdminLTE Design Team
-                                            <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Developers
-                                            <small><i class="fa fa-clock-o"></i> Today</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Sales Department
-                                            <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Reviewers
-                                            <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
+                                </li>-->
                             </ul>
                         </li>
-                        <li class="footer"><a href="#">See All Messages</a></li>
+                        <li class="footer"><a href="<?= Url::toRoute(['/task/unfinished']) ?>">查看所有待处理任务</a></li>
                     </ul>
                 </li>
-                <li class="dropdown notifications-menu">
+                <!--<li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         <span class="label label-warning">10</span>
@@ -111,7 +97,6 @@ use yii\helpers\Html;
                     <ul class="dropdown-menu">
                         <li class="header">你有几个通知</li>
                         <li>
-                            <!-- inner menu: contains the actual data -->
                             <ul class="menu">
                                 <li>
                                     <a href="#">
@@ -145,7 +130,7 @@ use yii\helpers\Html;
                         <li class="footer"><a href="#">View all</a></li>
                     </ul>
                 </li>
-                <!-- Tasks: style can be found in dropdown.less -->
+
                 <li class="dropdown tasks-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-flag-o"></i>
@@ -154,9 +139,8 @@ use yii\helpers\Html;
                     <ul class="dropdown-menu">
                         <li class="header">你有几项任务去做</li>
                         <li>
-                            <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li><!-- Task item -->
+                                <li>
                                     <a href="#">
                                         <h3>
                                             Design some buttons
@@ -171,8 +155,7 @@ use yii\helpers\Html;
                                         </div>
                                     </a>
                                 </li>
-                                <!-- end task item -->
-                                <li><!-- Task item -->
+                                <li>
                                     <a href="#">
                                         <h3>
                                             Create a nice theme
@@ -187,8 +170,7 @@ use yii\helpers\Html;
                                         </div>
                                     </a>
                                 </li>
-                                <!-- end task item -->
-                                <li><!-- Task item -->
+                                <li>
                                     <a href="#">
                                         <h3>
                                             Some task I need to do
@@ -203,8 +185,7 @@ use yii\helpers\Html;
                                         </div>
                                     </a>
                                 </li>
-                                <!-- end task item -->
-                                <li><!-- Task item -->
+                                <li>
                                     <a href="#">
                                         <h3>
                                             Make beautiful transitions
@@ -219,30 +200,28 @@ use yii\helpers\Html;
                                         </div>
                                     </a>
                                 </li>
-                                <!-- end task item -->
                             </ul>
                         </li>
                         <li class="footer">
                             <a href="#">View all tasks</a>
                         </li>
                     </ul>
-                </li>
-                <!-- User Account: style can be found in dropdown.less -->
+                </li>-->
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="user-image" alt="User Image"/>
                         <span class="hidden-xs"><?= Yii::$app->user->identity->username ?></span>
                     </a>
-                    <ul class="dropdown-menu" >
+                    <ul class="dropdown-menu">
                         <!-- User image -->
-                        <li class="user-header" >
+                        <li class="user-header">
                             <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
                                  alt="User Image"/>
 
                             <p>
-                                 你好,<?= Yii::$app->user->identity->username ?>
-                                <small><?=date("Y-m-d",time()) ?></small>
+                                你好,<?= Yii::$app->user->identity->username ?>
+                                <small><?= date("Y-m-d", time()) ?></small>
                             </p>
                         </li>
                         <!-- Menu Body -->
