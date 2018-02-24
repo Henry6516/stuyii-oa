@@ -38,17 +38,19 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
                 -->
                 <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-suitcase"></i>
-                        <span class="label label-danger"><?= $task_num ?></span>
+                        <i class="fa fa-flag-o"></i>
+                        <?php if ($task_num) { ?>
+                            <span class="label label-danger"><?= $task_num ?></span>
+                        <?php } ?>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">你有几个待处理的任务</li>
-                        <li>
-                            <!-- inner menu: contains the actual data -->
-                            <ul class="menu">
-                                <!-- start message -->
-                                <?php if ($task_latest_list) {
-                                    foreach ($task_latest_list as $res) { ?>
+                        <?php if ($task_latest_list) { ?>
+                            <li class="header">你有几个待处理的任务</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu">
+                                    <!-- start message -->
+                                    <?php foreach ($task_latest_list as $res) { ?>
                                         <li>
                                             <a href="<?= Url::toRoute(['/task/view', 'id' => $res['taskid']]) ?>">
                                                 <div class="pull-left">
@@ -65,28 +67,14 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
                                                 <p><?= mb_substr(strip_tags($res['task']['description']), 0, 15) ?></p>
                                             </a>
                                         </li>
-                                    <?php }
-                                } ?>
-                                <!-- end message -->
-                                <!--<li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?/*= $directoryAsset */?>/img/user4-128x128.jpg"
-                                                 class="img-circle"
-                                                 alt="User Image"/>
-                                        </div>
-                                        <h4>
-                                            1111111111
-                                            <small>
-                                                <i class="fa fa-clock-o"></i> 3分钟前 ?>
-                                            </small>
-                                        </h4>
-                                        <p>123啊盛大盛大速度速度</p>
-                                    </a>
-                                </li>-->
-                            </ul>
-                        </li>
-                        <li class="footer"><a href="<?= Url::toRoute(['/task/unfinished']) ?>">查看所有待处理任务</a></li>
+                                    <?php } ?>
+                                    <!-- end message -->
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="<?= Url::toRoute(['/task/unfinished']) ?>">查看所有待处理任务</a></li>
+                        <?php } else { ?>
+                            <li class="header text-center">暂无待处理任务!</li>
+                        <?php } ?>
                     </ul>
                 </li>
                 <!--<li class="dropdown notifications-menu">
@@ -242,9 +230,7 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
                                 <a href="#" class="btn btn-default btn-flat">资料</a>
                             </div>
                             <div class="pull-right">
-                                <?= Html::a(
-                                    '退出',
-                                    ['/site/logout'],
+                                <?= Html::a('退出', ['/site/logout'],
                                     ['data-method' => 'post', 'class' => 'btn btn-default btn-flat']
                                 ) ?>
                             </div>

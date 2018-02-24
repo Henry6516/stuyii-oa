@@ -108,40 +108,6 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
-    <?php
-    $viewUrl = Url::toRoute('view');
-    $completeUrl = Url::toRoute('complete');
-    $completeLotsUrl = Url::toRoute('complete-lots');
-    $js = <<<JS
-//单个处理
-$(".index-complete").on('click',function() {
-    id = $(this).closest('tr').data('key');
-    $.ajax({
-        url:'{$completeUrl}',
-        type:'get',
-        data:{id:id},
-        success:function(res) {
-            alert(res);//传回结果信息
-        }
-    });
-});
-
-//批量处理
-$("#complete-lots").on('click',function() {
-    ids = $("#oa-goodsinfo").yiiGridView('getSelectedRows');
-    $.ajax({
-        url:'{$completeLotsUrl}',
-        type:'get',
-        data:{ids:ids},
-        success:function(res) {
-            alert(res);
-        }
-    });
-});
-JS;
-    $this->registerJs($js); ?>
-
-
 </div>
 
 

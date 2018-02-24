@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use \backend\assets\AppAsset;
+use \kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaTask */
@@ -37,14 +38,7 @@ $this->registerJs($js);
 
         <?= $form->field($model, 'title')->textInput()->label('<span style="color: red"> 标题： </span>') ?>
 
-       <!-- --><?php /*echo $form->field($model, 'sendee', [
-            'inputOptions' => [
-                //'multiple' => 'multiple',//这里加上
-                'placeholder' => '1111111111',
-                'class'       => 'form-control select-warp-option',
-            ]])->dropDownList([1,2,3,4,5,6],['prompt' => '请选择小区'])->label('内容：') */?>
-
-        <?= $form->field($model, 'sendee')->widget(\kartik\select2\Select2::classname(), [
+        <?= $form->field($model, 'sendee')->widget(Select2::classname(), [
             'data' => $userList,//ArrayHelper::map($categoryParent, 'id', 'name'),
             'language' => 'zh',
             'options' => ['multiple' => true, 'placeholder' => '选择执行人'],
