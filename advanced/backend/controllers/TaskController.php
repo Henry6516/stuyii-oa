@@ -249,11 +249,32 @@ class TaskController extends Controller
     public function actionComplete($id){
         $userid = Yii::$app->user->identity->getId();
         $info = OaTaskSendee::findOne(['taskid' => $id, 'userid' => $userid]);
+        $task = OaTask::findOne(['taskid' => $id]);
 
-        $info->status = '已处理';
-        $info->updatetime = date('Y-m-d H:i:s');
-        $ret = $info->save(false);
-        return $ret ? "任务处理成功!" : '任务处理失败!';
+        $transaction  = Yii::$app->db->beginTransaction();
+        try {
+            //更改任务状态
+            $info->status = '已处理';
+            $info->updatetime = date('Y-m-d H:i:s');
+            $info->save(false);
+            //更新任务进度
+            //已处理人员数
+            $completeNum = OaTaskSendee::find()->where(['taskid' => $id, 'status' => '已处理'])->count();
+            //未处理人员数
+            $unfinishedNum = OaTaskSendee::find()->where(['taskid' => $id, 'status' => ''])->count();
+            $schedule = round($completeNum/($unfinishedNum + $completeNum) * 100, 2);
+            $task->schedule = $schedule;
+            $task->save(false);
+            //提交
+            $transaction->commit();
+            $res = '任务处理成功!';
+        } catch (\Exception $e) {
+            //回滚
+            $transaction->rollBack();
+            $res = '任务处理失败!';
+        }
+
+        return $res;
     }
     /**
      * 批量处理任务

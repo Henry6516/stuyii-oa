@@ -105,6 +105,10 @@ $this->registerJs($js);
                     ]
                 ]
             ],
+            [
+                'attribute' => 'schedule',
+                'label' => '任务进度(%)',
+            ],
         ],
     ]); ?>
 
