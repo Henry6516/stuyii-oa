@@ -5,21 +5,30 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 
-$this->title = '全部任务';
+$this->title = '我发出的';
 $this->params['breadcrumbs'][] = $this->title;
+
+$userid = yii::$app->user->identity->getId();
+//获取待处理任务数量
+$task_num = \backend\models\OaTaskSendee::find()->where(['userid' => $userid, 'status' => ''])->count();
+$js = <<<JS
+$("#tab2 > a").html('未完成的<sup class="label label-danger">{$task_num}</sup>');
+JS;
+$this->registerJs($js);
 ?>
 
 
 <?= \yii\bootstrap\Tabs::widget([
     'items' => [
         [
-            'label' => '全部任务',
-            'url' => Url::to(['index']),
-            'headerOptions' => ["id" => 'tab1'],
-            'options' => ['id' => 'all-task'],
+            'label' => '我发出的',
+            'url' => Url::to(['my-task']),
+            'headerOptions' => ["id" => 'tab4'],
+            'options' => ['id' => 'my-task'],
+            'active' => true,
         ],
         [
-            'label' => '未完成的',
+            'label' => '未完成的'.$task_num,
             'url' => Url::to(['unfinished']),
             'headerOptions' => ["id" => 'tab2'],
             'options' => ['id' => 'unfinished-task'],
@@ -30,13 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'headerOptions' => ["id" => 'tab3'],
             'options' => ['id' => 'finished-task'],
         ],
-        [
-            'label' => '我发出的',
-            'url' => Url::to(['my-task']),
-            'headerOptions' => ["id" => 'tab4'],
-            'options' => ['id' => 'my-task'],
-            'active' => true,
-        ],
+
 
 
     ],

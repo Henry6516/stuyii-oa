@@ -43,6 +43,7 @@ $JS = <<< JS
     $("a span:contains('图片信息')").after('<sup class="label label-warning">{$status_map["图片信息"]}</sup>');
     $("a span:contains('平台信息')").after('<sup class="label label-success">{$status_map["平台信息"]}</sup>');
     $("a span:contains('产品中心')").after('<sup class="label label-info">{$status_map["产品中心"]}</sup>');
+    $("a span:contains('任务中心')").after('<sup class="label label-info">{$status_map["任务中心"]}</sup>');
 
 JS;
 $this->registerJs($JS);

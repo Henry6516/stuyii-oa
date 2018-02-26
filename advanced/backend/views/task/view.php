@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\helpers\Url;
 use backend\models\User;
 
 /* @var $this yii\web\View */
@@ -10,7 +10,32 @@ use backend\models\User;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => '任务中心', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$userid = Yii::$app->user->identity->getId();
+$tasksdee = \backend\models\OaTaskSendee::findOne(['taskid' =>$model->taskid, 'userid' => $userid, 'status' => '']);
+
+
+$completeUrl = Url::toRoute(['complete','id' => $model->taskid]);
+$js = <<<JS
+//单个处理
+$(".complete").on('click',function() {
+    var id = $(this).closest('tr').data('key');
+    var flag = confirm('确定标记完成?');
+    if(flag){
+        $.ajax({
+            url:'{$completeUrl}',
+            type:'get',
+            success:function(res) {
+                alert(res);//传回结果信息
+                location.reload();
+            }
+        });
+    }
+});
+JS;
+$this->registerJs($js);
 ?>
+
 <div class="oa-task-view" style="margin-top: 20px">
     <div class="row">
         <div class="col-xs-12">
@@ -18,8 +43,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="box-header">
                     <h2><?= Html::encode($this->title) ?></h2>
                     <h3 class="box-title">
-                        <?= Html::a('创建', ['create'], ['class' => 'btn btn-success']) ?>
-                        <?php if($model->userid == Yii::$app->user->identity->getId()){ ?>
+                        <?php if($tasksdee){ ?>
+                            <?= Html::button('标记完成', ['class' => 'btn btn-success complete']) ?>
+                        <?php } ?>
+                        <?php if($model->userid == $userid){ ?>
                             <?= Html::a('更新', ['update', 'id' => $model->taskid], ['class' => 'btn btn-primary']);?>
                             <?= Html::a('删除', ['delete', 'id' => $model->taskid], [
                                 'class' => 'btn btn-danger',

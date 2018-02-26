@@ -5,18 +5,26 @@ use yii\helpers\ArrayHelper;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 
-$this->title = '全部任务';
+$this->title = '未完成的';
 $this->params['breadcrumbs'][] = $this->title;
-?>
 
+$userid = yii::$app->user->identity->getId();
+//获取待处理任务数量
+$task_num = \backend\models\OaTaskSendee::find()->where(['userid' => $userid, 'status' => ''])->count();
+$js = <<<JS
+$("#tab2 > a").html('未完成的<sup class="label label-danger">{$task_num}</sup>');
+JS;
+$this->registerJs($js);
+
+?>
 
 <?= \yii\bootstrap\Tabs::widget([
     'items' => [
         [
-            'label' => '全部任务',
-            'url' => Url::to(['index']),
-            'headerOptions' => ["id" => 'tab1'],
-            'options' => ['id' => 'all-task'],
+            'label' => '我发出的',
+            'url' => Url::to(['my-task']),
+            'headerOptions' => ["id" => 'tab4'],
+            'options' => ['id' => 'my-task'],
         ],
         [
             'label' => '未完成的',
@@ -31,22 +39,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'headerOptions' => ["id" => 'tab3'],
             'options' => ['id' => 'finished-task'],
         ],
-        [
-            'label' => '我发出的',
-            'url' => Url::to(['my-task']),
-            'headerOptions' => ["id" => 'tab4'],
-            'options' => ['id' => 'my-task'],
-        ],
-
-
     ],
 ]); ?>
 
 
 <div class="oa-goodsinfo-index" style="margin-top: 20px">
     <p>
-        <?= Html::button('批量处理任务', ['id' => 'complete-lots', 'class' => 'btn btn-info']) ?>
-        <?= Html::a('发起任务', 'create', ['id' => 'task-create', 'class' => 'btn btn-success']) ?>
+        <?= Html::button('批量标记完成', ['id' => 'complete-lots', 'class' => 'btn btn-info']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -68,8 +67,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'complete' => function ($url, $model, $key) {
                         $options = [
-                            'title' => '处理任务',
-                            'aria-label' => '处理任务',
+                            'title' => '标记完成',
+                            'aria-label' => '标记完成',
                             'data-id' => $key,
                             'class' => 'index-input',
                             'id' => 'index-complete',
@@ -129,7 +128,7 @@ $this->params['breadcrumbs'][] = $this->title;
 //单个处理
 $("#index-complete").on('click',function() {
     var id = $(this).closest('tr').data('key');
-    var flag = confirm('确定处理该任务?');
+    var flag = confirm('确定标记完成?');
     if(flag){
         $.ajax({
             url:'{$completeUrl}',
@@ -147,7 +146,7 @@ $("#index-complete").on('click',function() {
 $("#complete-lots").on('click',function() {
     ids = $("#oa-task").yiiGridView('getSelectedRows');
     if(ids.length == 0) {
-        alert('请选择要处理的任务！');
+        alert('请选择要标记的任务！');
         return false;
     }
     $.ajax({
