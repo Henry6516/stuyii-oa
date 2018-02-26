@@ -39,7 +39,7 @@ $this->registerJs($js);
 ?>
 
 
-<div class="login-box">
+<div class="login-box" style="margin-top: 12%">
     <div class="login-logo">
         <a href="#"><img src="../img/logo.png"/></a>
     </div>
