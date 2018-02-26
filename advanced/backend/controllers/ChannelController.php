@@ -849,8 +849,8 @@ class ChannelController extends Controller
         //动态计算产品的状态
 
         $old_status = $info->completeStatus?$info->completeStatus:'';
-        $status = str_replace('|Wish已完善', '', $old_status);
-        $complete_status = $status .'|Wish已完善';
+        $status = str_replace('Wish已完善', '', $old_status);
+        $complete_status = 'Wish已完善'.$status;
         $info->completeStatus = $complete_status;
         $ret = $info->save(false);
         if($ret){
