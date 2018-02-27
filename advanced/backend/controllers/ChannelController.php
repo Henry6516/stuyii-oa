@@ -1022,7 +1022,7 @@ class ChannelController extends Controller
             $row = $key+2;
             $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/'.$GoodsCode.'-_'.$value['MainImg'].'_.jpg' ;
             $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$foos[0][0]['SKU']);                  //模板ID SKU
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['selleruserid']);              //卖家简称
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['IbaySuffix']);              //卖家简称
             $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$value['ParentCategory']);            //分类
             $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$name);                               //商品名称
             $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$foos[0][0]['SKU'].$value['Suffix']); //唯一SKU
