@@ -172,7 +172,7 @@ class TaskController extends Controller
             try {
                 $model->attributes = $post['OaTask'];
                 $model->userid = Yii::$app->user->identity->getId();
-                $model->createdate = date('Y-m-d H:i:s');
+                $model->updatedate = date('Y-m-d H:i:s');
                 $model->save();
 
                 //删除原有接收人
