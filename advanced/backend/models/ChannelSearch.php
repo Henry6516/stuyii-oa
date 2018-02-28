@@ -66,7 +66,7 @@ class ChannelSearch extends Channel
         //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
         if ($model_name == 'channel') {
             //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
-            if ($params && isset($params['ChannelSearch']) && !$params['ChannelSearch']['completeStatus'] || !isset($params['ChannelSearch'])) {
+            if (!isset($params['ChannelSearch'])) {
                 $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善' , 'Wish已完善'];
             }
         }
@@ -194,6 +194,7 @@ class ChannelSearch extends Channel
 
 
         //完成状态
+        //var_dump($this->completeStatus);exit;
         if ($this->completeStatus && is_array($this->completeStatus)) {
             //var_dump($this->completeStatus);exit;
             $completeStatus = ['or'];

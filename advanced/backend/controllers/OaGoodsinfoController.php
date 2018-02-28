@@ -56,7 +56,7 @@ class OaGoodsinfoController extends Controller
         $condition = [];
         //没有搜索条件，则添加默认显示图片状态条件
         if(!isset($params['OaGoodsinfoSearch'])){
-            $condition = ['or',['achieveStatus' => '待处理'],['achieveStatus' => '已导入']];
+            $condition = ['achieveStatus' => '待处理'];
         }
         $dataProvider = $searchModel->search($params,$condition,'属性信息');
         return $this->render('index', [
