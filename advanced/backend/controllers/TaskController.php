@@ -99,10 +99,17 @@ class TaskController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        //已处理人员列表
-        $completeArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => '已处理'])->asArray()->all();
-        //未处理人员列表
-        $unfinishedArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => ''])->asArray()->all();
+        //已处理人员
+        $completeArr = OaTaskSendee::find()->joinWith('user')
+            ->where(['taskid' => $id, 'oa_taskSendee.status' => '已处理'])
+            ->andWhere(['not', ['user.username' => null]])
+            ->asArray()->all();
+        //未处理人员
+        $unfinishedArr = OaTaskSendee::find()->joinWith('user')
+            ->where(['taskid' => $id, 'oa_taskSendee.status' => ''])
+            ->andWhere(['not', ['user.username' => null]])
+            ->asArray()->all();
+
         return $this->render('view', [
             'model' => $model,
             'completeName' => $completeArr,
@@ -262,11 +269,7 @@ class TaskController extends Controller
             $info->updatetime = date('Y-m-d H:i:s');
             $info->save(false);
             //更新任务进度
-            //已处理人员数
-            $completeNum = OaTaskSendee::find()->where(['taskid' => $id, 'status' => '已处理'])->count();
-            //未处理人员数
-            $unfinishedNum = OaTaskSendee::find()->where(['taskid' => $id, 'status' => ''])->count();
-            $schedule = round($completeNum/($unfinishedNum + $completeNum) * 100, 2);
+            $schedule = $task->getTaskSchedule($id);
             $task->schedule = $schedule;
             $task->save(false);
             //提交
@@ -286,17 +289,27 @@ class TaskController extends Controller
     public function actionCompleteLots(){
         $userid = Yii::$app->user->identity->getId();
         $ids = $_GET['ids'];
+        $transaction  = Yii::$app->db->beginTransaction();
         try {
             foreach ($ids as $id) {
+                //标记完成
                 $model = OaTaskSendee::findOne(['taskid' => $id, 'userid' => $userid]);
                 $model->status = '已处理';
                 $model->updatetime = date('Y-m-d H:i:s', time());
                 $model->save(false);
+                //计算完成进度
+                $task = OaTask::findOne(['taskid' => $id]);
+                $schedule = $task->getTaskSchedule($id);
+                $task->schedule = $schedule;
+                $task->save(false);
             }
-            echo "批量标记完成";
+            $transaction->commit();
+            $res = "批量标记完成";
         } catch (\Exception $e) {
-            echo "批量任务处理失败";
+            $transaction->rollBack();
+            $res = "批量任务处理失败";
         }
+        return $res;
     }
 
 
