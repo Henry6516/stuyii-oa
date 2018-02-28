@@ -67,6 +67,25 @@ class OaTask extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'userid']);
     }
 
+    /** 计算任务进度
+     * 注意处理已删除人员的处理的任务进度
+     */
+    public function getTaskSchedule($id)
+    {
+        //已处理人员数
+        $completeNum = OaTaskSendee::find()->joinWith('user')
+            ->where(['taskid' => $id, 'oa_taskSendee.status' => '已处理'])
+            ->andWhere(['not', ['user.username' => null]])
+            ->count();
+        //未处理人员数
+        $unfinishedNum = OaTaskSendee::find()->joinWith('user')
+            ->where(['taskid' => $id, 'oa_taskSendee.status' => ''])
+            ->andWhere(['not', ['user.username' => null]])
+            ->count();
+        $schedule = round($completeNum/($unfinishedNum + $completeNum) * 100, 2);
+        return $schedule;
+    }
+
     /**获取执行人列表
      * @param $arr //已有人员数组
      * @return string
