@@ -84,12 +84,13 @@ $js = <<<JS
         }
     
         //单个删除已选
-		$('.selection__choice__remove').on('click',function() {
+		$('.selection__rendered').on('click', '.selection__choice__remove', function() {
 		    var id = $(this).parent().data('id');
 		    //$(this).parent().remove();//删除li标签
 		   
 		    var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
             var nodes = treeObj.getCheckedNodes();
+            console.log(nodes);
             $.each(nodes,function(i,item) {
                 if(item.id == id){
                     treeObj.checkNode(nodes[i], false, true, true);
@@ -135,11 +136,11 @@ $this->registerJs($js);
             <label class="control-label col-md-1"><span style="color: red"> 执行人： </span></label>
             <div class="col-md-6">
                 <div class="left">
-                    <div id="citySel" class="userSelected" readonly="true" onclick="showMenu();">
-                        <ul class="selection__rendered">
+                    <div id="citySel" class="userSelected" readonly="true" >
+                        <ul class="selection__rendered" onclick="showMenu();">
                             <span class="selection__clear">x</span>
                             <li class="search__li" style="float: left">
-                                <input type="text" class="search__field">
+                                <input type="text" class="search__field" >
                             </li>
                         </ul>
                     </div>
@@ -191,6 +192,7 @@ $this->registerJs($js);
     }
 
     function onBodyDown(event) {
+        console.log(event.target);
         if (!(event.target.id == "citySel" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
             hideMenu();
         }
