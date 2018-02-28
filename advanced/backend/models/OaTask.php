@@ -48,6 +48,7 @@ class OaTask extends \yii\db\ActiveRecord
             'title' => '标题',
             'description' => '内容',
             'createdate' => '创建时间',
+            'sendee' => '执行人',
         ];
     }
     /** 关联所有任务接收人
@@ -66,20 +67,41 @@ class OaTask extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'userid']);
     }
 
-    /** 获取执行人列表
+    /**获取执行人列表
+     * @param $arr //已有人员数组
+     * @return string
      */
-    public static function getUserList()
+    public static function getUserList($arr = [])
     {
-        $data = User::find()->asArray()->all();
-        $list = [];
-        foreach ($data as $k => $v){
-            $item = $v['username'];
-            if($v['department']){
-                $item = $v['username'].'--'.$v['department'];
-            }
-            $list[$v['id']] = $item;
+        $depList = $userList = [];
+        //全部
+        $all = [['id' => '全部', 'pId' => 0, 'name' => '全部', 'open' => true]];
+        //职位数组
+        $dep_sql = 'SELECT ISNULL(a.item_name,\'其他\') AS name FROM auth_assignment a GROUP BY ISNULL(a.item_name,\'其他\') ORDER BY ISNULL(a.item_name,\'其他\') ASC';
+        $depart = Yii::$app->db->createCommand($dep_sql)->queryAll();
+        //判断是不存在‘其他’选项，没有则添加
+        $depart = in_array('其他', $depart) ? $depart : array_merge($depart, [['name' =>'其他']]);
+        foreach ($depart as $k => $v){
+            $item['pId'] = '全部';
+            $item['name'] = $item['id'] = $v['name'];
+            $depList[] = $item;
         }
-        return $list;
+        //人员数组
+        $user_sql = 'SELECT u.id,u.username,ISNULL(a.item_name,\'其他\') AS name FROM [user] u LEFT JOIN auth_assignment a ON u.id = a.user_id';
+        $user = Yii::$app->db->createCommand($user_sql)->queryAll();
+        foreach ($user as $k => $v){
+            $item['id'] = $v['id'];
+            $item['pId'] = $v['name'];
+            $item['name'] = $v['username'];
+            if($arr && in_array($v['id'], $arr)){
+                $item['checked'] = true;
+            }else{
+                $item['checked'] = false;
+            }
+            $userList[] = $item;
+        }
+        //var_dump(array_merge($all, $depList, $userList));exit;
+        return json_encode(array_merge($all, $depList, $userList));
     }
 
 

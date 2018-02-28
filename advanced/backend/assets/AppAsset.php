@@ -54,9 +54,9 @@ class AppAsset extends AssetBundle
     {
         if (is_array($file)) {
             foreach ($file as $v)
-                $view->registerCssFile('@web/themes/' . $v, ['position' => $position, 'depends' => 'backend\assets\AppAsset']);
+                $view->registerCssFile('@web/' . $v, ['position' => $position, 'depends' => 'backend\assets\AppAsset']);
         } else {
-            $view->registerCssFile('@web/themes/' . $file, ['position' => $position, 'depends' => 'backend\assets\AppAsset']);
+            $view->registerCssFile('@web/' . $file, ['position' => $position, 'depends' => 'backend\assets\AppAsset']);
         }
     }
 
