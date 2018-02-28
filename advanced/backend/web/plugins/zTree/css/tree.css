@@ -10,7 +10,7 @@ ul.ztree {
 
 div.userSelected {
     border: 1px solid #cccccc;
-    min-height: 30px;
+    min-height: 40px;
     max-height: 300px;
 }
 
@@ -49,7 +49,7 @@ div.userSelected {
     border-radius: 4px;
     cursor: default;
     float: left;
-    margin: 5px 0 0 6px;
+    margin: 8px 0 0 10px;
     padding: 0 6px;
 }
 
