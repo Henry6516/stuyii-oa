@@ -133,7 +133,8 @@ class TaskController extends Controller
                 $model->save();
 
                 //保存接收人
-                foreach ($post['OaTask']['sendee'] as $value){
+                $sendee = explode(',', $post['OaTask']['sendee']);
+                foreach ($sendee as $value){
                     $sendModel = new OaTaskSendee();
                     $sendModel->userid = $value;
                     $sendModel->taskid = $model->taskid;
@@ -166,6 +167,7 @@ class TaskController extends Controller
         $model = $this->findModel($id);
         $post = Yii::$app->request->post();
         if ($model->load($post)) {
+            //var_dump($post);exit;
             $transaction  = Yii::$app->db->beginTransaction();
             try {
                 $model->attributes = $post['OaTask'];
@@ -176,7 +178,8 @@ class TaskController extends Controller
                 //删除原有接收人
                 OaTaskSendee::deleteAll(['taskid' => $id]);
                 //保存新的接收人
-                foreach ($post['OaTask']['sendee'] as $value){
+                $sendee = explode(',', $post['OaTask']['sendee']);
+                foreach ($sendee as $value){
                     $sendModel = new OaTaskSendee();
                     $sendModel->userid = $value;
                     $sendModel->taskid = $model->taskid;
@@ -192,13 +195,15 @@ class TaskController extends Controller
             return $this->redirect(['my-task']);
         }
         //设置执行人初始值
-        $sendeeList = OaTaskSendee::findAll(['taskid' => $id]);
-        $sendeeList = ArrayHelper::getColumn($sendeeList, 'userid');
-        $model->sendee = $sendeeList;
-
+        $sendeeList = OaTaskSendee::find()->joinWith('user')->where(['taskid' => $id])->asArray()->all();
+        $userIds = ArrayHelper::getColumn($sendeeList, 'userid');
+        $model->sendee = implode(',',$userIds);
+        $sendeeList = ArrayHelper::map($sendeeList, 'userid' ,'user.username');
+        //var_dump($sendeeList);exit;
         return $this->render('update', [
             'model' => $model,
-            'userList' => OaTask::getUserList(),
+            'userList' => OaTask::getUserList($userIds),
+            'user' => json_encode($sendeeList),
         ]);
     }
 

@@ -55,4 +55,11 @@ class OaTaskSendee extends \yii\db\ActiveRecord
         //同样第一个参数指定关联的子表模型类名
         return $this->hasOne(OaTask::className(), ['taskid' => 'taskid']);
     }
+    /** 关联任务
+     */
+    public function getUser()
+    {
+        //同样第一个参数指定关联的子表模型类名
+        return $this->hasOne(User::className(), ['id' => 'userid']);
+    }
 }

@@ -10,6 +10,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="box-header with-border">
             <h3 class="box-title">修改任务</h3>
         </div>
-        <?php echo $this->render('_form', ['model' => $model, 'userList' => $userList]); ?>
+        <?php echo $this->render('_form', ['model' => $model, 'userList' => $userList, 'user' => $user]); ?>
     </div>
 </div>
