@@ -103,13 +103,11 @@ class TaskController extends Controller
         $completeArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => '已处理'])->asArray()->all();
         //未处理人员列表
         $unfinishedArr = OaTaskSendee::find()->where(['taskid' => $id, 'status' => ''])->asArray()->all();
-        //任务进度
-        $schedule = round(count($completeArr)/(count($completeArr)+count($unfinishedArr)) * 100, 2);
         return $this->render('view', [
             'model' => $model,
             'completeName' => $completeArr,
             'unfinishedName' => $unfinishedArr,
-            'schedule' => $schedule
+
         ]);
     }
 
@@ -172,7 +170,8 @@ class TaskController extends Controller
             try {
                 $model->attributes = $post['OaTask'];
                 $model->userid = Yii::$app->user->identity->getId();
-                $model->createdate = date('Y-m-d H:i:s');
+                $model->updatedate = date('Y-m-d H:i:s');
+                $model->schedule = 0;
                 $model->save();
 
                 //删除原有接收人

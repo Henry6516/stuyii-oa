@@ -86,10 +86,10 @@ $this->registerJs($js);
                             <td>
                                 <div class="col-xs-4">
                                     <div class="progress progress-xs progress-striped active" style="width: 85%;float: left">
-                                        <div class="progress-bar progress-bar-success" style="width: <?= $schedule ? $schedule . '%':'0%'; ?>"></div>
+                                        <div class="progress-bar progress-bar-success" style="width: <?= $model->schedule ? $model->schedule . '%':'0%'; ?>"></div>
                                     </div>
                                     <div style="float: right">
-                                        <span class="badge bg-green"><?= $schedule ? $schedule . '%': '0%'; ?></span>
+                                        <span class="badge bg-green"><?= $model->schedule ? $model->schedule . '%': '0%'; ?></span>
                                     </div>
                                 </div>
 
