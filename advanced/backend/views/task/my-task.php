@@ -67,7 +67,7 @@ $this->registerJs($js);
             ['class' => 'kartik\grid\ActionColumn'],
             [
                 'attribute' => 'title',
-                'width' => '500px',
+                'width' => '400px',
                 'format' => 'raw',
             ],
             [
@@ -76,12 +76,26 @@ $this->registerJs($js);
                 'value' => 'user.username'
             ],
             [
+                'attribute' => 'schedule',
+                'width' => '400px',
+                'label' => '任务进度(%)',
+                'format' => 'raw',
+                'value' => function($model){
+                    return '<div class="col-xs-10 col-xs-offset-1">
+                                    <div class="progress progress-xs progress-striped active" style="width: 80%;float: left">
+                                        <div class="progress-bar progress-bar-success" style="width: '.
+                        ($model->schedule ? ($model->schedule . '%'):'0%') .'"></div>
+                                    </div><div style="float: right"><span class="badge bg-green">'.
+                        ($model->schedule ? ($model->schedule . '%'): '0%') .'</span></div></div>';
+                },
+            ],
+            [
                 'attribute' => 'createdate',
                 'format' => 'raw',
                 'value' => function ($model) {
                     return "<span class='cell'>" . substr(strval($model->createdate), 0, 10) . "</span>";
                 },
-                'width' => '500px',
+                'width' => '400px',
                 'filterType' => GridView::FILTER_DATE_RANGE,
                 'filterWidgetOptions' => [
                     'pluginOptions' => [
@@ -104,10 +118,6 @@ $this->registerJs($js);
                         ]*/
                     ]
                 ]
-            ],
-            [
-                'attribute' => 'schedule',
-                'label' => '任务进度(%)',
             ],
         ],
     ]); ?>

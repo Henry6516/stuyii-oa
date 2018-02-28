@@ -1,14 +1,16 @@
 <?php
-    use mdm\admin\components\MenuHelper;
-    $user = yii::$app->user->identity->username;
-    $sql = "oaP_statusCount '{$user}'";
-    $status_result = yii::$app->db->createCommand($sql)->queryAll();
-    $status_map = [];
-    foreach ($status_result as $res){
-        $status_map[$res['moduletype']] = $res['num'];
-    }
+
+use mdm\admin\components\MenuHelper;
+
+$user = yii::$app->user->identity->username;
+$sql = "oaP_statusCount '{$user}'";
+$status_result = yii::$app->db->createCommand($sql)->queryAll();
+$status_map = [];
+foreach ($status_result as $res) {
+    $status_map[$res['moduletype']] = $res['num'];
+}
 //    var_dump($status_map);die;
-    $callback = function($menu){
+$callback = function ($menu) {
     $data = json_decode($menu['data'], true);
     $items = $menu['children'];
     $return = [
@@ -57,7 +59,7 @@ $this->registerJs($JS);
             [
 
                 'options' => ['class' => 'sidebar-menu'],
-                'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id,null,$callback),
+                'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback),
             ]
         ) ?>
 
