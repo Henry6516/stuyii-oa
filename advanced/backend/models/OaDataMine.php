@@ -43,12 +43,12 @@ class OaDataMine extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'proId' => 'Pro ID',
-            'platForm' => 'Plat Form',
-            'progress' => 'Progress',
-            'creator' => 'Creator',
-            'createTime' => 'Create Time',
-            'updateTime' => 'Update Time',
+            'proId' => '商品编号',
+            'platForm' => '平台名称',
+            'progress' => '状态',
+            'creator' => '创建人',
+            'createTime' => '创建时间',
+            'updateTime' => '更新时间',
         ];
     }
 }
