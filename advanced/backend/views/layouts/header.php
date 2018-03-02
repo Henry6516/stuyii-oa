@@ -48,7 +48,7 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
                             <li class="header">你有几个待处理的任务</li>
                             <li>
                                 <!-- inner menu: contains the actual data -->
-                                <ul class="menu">
+                                <ul  class="menu">
                                     <!-- start message -->
                                     <?php foreach ($task_latest_list as $res) { ?>
                                         <li>
@@ -77,124 +77,123 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
                         <?php } ?>
                     </ul>
                 </li>
-                <!--<li class="dropdown notifications-menu">
+                <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-warning">10</span>
+                        <span id="notify-num" class="label label-warning">10</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">你有几个通知</li>
+                        <li class="header" style="text-align:center">您有新的通知</li>
                         <li>
-                            <ul class="menu">
+                            <ul id="notify" class="menu">
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        <i class="fa fa-truck text-red"></i>编号：XXXX 已采集完毕！
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may
-                                        not fit into the page and may cause design problems
+                                        <i class="fa fa-truck text-red"></i>编号：XXXX 已采集完毕！
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-users text-red"></i> 5 new members joined
+                                        <i class="fa fa-truck text-red"></i>编号：XXXX 已采集完毕！
                                     </a>
                                 </li>
 
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        <i class="fa fa-truck text-red"></i>编号：XXXX 已采集完毕！
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
-                                        <i class="fa fa-user text-red"></i> You changed your username
+                                        <i class="fa fa-truck text-red"></i>编号：XXXX 已采集完毕！
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="footer"><a href="#">View all</a></li>
+                        <li class="footer"><a href="#">查看全部</a></li>
                     </ul>
                 </li>
 
-                <li class="dropdown tasks-menu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-flag-o"></i>
-                        <span class="label label-danger">9</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="header">你有几项任务去做</li>
-                        <li>
-                            <ul class="menu">
-                                <li>
-                                    <a href="#">
-                                        <h3>
-                                            Design some buttons
-                                            <small class="pull-right">20%</small>
-                                        </h3>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-aqua" style="width: 20%"
-                                                 role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                                <span class="sr-only">20% Complete</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <h3>
-                                            Create a nice theme
-                                            <small class="pull-right">40%</small>
-                                        </h3>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-green" style="width: 40%"
-                                                 role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                                <span class="sr-only">40% Complete</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <h3>
-                                            Some task I need to do
-                                            <small class="pull-right">60%</small>
-                                        </h3>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-red" style="width: 60%"
-                                                 role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                                <span class="sr-only">60% Complete</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <h3>
-                                            Make beautiful transitions
-                                            <small class="pull-right">80%</small>
-                                        </h3>
-                                        <div class="progress xs">
-                                            <div class="progress-bar progress-bar-yellow" style="width: 80%"
-                                                 role="progressbar" aria-valuenow="20" aria-valuemin="0"
-                                                 aria-valuemax="100">
-                                                <span class="sr-only">80% Complete</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="footer">
-                            <a href="#">View all tasks</a>
-                        </li>
-                    </ul>
-                </li>-->
+                <!-- <li class="dropdown tasks-menu">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                         <i class="fa fa-flag-o"></i>
+                         <span class="label label-danger">9</span>
+                     </a>
+                     <ul class="dropdown-menu">
+                         <li class="header">你有几项任务去做</li>
+                         <li>
+                             <ul class="menu">
+                                 <li>
+                                     <a href="#">
+                                         <h3>
+                                             Design some buttons
+                                             <small class="pull-right">20%</small>
+                                         </h3>
+                                         <div class="progress xs">
+                                             <div class="progress-bar progress-bar-aqua" style="width: 20%"
+                                                  role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                                  aria-valuemax="100">
+                                                 <span class="sr-only">20% Complete</span>
+                                             </div>
+                                         </div>
+                                     </a>
+                                 </li>
+                                 <li>
+                                     <a href="#">
+                                         <h3>
+                                             Create a nice theme
+                                             <small class="pull-right">40%</small>
+                                         </h3>
+                                         <div class="progress xs">
+                                             <div class="progress-bar progress-bar-green" style="width: 40%"
+                                                  role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                                  aria-valuemax="100">
+                                                 <span class="sr-only">40% Complete</span>
+                                             </div>
+                                         </div>
+                                     </a>
+                                 </li>
+                                 <li>
+                                     <a href="#">
+                                         <h3>
+                                             Some task I need to do
+                                             <small class="pull-right">60%</small>
+                                         </h3>
+                                         <div class="progress xs">
+                                             <div class="progress-bar progress-bar-red" style="width: 60%"
+                                                  role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                                  aria-valuemax="100">
+                                                 <span class="sr-only">60% Complete</span>
+                                             </div>
+                                         </div>
+                                     </a>
+                                 </li>
+                                 <li>
+                                     <a href="#">
+                                         <h3>
+                                             Make beautiful transitions
+                                             <small class="pull-right">80%</small>
+                                         </h3>
+                                         <div class="progress xs">
+                                             <div class="progress-bar progress-bar-yellow" style="width: 80%"
+                                                  role="progressbar" aria-valuenow="20" aria-valuemin="0"
+                                                  aria-valuemax="100">
+                                                 <span class="sr-only">80% Complete</span>
+                                             </div>
+                                         </div>
+                                     </a>
+                                 </li>
+                             </ul>
+                         </li>
+                         <li class="footer">
+                             <a href="#">View all tasks</a>
+                         </li>
+                     </ul>
+                 </li>-->
 
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -241,3 +240,31 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
         </div>
     </nav>
 </header>
+
+<?php
+$js = <<< JS
+
+var ws = new WebSocket("ws://james:8080/");
+ 
+ws.onopen = function(evt) { 
+  console.log("Connection open ..."); 
+  ws.send("Hello WebSockets!");
+};
+ 
+ws.onmessage = function(evt) {
+  console.log( "Received Message: " + evt.data);
+  ele = '<li><a href="#"><i class="fa fa-truck text-red"></i>ws通知-编号：XXXX 已采集完毕！</a></li>'
+  $('#notify').append(ele);
+  var num = $('#notify').children('li').length;
+  $('#notify-num').text(num);
+};
+ 
+ws.onclose = function(evt) {
+  console.log("Connection closed.");
+};      
+ 
+
+JS;
+
+$this->registerJs($js);
+?>
