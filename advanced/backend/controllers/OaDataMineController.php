@@ -132,8 +132,16 @@ class OaDataMineController extends Controller
         $job_model->progress = '待采集';
         try
         {
-            $job_model->save();
-            $msg = "任务已添加到队列！";
+            if($job_model->save()){
+                $job_id = $job_model->id;
+                $redis = Yii::$app->redis;
+                $redis->set($job_id, $pro_id);
+                $msg = "任务已添加到队列！";
+            }
+            else {
+                $msg = "任务添加失败，请重新添加";
+            }
+
         }
         catch(IntegrityException $why){
             $msg = "该商品已采集过，不可重复采集！";

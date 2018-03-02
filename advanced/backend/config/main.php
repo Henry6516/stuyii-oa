@@ -22,14 +22,7 @@ return [
             'class' => 'mdm\admin\Module',
 //            'layout' => 'left-menu',//yii2-admin的导航菜单
         ],
-        //'gii' => [
-            //'class' => 'yii\gii\Module',
-            //'allowedIPs' => ['127.0.0.1', '192.168.0.*','::1'] // 按需调整这里
-        //],
-//        'debug' => [
-//            'class' => 'yii\gii\Module',
-//            'allowedIPs' => ['127.0.0.1', '192.168.0.*','::1'] // 按需调整这里
-//        ],
+
 
     ],
     'aliases' => [
@@ -38,12 +31,7 @@ return [
     ],
     'language' => 'zh-CN',
     'components' => [
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => '127.0.0.1',
-            'port' => 6379,
-            'database' => 0,
-        ],
+
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'defaultRoles' => ['guest'],
