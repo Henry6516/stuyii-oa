@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\OaGoods;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -154,12 +155,19 @@ class GoodsskuController extends Controller
 
     public function actionSaveComplete($pid, $type)
     {
+        $username = Yii::$app->user->identity->username;
         $request = Yii::$app->request;
         $model = new Goodssku();
+        $title = '';
+        $content = '<table>';
+        $sendee = [];//任务发送人
         if ($request->isPost) {
             //提交过来的表单数据
             try {
                 if ($type == 'goods-info') {
+                    $sendee = Goodssku::getTaskSendee($pid, '属性信息修改');//判断产品完成状态并返回任务发送人
+                    $title = '属性信息修改';//任务发标题
+
                     $skuRows = $request->post()['Goodssku'];
                     $count = count($skuRows);
                     $info = OaGoodsinfo::find()->where(['pid' => $pid])->one();
@@ -180,9 +188,19 @@ class GoodsskuController extends Controller
                             //配合rules 进行安全检查;需要改变的数据都要声明下类型。
                             $_model->setAttributes($row_value, true); //逐行入库
                             $_model->save(false);
+
+                            /*$content .= '<tr><td>添加新的SKU为：' + $row_value['sku'] + '</td><td>成本价为：' . $row_value['CostPrice'] . '</td>' .
+                                        '<td>重量为：' . $row_value['Weight'] . '</td><td>零售价为：' . $row_value['RetailPrice'] . '</td></tr>';*/
+                            $content .= '<tr>添加新的SKU为：' . $row_value['sku'] .  '，成本价为：' . $row_value['CostPrice'] .
+                                '，重量为：'.$row_value['Weight'] . '，零售价为：'.$row_value['RetailPrice'] . '。</tr>';
                         } //更新行
                         else {
                             $update_model = Goodssku::find()->where(['sid' => $sid])->one();
+
+                            $oldCostPrice = $update_model->CostPrice;
+                            $oldWeight = $update_model->Weight;
+                            $oldRetailPrice = $update_model->RetailPrice;
+
                             $update_model->sku = $row_value['sku'];
                             $update_model->property1 = $row_value['property1'];
                             $update_model->property2 = $row_value['property2'];
@@ -193,8 +211,19 @@ class GoodsskuController extends Controller
                             $update_model->stockNum = $row_value['stockNum'];
                             $update_model->update(false);
 
+                            //判断成本价修改前后是否一致？
+                            if($oldCostPrice != $update_model->CostPrice){
+                                $content .= '<tr><td>SKU：' . $update_model['sku'] .  '</td><td>原成本价：' . $oldCostPrice . '</td><td>修改后的成本价：'.$row_value['CostPrice'].'</td></tr>';
+                            }
+                            //判断成重量修改前后是否一致？
+                            if($oldWeight != $update_model->Weight){
+                                $content .= '<tr><td>SKU：' . $update_model['sku'] .  '</td><td>原重量：' . $oldWeight . '</td><td>修改后的重量：'.$row_value['Weight'].'</td></tr>';
+                            }
+                            //判断零售价修改前后是否一致？
+                            if($oldRetailPrice != $update_model->RetailPrice){
+                                $content .= '<tr><td>SKU：' . $update_model['sku'] .  '</td><td>原零售价：' . $oldRetailPrice . '</td><td>修改后的零售价：'.$row_value['RetailPrice'].'</td></tr>';
+                            }
                         }
-
                     }
                     //更新属性信息
                     $sql_wish = "P_oaGoods_TowishGoods $pid";
@@ -202,19 +231,16 @@ class GoodsskuController extends Controller
                     $connection = Yii::$app->db;
                     $import_trans = $connection->beginTransaction();
                     try {
-
                         $connection->createCommand($sql_wish)->execute();
                         $connection->createCommand($sql_ebay)->execute();
                         $import_trans->commit();
                     } catch (Exception $er) {
-
                         $import_trans->rollBack();
                     }
                     //更新产品状态
                     $goods_model = OaGoodsinfo::find()->where(['pid' => $pid])->one();
                     $developer = $goods_model->developer;
                     try {
-
                         if (empty($goods_model->possessMan1)) {
                             $arc_model = OaSysRules::find()->where(['ruleKey' => $developer])->andWhere(['ruleType' => 'dev-arc-map'])->one();
                             $arc = $arc_model->ruleValue;
@@ -229,7 +255,6 @@ class GoodsskuController extends Controller
                         if (empty($goods_model->picStatus)) {
                             $goods_model->picStatus = '待处理';
                         }
-
                         $goods_model->updateTime = strftime('%F %T');
                         $goods_model->update(false);
                         echo "保存完成";
@@ -240,12 +265,19 @@ class GoodsskuController extends Controller
                 }
 
                 if ($type == 'pic-info') {
+                    $sendee = Goodssku::getTaskSendee($pid, '图片地址修改');//判断产品完成状态并返回任务发送人
+                    $title = '属性图修改';//任务发标题
                     $Rows = $request->post()['Goodssku'];
                     foreach ($Rows as $row_key => $row_value) {
                         $sid = $row_key;
                         $update_model = Goodssku::find()->where(['sid' => $sid])->one();
+                        $oldLinkurl = $update_model->linkurl;
                         $update_model->linkurl = $row_value['linkurl'];
                         $update_model->save(false);
+                        //判断地址修改前后是否一致？
+                        if($oldLinkurl != $update_model->linkurl){
+                            $content .= '<tr><td>SKU:' . $update_model['sku'] .  '</td><td>原有图片链接：' . $oldLinkurl . '</td><td>修改后的图片链接:'.$row_value['linkurl'].'</td></tr>';
+                        }
                     }
                     //图片验空
                     $pic_url = array_column($Rows, 'linkurl');
@@ -277,10 +309,14 @@ class GoodsskuController extends Controller
                         }
                     }
                 }
+                $content .= '</table>';
+                //发布任务
+                if(strip_tags($content) && $sendee){
+                    Goodssku::taskSave($title,$content,$sendee);
+                }
             } catch (Exception  $e) {
                 echo $e;
             }
-
         }
     }
 

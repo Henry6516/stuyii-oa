@@ -96,7 +96,7 @@ class ChannelSearch extends Channel
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             } elseif ($role[0]['item_name'] == '产品开发') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] == '产品开发组长') {
+            } elseif ($role[0]['item_name'] == '产品开发2') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             } elseif ($role[0]['item_name'] == '美工') {
                 $query->andWhere(['in', 'possessMan1', $users]);
@@ -194,7 +194,7 @@ class ChannelSearch extends Channel
 
 
         //完成状态
-        //var_dump($this->completeStatus);exit;
+
         if ($this->completeStatus && is_array($this->completeStatus)) {
             //var_dump($this->completeStatus);exit;
             $completeStatus = ['or'];

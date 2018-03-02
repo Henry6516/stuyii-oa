@@ -56,7 +56,7 @@ class OaTaskSearch extends OaTask
             $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')
             ->where(['oa_taskSendee.userid' => $userid, 'oa_taskSendee.status' => '已处理'])->orderBy('createdate DESC');
         }else{
-            $query = OaTask::find()->joinWith('user')->joinWith('taskSendee')
+            $query = OaTask::find()->joinWith('user')
             ->where(['oa_task.userid' => $userid])->orderBy('createdate DESC');
         }
 
