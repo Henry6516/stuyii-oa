@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = '更新数据';
 $bannedNames = explode(',', $info->DictionaryName);
 $catNid = $goodsItem->catNid;
 $subCate = $goodsItem->subCate;
-$stock_flag = $info->stockUp?false:true;
+$stock_flag = $info->stockUp ? false : true;
 if (empty($info->requiredKeywords)) {
     $required_kws = [];
     for ($i = 0; $i <= 5; $i++) {
@@ -64,7 +64,7 @@ echo "<div style='margin-left: 8px'><a href= '$info->picUrl'  target='_blank' ><
 ?>
 
 <?php
-$stock = $info->stockUp?'是':'否';
+$stock = $info->stockUp ? '是' : '否';
 $form = ActiveForm::begin([]);
 
 echo FormGrid::widget([ // continuation fields to row above without labels
@@ -148,7 +148,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 ],
                 'AttributeName' => [
                     'label' => '特殊属性必填',
-                    'items' => [ ''=>'','液体商品'=>'液体商品','带电商品'=>'带电商品','带磁商品'=>'带磁商品','粉末商品'=>'粉末商品'],
+                    'items' => ['' => '', '液体商品' => '液体商品', '带电商品' => '带电商品', '带磁商品' => '带磁商品', '粉末商品' => '粉末商品'],
                     'type' => Form::INPUT_DROPDOWN_LIST,
                 ],
                 'StoreName' => [
@@ -158,7 +158,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 ],
                 'Season' => [
                     'label' => '季节',
-                    'items' => [  ''=>'','春季'=>'春季','夏季'=>'夏季','秋季'=>'秋季','冬季'=>'冬季','春秋'=>'春秋','秋冬'=>'秋冬'],
+                    'items' => ['' => '', '春季' => '春季', '夏季' => '夏季', '秋季' => '秋季', '冬季' => '冬季', '春秋' => '春秋', '秋冬' => '秋冬'],
                     'type' => Form::INPUT_DROPDOWN_LIST,
                 ],
 
@@ -185,7 +185,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
         <strong>关键词Tags：</strong>
     </div>
     <div class="col-lg-11">
-        <?= $form->field($info, 'wishtags')->textInput(['class' => 'tags-input','style'=>"width:780px;margin-left:-2%;",'placeholder' => '--tags关键词不能超过10个,逗号分隔--'])->label(false); ?>
+        <?= $form->field($info, 'wishtags')->textInput(['class' => 'tags-input', 'style' => "width:780px;margin-left:-2%;", 'placeholder' => '--tags关键词不能超过10个,逗号分隔--'])->label(false); ?>
     </div>
 </div>
 
@@ -195,29 +195,31 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             <strong>标题关键词：</strong>
         </div>
     </div>
-    <?= $form->field($info,'headKeywords',['labelOptions' => ['style' => 'margin-left:3%']])->textInput(['style'=>"width:200px;margin-left:3%;",'placeholder' => '--一个关键词--']); ?>
-    <?= $form->field($info,'requiredKeywords')->textInput(['style'=>"width:200px;display:none;",'placeholder' => ''])->label(false); ?>
-    <?= $form->field($info,'randomKeywords')->textInput(['style'=>"width:200px;display:none;",'placeholder' => ''])->label(false); ?>
+    <?= $form->field($info, 'headKeywords', ['labelOptions' => ['style' => 'margin-left:3%']])->textInput(['style' => "width:200px;margin-left:3%;", 'placeholder' => '--一个关键词--']); ?>
+    <?= $form->field($info, 'requiredKeywords')->textInput(['style' => "width:200px;display:none;", 'placeholder' => ''])->label(false); ?>
+    <?= $form->field($info, 'randomKeywords')->textInput(['style' => "width:200px;display:none;", 'placeholder' => ''])->label(false); ?>
     <br>
     <div style="margin-left:3%;margin-right: 50%">
-        <div><label class="control-label">必选关键词<span style = "color:red">*</span></label><span style="margin-left:1%" class="required-kw"></span></div>
+        <div><label class="control-label">必选关键词<span style="color:red">*</span></label><span style="margin-left:1%"
+                                                                                             class="required-kw"></span>
+        </div>
         <div style="font-size:6px">
-            <span><label style = "color:red">说明：</label>物品名/材质/特征等。如T-Shirt(物品名)/V-neck(特征)/Cotton(材质)</span>
+            <span><label style="color:red">说明：</label>物品名/材质/特征等。如T-Shirt(物品名)/V-neck(特征)/Cotton(材质)</span>
         </div>
         <table class="table table-bordered table-responsive">
             <tbody>
             <?php
             echo '<tr>
         <th scope="row">必填</th>
-        <td><input value="'.$required_kws[0].'" class="required-kw-in" type="text" class=""></td>
-        <td><input value="'.$required_kws[1].'" class="required-kw-in" type="text" class=""></td>
-        <td><input value="'.$required_kws[2].'" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[0] . '" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[1] . '" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[2] . '" class="required-kw-in" type="text" class=""></td>
     </tr>
     <tr>
         <th scope="row">选填</th>
-        <td><input value="'.$required_kws[3].'" class="required-kw-in" type="text" class=""></td>
-        <td><input value="'.$required_kws[4].'" class="required-kw-in" type="text" class=""></td>
-        <td><input value="'.$required_kws[5].'" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[3] . '" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[4] . '" class="required-kw-in" type="text" class=""></td>
+        <td><input value="' . $required_kws[5] . '" class="required-kw-in" type="text" class=""></td>
         <td><button type="button" class = "required-paste btn btn-success" data-toggle="modal" data-target = "#required-modal">批量设置</button></td>
     </tr>'
             ?>
@@ -226,10 +228,11 @@ echo FormGrid::widget([ // continuation fields to row above without labels
     </div>
     <br>
     <div style="margin-left:3%;margin-right: 25%">
-        <label class="control-label">随机关键词<span style = "color:red">*</span></label><span style="margin-left:1%" class="random-kw"></span>
+        <label class="control-label">随机关键词<span style="color:red">*</span></label><span style="margin-left:1%"
+                                                                                        class="random-kw"></span>
 
         <div style="font-size:6px">
-            <span><label style = "color:red">说明：</label>形容词/品类热词等。如Fashion/Elegant/Hot/DIY/Casual…</span>
+            <span><label style="color:red">说明：</label>形容词/品类热词等。如Fashion/Elegant/Hot/DIY/Casual…</span>
         </div>
         <table class="table table-bordered table-responsive">
             <tbody>
@@ -237,19 +240,19 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             echo
                 '<tr>
                 <th scope="row">必填</th>
-                <td><input value="'.$random_kws[0].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[1].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[2].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[3].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[4].'" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[0] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[1] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[2] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[3] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[4] . '" class="random-kw-in" type="text" class=""></td>
             </tr>
             <tr>
                 <th scope="row">选填</th>
-                <td><input value="'.$random_kws[5].'"   class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[6].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[7].'" class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[8].'"  class="random-kw-in" type="text" class=""></td>
-                <td><input value="'.$random_kws[9].'" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[5] . '"   class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[6] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[7] . '" class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[8] . '"  class="random-kw-in" type="text" class=""></td>
+                <td><input value="' . $random_kws[9] . '" class="random-kw-in" type="text" class=""></td>
                 <td><button type="button" class = "random-paste btn btn-success" data-toggle="modal" data-target = "#random-modal">批量设置</button></td>
             </tr>'
             ?>
@@ -257,7 +260,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
         </table>
 
     </div>
-    <?= $form->field($info,'tailKeywords',['labelOptions' => ['style' => 'margin-left:3%']])->textInput(['style'=>"width:200px;margin-left:3%;",'placeholder' => '--最多一个关键词--'])->label('最后关键词<span style = "color:red">*</span>'); ?>
+    <?= $form->field($info, 'tailKeywords', ['labelOptions' => ['style' => 'margin-left:3%']])->textInput(['style' => "width:200px;margin-left:3%;", 'placeholder' => '--最多一个关键词--'])->label('最后关键词<span style = "color:red">*</span>'); ?>
 
 </div>
 
@@ -341,7 +344,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
     ?>
 
     <?php
-    echo Html::submitButton( '保存基本信息', ['class' =>  'btn btn-danger','style' => 'margin-left:8%']);
+    echo Html::submitButton('保存基本信息', ['class' => 'btn btn-danger', 'style' => 'margin-left:8%']);
     ActiveForm::end();
     echo "<br>";
     ?>
@@ -364,7 +367,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             'template' => '{delete}',
             'buttons' => [
                 'delete' => function ($url, $model, $key) {
-                    $delete_url = Url::to(['/goodssku/delete','id' => $key]);
+                    $delete_url = Url::to(['/goodssku/delete', 'id' => $key]);
                     $options = [
                         'title' => '删除',
                         'aria-label' => '删除',
@@ -398,7 +401,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 'options' => ['class' => 'RetailPrice'],
             ],
             'stockNum' => ['label' => '备货数量', 'type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'stockNum', 'readonly' => $stock_flag ],
+                'options' => ['class' => 'stockNum', 'readonly' => $stock_flag],
             ],
 
         ],
@@ -409,7 +412,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-book"></i> 管理SKU</h3>',
                 'type' => GridView::TYPE_PRIMARY,
 
-                'footer' => true,
+                //'footer' => true,
                 'after' =>
                     Html::input('text', 'rowNum', '', ['class' => 'x-row', 'placeholder' => '行数']) . ' ' .
                     Html::button('新增行', ['id' => 'add-row', 'type' => 'button', 'class' => 'btn kv-batch-create']) . ' ' .
@@ -421,11 +424,11 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                     Html::button('价格确定', ['id' => 'RetailPrice-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::button('一键生成SKU', ['id' => 'sku-set', 'type' => 'button', 'class' => 'btn btn-success']) . ' ' .
                     Html::button('保存当前数据', ['id' => 'save-only', 'type' => 'button', 'class' => 'btn btn-info',
-                        'data-href' => Url::to(['/goodssku/save-only', 'pid' => $pid, 'type'=> 'goods-info'])]) . ' ' .
+                        'data-href' => Url::to(['/goodssku/save-only', 'pid' => $pid, 'type' => 'goods-info'])]) . ' ' .
                     Html::button('保存并完善', ['id' => 'save-complete', 'type' => 'button', 'class' => 'btn btn-primary',
-                        'data-href' => Url::to(['/goodssku/save-complete', 'pid' => $pid, 'type'=> 'goods-info'])]) . ' ' .
+                        'data-href' => Url::to(['/goodssku/save-complete', 'pid' => $pid, 'type' => 'goods-info'])]) . ' ' .
                     Html::button('导入普源', ['id' => 'data-input', 'type' => 'button', 'class' => 'btn btn-warning']) . ' ' .
-                    Html::button('生成采购单', ['id' => 'make-order', 'type' => 'button', 'class' => 'btn' ]) . ' ' .
+                    Html::button('生成采购单', ['id' => 'make-order', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::button('删除行', ['id' => 'delete-row', 'type' => 'button', 'class' => 'btn btn-danger kv-batch-delete'])
             ]
         ]
@@ -489,9 +492,9 @@ echo FormGrid::widget([ // continuation fields to row above without labels
     $requestUrl2 = Url::toRoute(['/goodssku/update']);//弹窗的html内容，下面的js会调用获得该页面的Html内容，直接填充在弹框中
     $inputUrl = Url::toRoute(['input']);
     $deleteUrl = Url::toRoute(['/goodssku/delete']);
-    $makeOrdersUrl = Url::toRoute(['/goodssku/make-orders','goodsCode' => $info->GoodsCode]);
-    $make_flag = $info->stockUp?$info->stockUp:0;
-    $import_flag = $info->bgoodsid?$info->bgoodsid:0;
+    $makeOrdersUrl = Url::toRoute(['/goodssku/make-orders', 'goodsCode' => $info->GoodsCode]);
+    $make_flag = $info->stockUp ? $info->stockUp : 0;
+    $import_flag = $info->bgoodsid ? $info->bgoodsid : 0;
 
     $js2 = <<<JS
     
@@ -662,7 +665,6 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                              '</div>' +
                            '</td>');
                     }
-                    
                 }
                 else {
                     var td = $('<td class="kv-align-top" data-col-seq="'+ i +'" >' +
@@ -672,7 +674,6 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                              '</div>' +
                            '</td>');
                 }
-                
                 row.append(td);
             }
             
@@ -755,16 +756,9 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                         }
                     }
                 }
-                
             })
-            
-        })    
-           
-           
-           
+        })                
     }); 
-    
-    
     
     
     //批量设置成本价格 
@@ -864,7 +858,6 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 
 JS;
     $this->registerJs($js2);
-
     ?>
 
     <script>
@@ -883,7 +876,6 @@ JS;
                 len_kw = kw.length;
             }
             $(".head-kw").html('<span style = "color:red">' + String(len_kw) + '</span>个字符');
-
         }
 
         function tailCount() {
@@ -895,7 +887,6 @@ JS;
                 len_kw = kw.length;
             }
             $(".tail-kw").html('<span style = "color:red">' + String(len_kw) + '</span>个字符');
-
         }
 
 
@@ -943,12 +934,11 @@ JS;
         }
 
         function listenOnTextInput(ele, name) {
-            $('body').on('change',ele,function () {
-
+            $('body').on('change', ele, function () {
                 if (name == 'required') {
                     var kws = $("#required-kws").val();
                     //alert(kws);return;
-                    var  kw_list = kws.split('\n');
+                    var kw_list = kws.split('\n');
                     $.each(kw_list, function (index, value) {
                         $('.required-kw-in').each(function (pos) {
                             if (index == pos) {
@@ -970,10 +960,8 @@ JS;
                     });
                     randomCount();
                 }
-
             });
         }
-
     </script>
 
     <script>
@@ -989,7 +977,4 @@ JS;
             display: block;
             margin: auto;
         }
-
-
-
     </style>

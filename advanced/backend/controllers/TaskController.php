@@ -135,15 +135,20 @@ class TaskController extends Controller
                 $model->attributes = $post['OaTask'];
                 $model->userid = Yii::$app->user->identity->getId();
                 $model->createdate = date('Y-m-d H:i:s');
-                $model->save();
-
+                $res = $model->save();
+                if(!$res){
+                    throw new \Exception('任务发起失败!');
+                }
                 //保存接收人
                 $sendee = explode(',', $post['OaTask']['sendee']);
                 foreach ($sendee as $value){
                     $sendModel = new OaTaskSendee();
                     $sendModel->userid = $value;
                     $sendModel->taskid = $model->taskid;
-                    $sendModel->save();
+                    $ret = $sendModel->save();
+                    if(!$ret){
+                        throw new \Exception('任务发起失败!');
+                    }
                 }
                 //提交
                 $transaction->commit();

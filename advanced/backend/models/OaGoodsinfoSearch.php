@@ -96,7 +96,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
                 $query->andWhere(['in', 'introducer', $users]);
             }elseif ($role[0]['item_name']=='产品开发'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发组长'){
+            }elseif($role[0]['item_name']=='产品开发2'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
         }elseif($unit == '属性信息'){
@@ -106,7 +106,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
                 $query->andWhere(['in', 'introducer', $users]);
             }elseif ($role[0]['item_name']=='产品开发'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发组长'){
+            }elseif($role[0]['item_name']=='产品开发2'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
         }elseif($unit == '图片信息'){
@@ -116,7 +116,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
                 $query->andWhere(['in', 'introducer', $users]);
             }elseif ($role[0]['item_name']=='产品开发'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发组长'){
+            }elseif($role[0]['item_name']=='产品开发2'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }elseif ($role[0]['item_name']=='美工'){
                 $query->andWhere(['in', 'possessMan1', $users]);

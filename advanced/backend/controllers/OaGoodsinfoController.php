@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\OaGoods;
+use backend\models\OaSysRules;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -56,7 +57,7 @@ class OaGoodsinfoController extends Controller
         $condition = [];
         //没有搜索条件，则添加默认显示图片状态条件
         if(!isset($params['OaGoodsinfoSearch'])){
-            $condition = ['or',['achieveStatus' => '待处理'],['achieveStatus' => '已导入']];
+            $condition = ['achieveStatus' => '待处理'];
         }
         $dataProvider = $searchModel->search($params,$condition,'属性信息');
         return $this->render('index', [
@@ -112,8 +113,12 @@ class OaGoodsinfoController extends Controller
  *
 */
 
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id){
+        //任务属性初始化
+        $title = '商品基本信息修改';
+        $content = '<table>';
+        $sendee = Goodssku::getTaskSendee($id, '基本信息修改');
+
         $updata = $_POST;
         $info = OaGoodsinfo::findOne($id);
         $conid = Yii::$app->db->createCommand("SELECT goodsid from  oa_Goodsinfo WHERE pid=$id")
@@ -124,6 +129,8 @@ class OaGoodsinfoController extends Controller
         if (!$info) {
             throw new NotFoundHttpException("The product was not found.");
         }
+        $oldGoodsCode = $info->GoodsCode;
+        $oldDescription = $info->description;
 
         $post = Yii::$app->request->post();
         unset($post['OaGoodsinfo']['stockUp']);
@@ -171,7 +178,6 @@ class OaGoodsinfoController extends Controller
             $info->possessMan1 = $arc;
             $info->AttributeName = $updata['OaGoodsinfo']['AttributeName'];
             if(!empty($updata['OaGoodsinfo']['AttributeName'])){
-
                     if($updata['OaGoodsinfo']['AttributeName']=='液体商品'){
                         $info->IsLiquid = 1;
                         $info->IsPowder = 0;
@@ -197,9 +203,22 @@ class OaGoodsinfoController extends Controller
                     }
             }
             $info->save(false);
+            //判断商品编码修改前后是否一致？
+            if($oldGoodsCode != $info->GoodsCode){
+                $content .= '<tr><td>原有商品编码：' . $oldGoodsCode . '</td><td>修改后商品编码为：' . $info->GoodsCode . '</td></tr>';
+            }
+            //判断商品描述修改前后是否一致？
+            if($oldDescription != $info->description){
+                $content .= '<tr><td>原有商品描述：' . $oldDescription . '</td><td>修改后商品描述为：' . $info->description . '</td></tr>';
+                //$content .= '将原有商品描述：（' . $oldDescription . '）更新为：（' . $info->description . '）。';
+            }
+            $content .= '</<table>';
+            //发布任务
+            if(strip_tags($content) && $sendee){
+                Goodssku::taskSave($title,$content,$sendee);
+            }
 
             $sub_cate = $updata['OaGoods']['subCate'];
-
             try {
                 $cateModel = GoodsCats::find()->where(['nid' => $sub_cate])->one();
             }

@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%oa_goodssku}}".
@@ -39,8 +40,8 @@ class Goodssku extends \yii\db\ActiveRecord
         return [
 //            [['pid'], 'required'],
             [['pid'], 'integer'],
-            [['sku', 'property1', 'property2', 'property3', 'memo1', 'memo2', 'memo3', 'memo4','CostPrice', 'Weight', 'RetailPrice','linkurl'], 'string'],
-            [['linkurl','stockNum'],'safe'],
+            [['sku', 'property1', 'property2', 'property3', 'memo1', 'memo2', 'memo3', 'memo4', 'CostPrice', 'Weight', 'RetailPrice', 'linkurl'], 'string'],
+            [['linkurl', 'stockNum'], 'safe'],
         ];
     }
 
@@ -66,4 +67,70 @@ class Goodssku extends \yii\db\ActiveRecord
             'stockNum' => '备货数量',
         ];
     }
+
+    /**
+     * 获取任务接收人
+     * @inheritdoc
+     */
+    public static function getTaskSendee($id, $unit)
+    {
+        $wishSendee = $ebaySendee = [];
+        $model = OaGoodsinfo::findOne(['pid' => $id]);
+        if (stripos($model['completeStatus'], "Wish已完善") !== false) {
+            if($unit == '图片地址修改'){
+                $wishSql = "SELECT user_id FROM auth_assignment a ".
+                    " LEFT JOIN [user] u ON a.user_id=u.id WHERE ISNULL(u.username,'')<>'' AND ".
+                    " item_name IN ('产品开发','产品开发2','Wish销售','SMT销售')";
+            }else{
+                $wishSql = "SELECT user_id FROM auth_assignment a ".
+                    " LEFT JOIN [user] u ON a.user_id=u.id WHERE ISNULL(u.username,'')<>'' AND ".
+                    " item_name IN ('Wish销售','SMT销售')";
+            }
+            $wishSendee = Yii::$app->db->createCommand($wishSql)->queryAll();
+        }
+        if (stripos($model['completeStatus'], "eBay已完善") !== false) {
+            $wishSql = "SELECT user_id FROM auth_assignment a ".
+                " LEFT JOIN [user] u ON a.user_id=u.id WHERE ISNULL(u.username,'')<>'' AND item_name = 'eBay销售'";
+            $ebaySendee = Yii::$app->db->createCommand($wishSql)->queryAll();
+        }
+        $sendee = array_merge($wishSendee, $ebaySendee);
+        return $sendee;
+    }
+
+    /**varv
+     * 保存任务内容
+     * @inheritdoc
+     */
+    public static function taskSave($title, $content, $sendee)
+    {
+        $connection = Yii::$app->db;
+        $import_trans = $connection->beginTransaction();
+        try {
+            $model = new OaTask();
+            $model->title = $title;
+            $model->description = $content;
+            $model->sendee = 1;//随意赋值，不能为空
+            $model->userid = Yii::$app->user->identity->getId();
+            $model->createdate = date('Y-m-d H:i:s');
+            $res = $model->save();
+            if (!$res) {
+                throw new \Exception('任务发起失败!');
+            }
+            //保存接收人
+            foreach ($sendee as $value) {
+                $sendModel = new OaTaskSendee();
+                $sendModel->userid = $value['user_id'];
+                $sendModel->taskid = $model->taskid;
+                $ret = $sendModel->save();
+                if (!$ret) {
+                    throw new \Exception('任务发起失败!');
+                }
+            }
+            $import_trans->commit();
+        } catch (\Exception $e) {
+            $import_trans->rollBack();
+        }
+    }
+
+
 }

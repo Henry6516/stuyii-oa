@@ -31,10 +31,9 @@ $callback = function ($menu) {
     $items && $return['items'] = $items;
     return $return;
 };
-
 //注册JS 为每个模块加数量
 $JS = <<< JS
- //找到产品推荐模块并追加<span>
+    //找到产品推荐模块并追加<span>
     $("a span:contains('产品推荐')").after('<sup class="label label-info">{$status_map["产品推荐"]}</sup>');
     $("a span:contains('正向开发')").after('<sup class="label label-warning">{$status_map["正向开发"]}</sup>');
     $("a span:contains('逆向开发')").after('<sup class="label label-success">{$status_map["逆向开发"]}</sup>');
@@ -45,24 +44,17 @@ $JS = <<< JS
     $("a span:contains('图片信息')").after('<sup class="label label-warning">{$status_map["图片信息"]}</sup>');
     $("a span:contains('平台信息')").after('<sup class="label label-success">{$status_map["平台信息"]}</sup>');
     $("a span:contains('产品中心')").after('<sup class="label label-info">{$status_map["产品中心"]}</sup>');
-    $("a span:contains('任务中心')").after('<sup class="label label-info">{$status_map["任务中心"]}</sup>');
-
+    if({$status_map["任务中心"]}){
+        $("a span:contains('任务中心')").after('<sup class="label label-info">{$status_map["任务中心"]}</sup>');
+    }
 JS;
 $this->registerJs($JS);
 ?>
 <aside class="main-sidebar">
-
     <section class="sidebar">
-
-
-        <?= dmstr\widgets\Menu::widget(
-            [
-
-                'options' => ['class' => 'sidebar-menu'],
-                'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback),
-            ]
-        ) ?>
-
+        <?= dmstr\widgets\Menu::widget([
+            'options' => ['class' => 'sidebar-menu'],
+            'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback),
+        ]) ?>
     </section>
-
 </aside>

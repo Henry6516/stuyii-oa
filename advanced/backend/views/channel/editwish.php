@@ -83,7 +83,7 @@ if (empty($sku->randomKeywords)) {
         <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
         <button class="btn btn-success export" type="button">导出ibay模版</button>
         <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
-        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>
+<!--        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
     </div>
     <div class="blockTitle">
         <span>基本信息</span>
@@ -244,7 +244,7 @@ if (empty($sku->randomKeywords)) {
     <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
     <button class="btn btn-success export" type="button">导出ibay模版</button>
     <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
-    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>
+<!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
 
