@@ -135,7 +135,7 @@ class OaDataMineController extends Controller
             if($job_model->save()){
                 $job_id = $job_model->id;
                 $redis = Yii::$app->redis;
-                $redis->set($job_id, $pro_id);
+                $redis->lpush('job_list',$job_id.','.$pro_id);
                 $msg = "任务已添加到队列！";
             }
             else {

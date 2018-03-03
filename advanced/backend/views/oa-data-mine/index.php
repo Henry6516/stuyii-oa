@@ -4,7 +4,8 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use \kartik\form\ActiveForm;
-
+use yii\widgets\Pjax;
+use \yii\bootstrap\Tabs;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OaDataMineSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,7 +16,7 @@ $createJobUrl = URl::toRoute('create-job')
 ?>
 <div class="oa-data-mine-index">
 
-    <?= \yii\bootstrap\Tabs::widget([
+    <?= Tabs::widget([
         'items' => [
             [
                 'label' => 'Joom',
@@ -39,13 +40,13 @@ $createJobUrl = URl::toRoute('create-job')
 
         ],
     ]); ?>
-
     <div class="row" style="margin: 1%">
         <?php $form = ActiveForm::begin([
             'action' => $createJobUrl,
             'method' => 'post',
             'id' => 'create-job',
             'enableAjaxValidation' => true,
+            'options' => ['data-pjax' => true ],
         ]); ?>
 
     <div class="col-lg-4">
@@ -62,6 +63,9 @@ $createJobUrl = URl::toRoute('create-job')
     </div><!-- /.col-lg-6 -->
         <?php ActiveForm::end(); ?>
 </div><!-- /.row -->
+
+
+    <?php Pjax::begin(['id' => 'job-table']) ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -76,11 +80,14 @@ $createJobUrl = URl::toRoute('create-job')
             'updateTime',
         ],
     ]); ?>
-
+    <?php Pjax::end() ?>
 </div>
+
 <?php
 $js = <<< JS
+
 $('form#create-job').on('beforeSubmit', function() {
+    
     if($('#pro-id').val()===''){
         alert('商品编号不可为空！');
         return false
@@ -89,16 +96,24 @@ $('form#create-job').on('beforeSubmit', function() {
     $.ajax({
     url:this_form.attr('action'),
     data:this_form.serialize(),
-    type:'post',
+    type:'POST',
     success:function(res) {
       alert(res);
-      location.reload();
+      // location.reload();
+      $.pjax.reload({container:"#job-table",timeout: false});
     }
     });
-}).on('submit', function(e){
+}).on('submit',function(e) {
     e.preventDefault();
 });
 
+//异步加载表格
+
+// $("document").ready(function(){ 
+//         $("#job-form").on("pjax:end", function() {
+//             $.pjax.reload({container:"#job-table"});  //Reload GridView
+//         });
+//     });
 JS;
 $this->registerJs($js);
 ?>
