@@ -76,26 +76,32 @@ class ProductPerformController extends \yii\web\Controller
      * 根据登录人员身份获取开发员列表
      */
     public function getDevList(){
-        /*$username = Yii::$app->user->identity->username;
-        $username = '韩珍';
-        $res = Yii::$app->db->createCommand("select mid from Y_manger WHERE manger='$username'")->queryAll();
-        if($res){
-            $mangerid =$res[0]['mid'];
-            $sql ="select DISTINCT u.username from Y_role r
-                LEFT JOIN Y_user_role ur on ur.roleid=r.roleid
-                LEFT JOIN Y_user u ON u.uid=ur.uid
-                WHERE r.rolename='开发员' AND mangerid='$mangerid'";
-        }elseif($username=='admin'){*/
-            $sql = "select u.username from Y_role r
-                    LEFT JOIN Y_user_role ur on ur.roleid=r.roleid
-                    LEFT JOIN Y_user u ON u.uid=ur.uid
-                    WHERE rolename='开发员' ";
-        /*}else{
-            $sql ="select r.rolename, u.username from Y_role r
-                    LEFT JOIN Y_user_role ur on ur.roleid=r.roleid
-                    LEFT JOIN Y_user u ON u.uid=ur.uid
-                    WHERE rolename='开发员' AND u.username='$username'";
-        }*/
+        $username = Yii::$app->user->identity->username;
+        $res = Yii::$app->db->createCommand("select department,leaderName,isLeader,groupMaster,isGroupMaster from [user] WHERE username='$username'")->queryOne();
+        $role = "'产品开发','产品开发2'";
+        if($res['isLeader']){
+            $manger_username =$res['leaderName'];
+            if($username == '宋现中' || $username == '尚显贝'){
+                $role = "'产品开发','产品开发','部门主管'";
+            }
+            $sql ="select DISTINCT u.username from auth_assignment aa
+                LEFT JOIN [user] u on u.id=aa.user_id
+                WHERE aa.item_name IN (" . $role . ") AND ISNULL(u.username,'')<>'' AND u.leaderName='$manger_username'";
+        }elseif($res['isGroupMaster']){
+            $master_username =$res['groupMaster'];
+            $sql ="select DISTINCT u.username from auth_assignment aa
+                LEFT JOIN [user] u on u.id=aa.user_id
+                WHERE aa.item_name IN (" . $role . ") AND ISNULL(u.username,'')<>'' AND u.groupMaster='$master_username'";
+        }elseif($username=='admin'){
+            $sql ="select DISTINCT u.username from auth_assignment aa
+                LEFT JOIN [user] u on u.id=aa.user_id
+                WHERE (aa.item_name IN (" . $role . ") AND ISNULL(u.username,'')<>'') OR 
+                (aa.item_name='部门主管' AND ISNULL(u.username,'') IN ('宋现中','尚显贝'))";
+        }else{
+            $sql ="select DISTINCT u.username from auth_assignment aa
+                LEFT JOIN [user] u on u.id=aa.user_id
+                WHERE aa.item_name IN (" . $role . ") AND ISNULL(u.username,'')='$username'";
+        }
         $developer= Yii::$app->db->createCommand($sql)->queryAll();
         foreach($developer as $v){
             $dev[$v['username']]  = $v['username'];
