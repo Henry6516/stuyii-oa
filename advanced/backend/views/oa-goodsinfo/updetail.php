@@ -823,7 +823,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 // async: false,    
                 success: function(data) {
                     alert(data);
-                    location.reload();
+                    //location.reload();
                 }
             });
     });

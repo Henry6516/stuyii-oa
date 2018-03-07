@@ -97,6 +97,37 @@ class Goodssku extends \yii\db\ActiveRecord
         return $sendee;
     }
 
+    /**
+     * 获取商品片吗或描述修改日志
+     * @inheritdoc
+     */
+    public static function getGoodsAttrLog($id)
+    {
+        $list = OaTaskAttributeLog::find()->where(['pid' => $id])->orderBy('createtime ASC')->asArray()->all();
+        $times = count($list);//修改记录数
+        $str = '';
+        if($times > 1){
+            $first = $list[0];
+            $last = end($list);
+            //print_r($first);
+            //print_r($last);exit;
+            if($first['oldGoodsCode'] != $last['GoodsCode']){
+                $str .= '<tr><td>修改商品编码</td><td>原商品编码:'. $first['oldGoodsCode'] .'</td><td>修改后的商品编码:'. $last['GoodsCode'] .'</td></tr>';
+            }
+            if($first['oldDescription'] != $last['description']){
+                $str .= '<tr><td>修改商品描述</td><td>原商品描述:'. $first['oldDescription'] .'</td><td>修改后的商品描述:'. $last['description'] .'</td></tr>';
+            }
+        }elseif($times == 1){
+            if($list[0]['oldGoodsCode'] != $list[0]['GoodsCode']){
+                $str .= '<tr><td>修改商品编码</td><td>原商品编码:'. $list[0]['oldGoodsCode'] .'</td><td>修改后的商品编码:'. $list[0]['GoodsCode'] .'</td></tr>';
+            }
+            if($list[0]['oldDescription'] != $list[0]['description']){
+                $str .= '<tr><td></td>修改商品描述<td>原商品描述:'. $list[0]['oldDescription'] .'</td><td>修改后的商品描述:'. $list[0]['description'] .'</td></tr>';
+            }
+        }
+        return $str;
+    }
+
     /**varv
      * 保存任务内容
      * @inheritdoc

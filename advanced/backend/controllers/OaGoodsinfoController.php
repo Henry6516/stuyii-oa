@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\OaGoods;
 use backend\models\OaSysRules;
+use backend\models\OaTaskAttributeLog;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -115,9 +116,8 @@ class OaGoodsinfoController extends Controller
 
     public function actionUpdate($id){
         //任务属性初始化
-        $title = '商品基本信息修改';
-        $content = '<table>';
-        $sendee = Goodssku::getTaskSendee($id, '基本信息修改');
+        $goodsCode = '';
+        $content = '';
 
         $updata = $_POST;
         $info = OaGoodsinfo::findOne($id);
@@ -129,6 +129,7 @@ class OaGoodsinfoController extends Controller
         if (!$info) {
             throw new NotFoundHttpException("The product was not found.");
         }
+        //获取修改前的记录
         $oldGoodsCode = $info->GoodsCode;
         $oldDescription = $info->description;
 
@@ -205,17 +206,22 @@ class OaGoodsinfoController extends Controller
             $info->save(false);
             //判断商品编码修改前后是否一致？
             if($oldGoodsCode != $info->GoodsCode){
-                $content .= '<tr><td>原有商品编码：' . $oldGoodsCode . '</td><td>修改后商品编码为：' . $info->GoodsCode . '</td></tr>';
+                $goodsCode = $info->GoodsCode;
             }
             //判断商品描述修改前后是否一致？
             if($oldDescription != $info->description){
-                $content .= '<tr><td>原有商品描述：' . $oldDescription . '</td><td>修改后商品描述为：' . $info->description . '</td></tr>';
-                //$content .= '将原有商品描述：（' . $oldDescription . '）更新为：（' . $info->description . '）。';
+                $content = $info->description;
             }
-            $content .= '</<table>';
-            //发布任务
-            if(strip_tags($content) && $sendee){
-                Goodssku::taskSave($title,$content,$sendee);
+            //保存商品编码或描述的修改记录
+            if($content || $goodsCode){
+                $logModel = new OaTaskAttributeLog();
+                $logModel->pid = $id;
+                $logModel->GoodsCode = $goodsCode;
+                $logModel->oldGoodsCode = $goodsCode ? $oldGoodsCode : '';
+                $logModel->oldDescription = $content ? $oldDescription : '';
+                $logModel->description = $content;
+                $logModel->createtime = date('Y-m-d H:i:s');
+                $logModel->save();
             }
 
             $sub_cate = $updata['OaGoods']['subCate'];
