@@ -146,7 +146,7 @@ class OaDataMineController extends Controller
         catch(IntegrityException $why){
             $msg = "该商品已采集过，不可重复采集！";
         }
-        return $msg;
+        return json_encode(['msg' =>$msg]);
     }
 
     /**

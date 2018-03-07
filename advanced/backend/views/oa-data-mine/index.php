@@ -95,11 +95,12 @@ $('form#create-job').on('beforeSubmit', function() {
     var this_form = $(this);
     $.ajax({
     url:this_form.attr('action'),
+    dataType: 'json',
     data:this_form.serialize(),
     type:'POST',
     success:function(res) {
-      alert(res);
-      // location.reload();
+        var msg = parseJSON(res)['msg']; 
+      alert(msg);
       $.pjax.reload({container:"#job-table",timeout: false});
     }
     });
@@ -107,13 +108,7 @@ $('form#create-job').on('beforeSubmit', function() {
     e.preventDefault();
 });
 
-//异步加载表格
 
-// $("document").ready(function(){ 
-//         $("#job-form").on("pjax:end", function() {
-//             $.pjax.reload({container:"#job-table"});  //Reload GridView
-//         });
-//     });
 JS;
 $this->registerJs($js);
 ?>
