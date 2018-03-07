@@ -99,7 +99,7 @@ $('form#create-job').on('beforeSubmit', function() {
     data:this_form.serialize(),
     type:'POST',
     success:function(res) {
-        var msg = $.parseJSON(res)['msg']; 
+        var msg = res['msg']; 
       alert(msg);
       $.pjax.reload({container:"#job-table",timeout: false});
     }
