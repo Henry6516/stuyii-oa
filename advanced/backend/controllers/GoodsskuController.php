@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\OaGoods;
+use backend\models\OaTaskAttributeLog;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -178,6 +179,9 @@ class GoodsskuController extends Controller
                     }
                     $info->save(false);
 
+                    //判断属新信息修改(商品编码或描述)
+                    $content .= Goodssku::getGoodsAttrLog($pid);
+
                     //保存SKU信息
                     foreach ($skuRows as $row_key => $row_value) {
                         $row_value['pid'] = intval($pid); //pid传进来
@@ -189,8 +193,6 @@ class GoodsskuController extends Controller
                             $_model->setAttributes($row_value, true); //逐行入库
                             $_model->save(false);
 
-                            /*$content .= '<tr><td>添加新的SKU为：' + $row_value['sku'] + '</td><td>成本价为：' . $row_value['CostPrice'] . '</td>' .
-                                        '<td>重量为：' . $row_value['Weight'] . '</td><td>零售价为：' . $row_value['RetailPrice'] . '</td></tr>';*/
                             $content .= '<tr>添加新的SKU为：' . $row_value['sku'] .  '，成本价为：' . $row_value['CostPrice'] .
                                 '，重量为：'.$row_value['Weight'] . '，零售价为：'.$row_value['RetailPrice'] . '。</tr>';
                         } //更新行
@@ -313,6 +315,10 @@ class GoodsskuController extends Controller
                 //发布任务
                 if(strip_tags($content) && $sendee){
                     Goodssku::taskSave($title,$content,$sendee);
+                    //属性信息修改并发任务后,删除该商品属性信息修改的记录
+                    if ($type == 'goods-info') {
+                        OaTaskAttributeLog::deleteAll(['pid' => $pid]);
+                    }
                 }
             } catch (Exception  $e) {
                 echo $e;
