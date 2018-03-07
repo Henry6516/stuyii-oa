@@ -122,7 +122,7 @@ class Goodssku extends \yii\db\ActiveRecord
                 $str .= '<tr><td>修改商品编码</td><td>原商品编码:'. $list[0]['oldGoodsCode'] .'</td><td>修改后的商品编码:'. $list[0]['GoodsCode'] .'</td></tr>';
             }
             if($list[0]['oldDescription'] != $list[0]['description']){
-                $str .= '<tr><td></td>修改商品描述<td>原商品描述:'. $list[0]['oldDescription'] .'</td><td>修改后的商品描述:'. $list[0]['description'] .'</td></tr>';
+                $str .= '<tr><td>修改商品描述</td><td>原商品描述:'. $list[0]['oldDescription'] .'</td><td>修改后的商品描述:'. $list[0]['description'] .'</td></tr>';
             }
         }
         return $str;
