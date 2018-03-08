@@ -101,6 +101,11 @@ class GoodsskuController extends Controller
                         $info->isVar = '否';
                     }
                     $info->save(false);
+
+                    //修改SKU=sid
+                    $skusql ='UPDATE oa_goodssku SET sku=sid WHERE pid='.$pid;
+                    Yii::$app->db->createCommand($skusql)->query();
+
                     foreach ($skuRows as $row_key => $row_value) {
                         $row_value['pid'] = intval($pid); //pid传进来
                         $sid = $row_key;
