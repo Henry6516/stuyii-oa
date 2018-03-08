@@ -248,7 +248,7 @@ class OaGoodsinfoController extends Controller
         }else{
             $data = $this->actionSelectParam();
             $dataProvider = new ActiveDataProvider([
-                'query' => Goodssku::find()->where(['pid'=>$id]),
+                'query' => Goodssku::find()->where(['pid'=>$id])->orderBy('sku ASC'),
                 'pagination' => [
                     'pageSize' => 150,
                 ],
