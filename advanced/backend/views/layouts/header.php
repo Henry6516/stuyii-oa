@@ -244,7 +244,7 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
 <?php
 $js = <<< JS
 
-var ws = new WebSocket("ws://james:8088/");
+var ws = new WebSocket("ws://127.0.0.1:8880/");
  
 ws.onopen = function(evt) { 
   console.log("Connection open ..."); 
