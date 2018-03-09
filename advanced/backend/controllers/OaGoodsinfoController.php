@@ -281,14 +281,13 @@ class OaGoodsinfoController extends Controller
      */
     public function actionDelete($id)
     {
-        $sql = "select isnull(completeStatus,'') as completeStatus from oa_goodsinfo where pid= :id";
+        $model = OaGoodsinfo::findOne(['pid' => $id]);
         try{
-            $complete_status_query = OaGoodsinfo::findBySql($sql,[":id"=>$id])->one();
-            $complete_status = $complete_status_query->completeStatus;
-            if(empty($complete_status)){
+            if($model && empty($model->completeStatus)){
                 $this->findModel($id)->delete();  //OaGoodsinfo信息删除
                 OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
                 GoodsSKU::deleteAll(['pid' => $id]);//Goodssku信息删除
+
                 OaTemplates::deleteAll(['infoid' => $id]);//eBay平台信息删除
                 OaTemplatesVar::deleteAll(['pid' => $id]);//eBay平台SKU信息删除
                 OaWishgoods::deleteAll(['infoid' => $id]);//Wish平台信息删除
