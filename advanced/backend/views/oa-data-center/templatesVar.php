@@ -109,9 +109,10 @@ $js = <<< JS
        var panel = $('.kv-panel-pager');
        panel.append('<div class="radio"><span class="assoc_pic_key">图片关联： ');
        var picOptions = JSON.parse('{$pictureOptions}');
+       console.log(picOptions);
        $(picOptions).each(function(index,ele) {
        if( index>=1){
-            if(ele =='{$pictureKey}'){
+            if(ele ==='{$pictureKey}'){
             panel.append('<label class="radio-inline"><input class="{$pictureKey}" name="picKey" type="radio" checked="true" value="{$pictureKey}">{$pictureKey}</label>');    
          }
             else{
