@@ -5,6 +5,10 @@ namespace backend\controllers;
 use backend\models\OaGoods;
 use backend\models\OaSysRules;
 use backend\models\OaTaskAttributeLog;
+use backend\models\OaTemplates;
+use backend\models\OaTemplatesVar;
+use backend\models\OaWishgoods;
+use backend\models\OaWishgoodssku;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -282,9 +286,13 @@ class OaGoodsinfoController extends Controller
             $complete_status_query = OaGoodsinfo::findBySql($sql,[":id"=>$id])->one();
             $complete_status = $complete_status_query->completeStatus;
             if(empty($complete_status)){
-                $this->findModel($id)->delete();  //OaGoodsinfo
-                OaGoods::deleteAll(['nid' => $id]);
-                GoodsSKU::deleteAll(['pid' => $id]);
+                $this->findModel($id)->delete();  //OaGoodsinfo信息删除
+                OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
+                GoodsSKU::deleteAll(['pid' => $id]);//Goodssku信息删除
+                OaTemplates::deleteAll(['infoid' => $id]);//eBay平台信息删除
+                OaTemplatesVar::deleteAll(['pid' => $id]);//eBay平台SKU信息删除
+                OaWishgoods::deleteAll(['infoid' => $id]);//Wish平台信息删除
+                OaWishgoodssku::deleteAll(['pid' => $id]);//Wish平台SKU信息删除
             }
         }
         catch (Exception $e){

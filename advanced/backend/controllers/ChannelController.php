@@ -3,6 +3,7 @@ namespace backend\controllers;
 use backend\models\Goodssku;
 use backend\models\OaGoods;
 use backend\models\OaGoodsinfo;
+use backend\models\OaWishgoodssku;
 use backend\unitools\PHPExcelTools;
 use Yii;
 use backend\models\Channel;
@@ -380,9 +381,15 @@ class ChannelController extends Controller
         $complete_status = $complete_status_query->completeStatus;
         if(empty($complete_status)){
             try{
-                $this->findModel($id)->delete();
-                OaGoods::deleteAll(['nid' => $id]);
-                Goodssku::deleteAll(['pid' => $id]);
+                $this->findModel($id)->delete();//OaGoodsinfo信息删除
+                OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
+                Goodssku::deleteAll(['pid' => $id]);//Goodssku信息删除
+
+                OaTemplates::deleteAll(['infoid' => $id]);//eBay平台信息删除
+                OaTemplatesVar::deleteAll(['pid' => $id]);//eBay平台SKU信息删除
+                OaWishgoods::deleteAll(['infoid' => $id]);//Wish平台信息删除
+                OaWishgoodssku::deleteAll(['pid' => $id]);//Wish平台SKU信息删除
+
             }
             catch (Exception $e){
             }
