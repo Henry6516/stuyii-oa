@@ -3,31 +3,29 @@
 namespace console\controllers;
 
 
+use backend\models\OaGoods;
+use backend\models\User;
+use console\models\Send;
 use yii\console\Controller;
 use Yii;
-use yii\db\Exception;
-
 class SiteController extends Controller
 {
 
     /**
-     * 查询产品状态，更新产品备货天数
-     * @return mixedd
+     * 查询管理员待审核商品数并发邮件
+     * 访问方法: php yii site/index parameter
+     * @return mixed
      */
     public function actionIndex()
     {
-        //更新属性信息
-        $sql = "P";
-        $connection = Yii::$app->db;
-        $import_trans = $connection->beginTransaction();
-        try{
-            $connection->createCommand($sql)->execute();
-            $import_trans->commit();
+        $sql = "P_oa_checkNumbers";
+        $leader = Yii::$app->db->createCommand($sql)->queryAll();
+        foreach ($leader as $v){
+            if($v['email'] && $v['num']){
+                Send::sendEmail($v['username'],$v['email'],$v['num']);
+            }
         }
-        catch (Exception $e) {
-            $import_trans->rollBack();
-        }
-        return '';
+        exit;
     }
 
 

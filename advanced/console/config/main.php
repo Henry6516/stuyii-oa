@@ -26,6 +26,23 @@ return [
                 ],
             ],
         ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' =>false,//这句一定有，false发送邮件，true只是生成邮件在runtime文件夹下，不发邮件
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.qq.com',  //每种邮箱的host配置不一样
+                'username' => '595551242@qq.com',
+                'password' => 'fcnhttkdn982651',
+                'port' => '25',
+                'encryption' => 'tls',
+
+            ],
+            'messageConfig'=>[
+                'charset'=>'UTF-8',
+                'from'=>['595551242@qq.com'=>'admin']
+            ],
+        ],
     ],
     'params' => $params,
 ];
