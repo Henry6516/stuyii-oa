@@ -217,14 +217,17 @@ class OaGoodsinfoController extends Controller
                 $content = $info->description;
             }
             //保存商品编码或描述的修改记录
-            if($content || $goodsCode){
-                $logModel = new OaTaskAttributeLog();
-                $logModel->pid = $id;
+            if(($content || $goodsCode) && (stripos($info->completeStatus,'Wish已完善') || stripos($info->completeStatus,'eBay已完善'))){
+                $logModel = OaTaskAttributeLog::findOne(['pid' => $id]);
+                if(empty($logModel)){
+                    $logModel = new OaTaskAttributeLog();
+                    $logModel->pid = $id;
+                    $logModel->oldGoodsCode = $goodsCode ? $oldGoodsCode : '';
+                    $logModel->oldDescription = $content ? $oldDescription : '';
+                    $logModel->createtime = date('Y-m-d H:i:s');
+                }
                 $logModel->GoodsCode = $goodsCode;
-                $logModel->oldGoodsCode = $goodsCode ? $oldGoodsCode : '';
-                $logModel->oldDescription = $content ? $oldDescription : '';
                 $logModel->description = $content;
-                $logModel->createtime = date('Y-m-d H:i:s');
                 $logModel->save();
             }
 
