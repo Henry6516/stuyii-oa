@@ -217,7 +217,8 @@ class OaGoodsinfoController extends Controller
                 $content = $info->description;
             }
             //保存商品编码或描述的修改记录
-            if(($content || $goodsCode) && (stripos($info->completeStatus,'Wish已完善') || stripos($info->completeStatus,'eBay已完善'))){
+            //var_dump(stripos($info->completeStatus,'eBay已完善'));exit;
+            if(($content || $goodsCode) && (stripos($info->completeStatus,'Wish已完善') !== false || stripos($info->completeStatus,'eBay已完善' !== false))){
                 $logModel = OaTaskAttributeLog::findOne(['pid' => $id]);
                 if(empty($logModel)){
                     $logModel = new OaTaskAttributeLog();
@@ -230,7 +231,6 @@ class OaGoodsinfoController extends Controller
                 $logModel->description = $content;
                 $logModel->save();
             }
-
             $sub_cate = $updata['OaGoods']['subCate'];
             try {
                 $cateModel = GoodsCats::find()->where(['nid' => $sub_cate])->one();
