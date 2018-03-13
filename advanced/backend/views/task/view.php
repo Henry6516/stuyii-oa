@@ -35,7 +35,11 @@ $(".complete").on('click',function() {
 JS;
 $this->registerJs($js);
 ?>
-
+<style>
+    td {
+        border: #9B9C94 1px solid
+    }
+</style>
 <div class="oa-task-view" style="margin-top: 20px">
     <div class="row">
         <div class="col-xs-12">
