@@ -157,7 +157,7 @@ $this->registerJs($js);
 
         <div class="form-group">
             <label class="control-label col-md-1">内容:</label>
-            <div class="col-md-6">
+            <div class="col-md-10">
                 <script id="container" name="OaTask[description]"
                         type="text/plain"><?php echo $model->description; ?></script>
             </div>

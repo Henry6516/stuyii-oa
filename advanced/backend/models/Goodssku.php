@@ -115,14 +115,14 @@ class Goodssku extends \yii\db\ActiveRecord
                 $str .= '<tr><td>修改商品编码</td><td>原商品编码:'. $first['oldGoodsCode'] .'</td><td>修改后的商品编码:'. $last['GoodsCode'] .'</td></tr>';
             }
             if($first['oldDescription'] != $last['description']){
-                $str .= '<tr><td>修改商品描述</td><td>原商品描述:'. $first['oldDescription'] .'</td><td>修改后的商品描述:'. $last['description'] .'</td></tr>';
+                $str .= '<tr><td>修改商品描述</td><td>原商品描述:<br>'. nl2br($first['oldDescription']) .'</td><td>修改后的商品描述:<br>'. nl2br($last['description']) .'</td></tr>';
             }
         }elseif($times == 1){
             if($list[0]['oldGoodsCode'] != $list[0]['GoodsCode']){
                 $str .= '<tr><td>修改商品编码</td><td>原商品编码:'. $list[0]['oldGoodsCode'] .'</td><td>修改后的商品编码:'. $list[0]['GoodsCode'] .'</td></tr>';
             }
             if($list[0]['oldDescription'] != $list[0]['description']){
-                $str .= '<tr><td>修改商品描述</td><td>原商品描述:'. $list[0]['oldDescription'] .'</td><td>修改后的商品描述:'. $list[0]['description'] .'</td></tr>';
+                $str .= '<tr><td>修改商品描述</td><td>原商品描述:<br>'. nl2br($list[0]['oldDescription']) .'</td><td>修改后的商品描述:<br>'. nl2br($list[0]['description']) .'</td></tr>';
             }
         }
         return $str;

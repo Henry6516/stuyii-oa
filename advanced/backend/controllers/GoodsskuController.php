@@ -172,11 +172,13 @@ class GoodsskuController extends Controller
             try {
                 if ($type == 'goods-info') {
                     $sendee = Goodssku::getTaskSendee($pid, '属性信息修改');//判断产品完成状态并返回任务发送人
-                    $title = '属性信息修改';//任务发标题
 
                     $skuRows = $request->post()['Goodssku'];
                     $count = count($skuRows);
                     $info = OaGoodsinfo::find()->where(['pid' => $pid])->one();
+
+                    $title = $info['GoodsCode'].'-属性信息修改';//任务发标题
+
                     if ($count > 1) {
                         $info->isVar = '是';
                     } else {
@@ -272,8 +274,9 @@ class GoodsskuController extends Controller
                 }
 
                 if ($type == 'pic-info') {
+                    $goods_model = OaGoodsinfo::find()->where(['pid' => $pid])->one();
                     $sendee = Goodssku::getTaskSendee($pid, '图片地址修改');//判断产品完成状态并返回任务发送人
-                    $title = '属性图修改';//任务发标题
+                    $title = $goods_model['GoodsCode'].'-属性图修改';//任务发标题
                     $Rows = $request->post()['Goodssku'];
                     foreach ($Rows as $row_key => $row_value) {
                         $sid = $row_key;
@@ -283,7 +286,7 @@ class GoodsskuController extends Controller
                         $update_model->save(false);
                         //判断地址修改前后是否一致？
                         if($oldLinkurl != $update_model->linkurl){
-                            $content .= '<tr><td>SKU:' . $update_model['sku'] .  '</td><td>原有图片链接：' . $oldLinkurl . '</td><td>修改后的图片链接:'.$row_value['linkurl'].'</td></tr>';
+                            $content .= '<tr><td>SKU:' . $update_model['sku'] .  ' </td><td>原有图片链接：' . $oldLinkurl . ' </td><td>修改后的图片链接:'.$row_value['linkurl'].'</td></tr>';
                         }
                     }
                     //图片验空
@@ -300,7 +303,6 @@ class GoodsskuController extends Controller
                             $connection->createCommand($sql_wish)->execute();
                             $connection->createCommand($sql_ebay)->execute();
                             //更新商品状态
-                            $goods_model = OaGoodsinfo::find()->where(['pid' => $pid])->one();
                             $goods_model->picStatus = '已完善';
                             $goods_model->picCompleteTime = date('Y-m-d H:i:s', time());
                             $goods_model->updateTime = strftime('%F %T');
