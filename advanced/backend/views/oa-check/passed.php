@@ -139,6 +139,10 @@ function centerFormat($name) {
         'responsive'=>true,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             [
                 'class' => 'yii\grid\CheckboxColumn',

@@ -242,6 +242,10 @@ function centerFormat($name) {
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'oa-check',
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             [
                 'class' => 'yii\grid\CheckboxColumn',
@@ -259,7 +263,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'backward-delete',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', 'javascript:void(0)', $options);
                     },
                     'view' => function ($url, $model, $key) {
                         $options = [

@@ -5,7 +5,7 @@ use kartik\grid\GridView;
 use yii\helpers\Url;
 use kartik\dialog\Dialog;
 use \backend\models\GoodsCats;
-
+use \yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\OaGoodsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -246,12 +246,17 @@ function centerFormat($name)
         <input type="file" id="import" name="import" style="display: none">
     </p>
 
+    <?php //Pjax::begin(['id' => 'goods-table']) ?>
     <?= GridView::widget([
         'bootstrap' => true,
         'responsive' => true,
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'oa-goods',
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn',],
             ['class' => 'kartik\grid\SerialColumn'],
@@ -259,6 +264,7 @@ function centerFormat($name)
             [
                 'class' => 'kartik\grid\ActionColumn',
                 'template' => '{view} {update} {delete} {heart}',
+
                 'buttons' => [
                     'delete' => function ($url, $model, $key) {
                         $options = [
@@ -266,8 +272,9 @@ function centerFormat($name)
                             'aria-label' => '删除',
                             'data-id' => $key,
                             'class' => 'index-delete',
+                            'data-toggle' => 'tooltip'
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', 'javascript:void(0)', $options);
                     },
                     'view' => function ($url, $model, $key) {
                         $options = [
@@ -277,6 +284,7 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'index-view',
+                            'data-toggle' => 'tooltip'
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '#', $options);
                     },
@@ -288,6 +296,7 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'index-update',
+                            'data-toggle' => 'tooltip'
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', '#', $options);
                     },
@@ -299,6 +308,7 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'data-heart',
+                            'data-toggle' => 'tooltip'
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-heart"></span>', '#', $options);
                     }
@@ -394,7 +404,7 @@ function centerFormat($name)
             ],
         ],
     ]); ?>
-
+    <?php //Pjax::end() ?>
     <!--    <script src="/jquery.csv.js"></script>-->
     <script>
         RegExp.escape = function (s) {
