@@ -40,3 +40,7 @@ phpunit.phar
 /advanced/composer.json
 /advanced/composer.lock
 /.gitignore
+/advanced/console/yii.php
+/advanced/console/yii
+/advanced/console/controllers/Test.php
+/advanced/console/controllers/TestController.php
