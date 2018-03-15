@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 
@@ -21,10 +21,14 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('添加eBay账号', "javascript:void(0);", ['title' => 'create', 'data-toggle' => 'modal', 'data-target' => '#index-modal',
             'data-href' => Url::to(['create']), 'class' => 'index-create btn btn-primary']) ?>
     </p>
-    <?php Pjax::begin(); ?>
+    <?php //Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn'],
             ['class' => 'yii\grid\SerialColumn'],
@@ -75,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-    <?php Pjax::end(); ?>
+    <?php //Pjax::end(); ?>
 </div>
 <script>
     window.onload = function (ev) {
