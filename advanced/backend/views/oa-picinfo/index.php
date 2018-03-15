@@ -23,7 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'showPageSummary'=>true,
         'id' => 'picinfo',
-        //'pjax'=>true,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'striped'=>true,
         'responsive'=>true,
         'hover'=>true,

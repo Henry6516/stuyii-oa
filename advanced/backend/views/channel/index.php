@@ -17,7 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        //'pjax'=>true,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'striped'=>true,
         //'responsive'=>true,
         'hover'=>true,

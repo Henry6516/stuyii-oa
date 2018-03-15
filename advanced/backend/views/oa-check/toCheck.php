@@ -224,6 +224,10 @@ function centerFormat($name) {
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'oa-check',
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn',],
             ['class' => 'kartik\grid\SerialColumn'],
@@ -261,7 +265,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'data-fail',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-thumbs-down"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-thumbs-down"></span>', 'javascript:void(0)', $options);
                     },
                     'trash' => function ($url, $model, $key) {
                         $options = [
@@ -272,7 +276,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'data-trash',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-trash"></span>', 'javascript:void(0)', $options);
                     },
                 ],
             ],

@@ -30,7 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'showPageSummary' => true,//显示统计栏，默认为false
         'id' => 'oa-goodsinfo',
-        //'pjax' => true,
+        'pjax' => true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+        ],
         //'floatHeader'=>true,//向下滚动时，标题栏可以fixed，默认为false
         'striped' => true,
         //'responsive' => true,//自适应，默认为true
