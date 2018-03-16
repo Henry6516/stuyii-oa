@@ -101,6 +101,7 @@ $('.index-view').on('click',  function () {
         $('.modal-body').children('div').remove();
         $.get('{$viewUrl}',  { id: $(this).closest('tr').data('key') },
             function (data) {
+            console.log(data);
                 $('.modal-body').html(data);
             }
         );
@@ -284,33 +285,33 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'index-view',
-                            'data-toggle' => 'tooltip'
+                            'type'=>'button',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '', $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
                             'title' => '更新',
                             'aria-label' => '更新',
+                            'type'=>'button',
                             'data-toggle' => 'modal',
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'index-update',
-                            'data-toggle' => 'tooltip'
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', 'javascript:void(0)', $options);
                     },
                     'heart' => function ($url, $model, $key) {
                         $options = [
                             'title' => '认领',
                             'aria-label' => '认领',
+                            //'type'=>'button',
                             'data-toggle' => 'modal',
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'data-heart',
-                            'data-toggle' => 'tooltip'
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-heart"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-heart"></span>', 'javascript:void(0)', $options);
                     }
                 ],
             ],

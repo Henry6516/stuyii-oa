@@ -284,7 +284,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'forward-view',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '', $options);
                     },
                     'update' => function ($url, $model, $key) {
                         $options = [
@@ -295,7 +295,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'forward-update',
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', '', $options);
                     },
                     'approve' => function ($url, $model, $key) {
                         $options = [
@@ -304,7 +304,7 @@ function centerFormat($name) {
                             'data-id' => $key,
                             'class' => 'approve',
                         ];
-                        return Html::a('<span  class="glyphicon  glyphicon-check"></span>', '#', $options);
+                        return Html::a('<span  class="glyphicon  glyphicon-check"></span>', '', $options);
                     }
                 ],
             ],
