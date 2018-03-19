@@ -244,13 +244,13 @@ $task_latest_list = OaTaskSendee::find()->joinWith('task')
 <?php
 $js = <<< JS
 
-var ws = new WebSocket("ws://192.168.0.134:8899/");
- 
+var ws = new WebSocket("ws://192.168.0.134:8809/");
+
 ws.onopen = function(evt) { 
   console.log("Connection open ..."); 
   ws.send("Hello WebSockets!");
 };
- 
+
 ws.onmessage = function(evt) {
   console.log( "Received Message: " + evt.data);
   ele = '<li><a href="#"><i class="fa fa-truck text-red"></i>任务编号：'+ evt.data +' 已采集完毕！</a></li>'
@@ -258,11 +258,14 @@ ws.onmessage = function(evt) {
   var num = $('#notify').children('li').length;
   $('#notify-num').text(num);
 };
- 
+
 ws.onclose = function(evt) {
+    ws.close();
   console.log("Connection closed.");
 };      
- 
+
+
+
 
 JS;
 

@@ -503,13 +503,15 @@ class OaDataCenterController extends Controller
             }
             //Title
             $names = '';
-            while(true){
+            $count = 0 ;
+            while($count< 100){
                 $title = $this->actionNonOrder($data,'eBay');
                 if(!in_array($title,$title_list)||empty($title)){
                     $name = $title;
                     array_push($title_list,$title);
                     break;
                 }
+                ++$count;
             }
 
             $row['Title'] = $name;
@@ -626,7 +628,8 @@ class OaDataCenterController extends Controller
         $title_list = [];
         foreach($suffixAll as $key=>$value){
             //标题关键字
-            while(true){
+            $count = 0;
+            while($count < 100){
                 $title = $this->actionNonOrder($data,'Wish');
                 if(!in_array($title,$title_list)||empty($title)){
                     $name = $title;
@@ -634,6 +637,7 @@ class OaDataCenterController extends Controller
                     break;
 
                 }
+                ++$count;
             }
 
             //价格判断
