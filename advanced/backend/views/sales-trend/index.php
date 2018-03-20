@@ -21,6 +21,8 @@ $this->title = '销售走势';
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!--<link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">-->
     <!-- ECharts单文件引入 标签式单文件引入-->
     <script src="http://echarts.baidu.com/build/dist/echarts-all.js"></script>
     <?php
@@ -31,43 +33,46 @@ $this->title = '销售走势';
     <div class="box-body row">
         <?php $form = ActiveForm::begin([
             'action' => ['sales-trend/index'],
-            'method' => 'get',
-            'options' => ['class' => 'form-inline drp-container form-group col-lg-12'],
+            'method' => 'post',
+            'options' => ['class' => 'form-inline  form-group'],
             'fieldConfig' => [
-                'template' => '{label}<div class="form-group text-right">{input}{error}</div>',
+                //'template' => '<div class=" col-lg-2">{label}{input}{error}</div>',
                 //'labelOptions' => ['class' => 'col-lg-3 control-label'],
                 'inputOptions' => ['class' => 'form-control'],
             ],
         ]); ?>
 
         <?= $form->field($model, 'type', [
-            'template' => '{label}{input}',
+            //'template' => '{label}{input}',
             'options' => ['class' => 'col-lg-2']
         ])->dropDownList(['0' => '按天', '1' => '按月'], ['placeholder' => '类型'])->label('类型:'); ?>
 
         <?= $form->field($model, 'cat', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-3']])->label('商品编码:') ?>
 
+        <div class="col-sm-3">
+            <label for="">账号:</label>
+            <select name="EntryForm[create_range][]" class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
+                <?php
+                foreach ($accountList as $account => $suffix) {
+                    echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+
         <?= $form->field($model, 'order_range', [
             'template' => '{label}{input}{error}',
             //'addon' => ['prepend' => ['content' => '<i class="glyphicon glyphicon-calendar"></i>']],
             'options' => ['class' => 'col-lg-3']
-        ])->widget(DatePicker::classname(), [
+        ])->widget(DateRangePicker::classname(), [
             'pluginOptions' => [
+                'autoUpdateOnInit' => true,
+                'startDate' => date("Y-m-01"),
+                'endDate' => date("Y-m-d"),
                 //'autoclose'=>true,
                 'format' => 'yyyy-mm-dd',
             ]
-        ])->label("<span style = 'color:red'>* 交易开始时间:</span>"); ?>
-
-        <?= $form->field($model, 'create_range', [
-            'template' => '{label}{input}{error}',
-            //'addon' => ['prepend' => ['content' => '<i class="glyphicon glyphicon-calendar"></i>']],
-            'options' => ['class' => 'col-lg-3']
-        ])->widget(DatePicker::classname(), [
-            'pluginOptions' => [
-                'autoclose' => true,
-                'format' => 'yyyy-mm-dd'
-            ]
-        ])->label("<span style = 'color:red'>* 交易结束时间:</span>"); ?>
+        ])->label("<span style = 'color:red'>* 交易时间:</span>"); ?>
 
 
         <div class="">
@@ -186,7 +191,9 @@ $this->title = '销售走势';
         myChart1.setOption(option1);
     }
 </script>
-
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
+<script src="../plugins/jquery/1.12.3/jquery.js"></script>
+<script src="../plugins/bootstrap-select/bootstrap-select.min.js"></script>
 
 
 
