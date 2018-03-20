@@ -51,10 +51,22 @@ $this->title = '销售走势';
 
         <div class="col-sm-3">
             <label for="">账号:</label>
-            <select name="EntryForm[create_range][]" class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
+            <select name="EntryForm[create_range][]" class="selectpicker ebay-chosen-up" multiple
+                    data-actions-box="true" title="--所有账号--">
                 <?php
                 foreach ($accountList as $account => $suffix) {
-                    echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
+                    if($model->create_range){
+                        foreach ($model->create_range as $k => $v) {
+                            if($suffix == $v){
+                                echo '<option class="account-select" value="' . $suffix . '" selected>' . $suffix . '</option>';
+                            }else{
+                                echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
+                            }
+                        }
+                    }else{
+                        echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
+                    }
+
                 }
                 ?>
             </select>
@@ -123,13 +135,14 @@ $this->title = '销售走势';
     var salesVolumeData = '<?php echo json_encode($salesVolumeData);?>';
     char_line('sales', salesData);
     char_line('sales-volume', salesVolumeData);
+
     function char_line(id, row_data) {
         var myChart1 = echarts.init(document.getElementById(id));
         var data = eval("(" + row_data + ")");
-        var salername, value, CreateDate,role;
-        if(id == 'sales'){
+        var salername, value, CreateDate, role;
+        if (id == 'sales') {
             role = '销量(个)';
-        }else if(id == 'sales-volume'){
+        } else if (id == 'sales-volume') {
             role = '销售额($)';
         }
         CreateDate = data.date;
