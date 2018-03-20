@@ -41,7 +41,7 @@ class OaDataMineSearch extends OaDataMine
      */
     public function search($params)
     {
-        $query = OaDataMine::find();
+        $query = OaDataMine::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
