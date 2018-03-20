@@ -18,7 +18,8 @@ class SalesTrendController extends \yii\web\Controller
         $get = Yii::$app->request->post();
         if(isset($get['EntryForm'])){
             $data = $get['EntryForm'];
-            $data['create_range'] = implode(',', $get['EntryForm']['create_range']);
+            $account = isset($get['EntryForm']['create_range'])?:[];
+            $data['create_range'] = implode(',',$account);
             $order = explode(' - ', $data['order_range']);
             $data['order_start'] = $order[0];
             $data['order_end'] = $order[1];
