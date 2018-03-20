@@ -126,7 +126,7 @@ class StockPerformController extends \yii\web\Controller
             $cache->set($sql,$result,2592000);
         }
         //$result = Yii::$app->db->createCommand($sql)->queryAll();
-        //var_dump($result);exit;
+        var_dump($result);exit;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [

@@ -80,7 +80,7 @@ $this->title = '备货产品表现';
                 'value' => function ($model, $key, $index, $widget) {
                     return $model['GoodsCode'];
                 },
-                'group' => true,  // enable grouping
+                //'group' => true,  // enable grouping
                 'pageSummary' => 'Page Summary',
                 'pageSummaryOptions' => ['class' => 'text-right text-warning'],
             ],
