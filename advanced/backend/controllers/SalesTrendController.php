@@ -84,7 +84,10 @@ class SalesTrendController extends \yii\web\Controller
         ];
 
         //获取帐号列表
-        $accountList = $this->getAccountList();
+        $sql = 'SELECT suffix From Y_suffixPingtai ORDER BY suffix';
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res,'suffix','suffix');
+        $accountList = array_unique($list);
 
         return $this->render('index', [
             'model' => $model,
@@ -93,18 +96,5 @@ class SalesTrendController extends \yii\web\Controller
             'accountList' => $accountList
         ]);
     }
-
-
-    public function getAccountList()
-    {
-        $ebay = OaEbaySuffix::find()->asArray()->all();
-        $ebay_account = ArrayHelper::map($ebay,'ebayName','ebaySuffix');
-
-        $wish = WishSuffixDictionary::find()->asArray()->all();
-        $wish_account = ArrayHelper::map($wish,'ShortName','IbaySuffix');
-        $list = $ebay_account + $wish_account;
-        return array_unique($list);
-    }
-
 
 }
