@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 
 use backend\models\EntryForm;
+use backend\models\OaEbaySuffix;
+use backend\models\WishSuffixDictionary;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -13,9 +15,13 @@ class SalesTrendController extends \yii\web\Controller
     {
         $model = new EntryForm();
         //获取搜索条件
-        $get = Yii::$app->request->get();
+        $get = Yii::$app->request->post();
         if(isset($get['EntryForm'])){
             $data = $get['EntryForm'];
+            $data['create_range'] = implode(',', $get['EntryForm']['create_range']);
+            $order = explode(' - ', $data['order_range']);
+            $data['order_start'] = $order[0];
+            $data['order_end'] = $order[1];
             $model->type = $get['EntryForm']['type'];
             $model->cat = $get['EntryForm']['cat'];
             $model->order_range = $get['EntryForm']['order_range'];
@@ -23,12 +29,16 @@ class SalesTrendController extends \yii\web\Controller
         }else{
             $data['type'] = 0;
             $data['cat'] = '';
-            $data['order_range'] = date('Y-m-d',strtotime("-30 day"));
-            $data['create_range'] = date('Y-m-d');
+            $data['order_range'] = date('Y-m-d',strtotime("-30 day")) . ' - ' . date('Y-m-d');
+            $data['create_range'] = '';
             $model->order_range = $data['order_range'];//设置开始时间初始值
             $model->create_range = $data['create_range'];//设置结束时间初始值
+            $data['order_start'] = date('Y-m-d',strtotime("-30 day"));
+            $data['order_end'] = date('Y-m-d');
         }
-        $sql = "P_oa_AMTtrend 0,'" . $data['order_range'] . "','" . $data['create_range'] . "','" . $data['type'] . "','" . $data['cat'] ."'";
+        $sql = "P_oa_AMTtrend 0,'" . $data['order_start'] . "','" . $data['order_end'] . "','" . $data['type'] . "','" .
+                $data['cat'] . "','" . $data['create_range'] . "'";
+        //var_dump($sql);exit;
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
@@ -73,10 +83,17 @@ class SalesTrendController extends \yii\web\Controller
             'value' => $arr_amt
         ];
 
+        //获取帐号列表
+        $sql = 'SELECT suffix From Y_suffixPingtai ORDER BY suffix';
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res,'suffix','suffix');
+        $accountList = array_unique($list);
+
         return $this->render('index', [
             'model' => $model,
             'salesData' => $salesData,
             'salesVolumeData' => $salesVolumeData,
+            'accountList' => $accountList
         ]);
     }
 
