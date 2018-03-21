@@ -33,6 +33,7 @@ class OaDataMine extends \yii\db\ActiveRecord
         return [
             [['proId', 'platForm', 'progress', 'creator'], 'string'],
             [['createTime', 'updateTime'], 'safe'],
+            [['varMainImage'], 'safe']
         ];
     }
 
@@ -49,6 +50,15 @@ class OaDataMine extends \yii\db\ActiveRecord
             'creator' => '创建人',
             'createTime' => '创建时间',
             'updateTime' => '更新时间',
+            'varMainImage' => '图片'
         ];
+    }
+
+    /**
+     * @brief join with details
+     */
+    public function getoa_data_mine_detail()
+    {
+        return $this->hasOne(OaDataMineDetail::className(), ['mid' => 'id']);
     }
 }

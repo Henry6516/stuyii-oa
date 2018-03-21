@@ -72,6 +72,17 @@ $createJobUrl = URl::toRoute('create-job')
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             ['class' => 'yii\grid\ActionColumn'],
+            [   'attribute' => 'varMainImage',
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'width:80px; white-space: normal;'],
+                'value' => function($model,$key)
+                {
+                    $image = $model->oa_data_mine_detail?$model->oa_data_mine_detail->varMainImage:'';
+                    $anchor = 'https://joom.com/en/products/'.$model->proId ;
+                    return "<div align='center'><a target='_blank' href='{$anchor}'> <img  src='{$image}' width='60' height='60'></a></div>";
+                },
+                'label' => '图片',
+            ],
             'proId',
             'platForm',
             'progress',
