@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
+use app\models\OaDataMineDetail;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -53,6 +54,7 @@ class OaDataMineController extends Controller
      */
     public function actionView($id)
     {
+        $detail = OaDataMineDetail::findOne(['mid' => $id]);
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
