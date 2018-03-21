@@ -49,7 +49,7 @@ echo Html::jsFile('@web/js/color.js');
                 //'autoclose'=>true,
                 'format' => 'yyyy-mm-dd',
             ]
-        ])->label("<span style = 'color:red'>* 时间必选:</span>"); ?>
+        ])->label("<span style = 'color:red'>* 订单时间:</span>"); ?>
 
         <?= $form->field($model, 'create_range', [
             'template' => '{label}{input}{error}',
@@ -78,8 +78,8 @@ echo Html::jsFile('@web/js/color.js');
         </div>
     </div>
     <div class="row" style="margin-top: 20px">
-        <div id="devSale" style="width: 800px;height:480px;" class="col-lg-6" data-lis="1"></div>
         <div id="devSaleNum" style="width: 800px;height:480px;" class="col-lg-6"></div>
+        <div id="devSale" style="width: 800px;height:480px;" class="col-lg-6" data-lis="1"></div>
     </div>
 </div>
 <script>
@@ -124,9 +124,9 @@ echo Html::jsFile('@web/js/color.js');
         catNumber = data.data;
         catName = data.name;
         if (id == 'devSaleNum') {
-            role = '销量(款数)';
+            role = '各开发产品款数';
         } else if (id == 'devSale') {
-            role = '销售额($)';
+            role = '各开发销售额($)';
         }
         // 使用刚指定的配置项和数据显示图表。
         option = {

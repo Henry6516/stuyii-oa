@@ -26,7 +26,7 @@ class SalesTrendController extends \yii\web\Controller
             $model->type = $get['EntryForm']['type'];
             $model->cat = $get['EntryForm']['cat'];
             $model->order_range = $get['EntryForm']['order_range'];
-            $model->create_range = $get['EntryForm']['create_range'];
+            $model->create_range = $account;
         }else{
             $data['type'] = 0;
             $data['cat'] = '';

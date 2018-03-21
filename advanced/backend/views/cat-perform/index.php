@@ -105,7 +105,7 @@ $this->registerJs($js);
             //'autoclose'=>true,
             'format' => 'yyyy-mm-dd',
         ]
-    ])->label("<span style = 'color:red'>* 时间必选:</span>"); ?>
+    ])->label("<span style = 'color:red'>* 订单时间:</span>"); ?>
 
     <?= $form->field($model, 'create_range', [
         'template' => '{label}{input}{error}',
