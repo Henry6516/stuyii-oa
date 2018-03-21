@@ -18,7 +18,7 @@ class SalesTrendController extends \yii\web\Controller
         $get = Yii::$app->request->post();
         if(isset($get['EntryForm'])){
             $data = $get['EntryForm'];
-            $account = isset($get['EntryForm']['create_range'])?:[];
+            $account = isset($get['EntryForm']['create_range']) ? $get['EntryForm']['create_range'] : [];
             $data['create_range'] = implode(',',$account);
             $order = explode(' - ', $data['order_range']);
             $data['order_start'] = $order[0];
@@ -39,7 +39,6 @@ class SalesTrendController extends \yii\web\Controller
         }
         $sql = "P_oa_AMTtrend 0,'" . $data['order_start'] . "','" . $data['order_end'] . "','" . $data['type'] . "','" .
                 $data['cat'] . "','" . $data['create_range'] . "'";
-        //var_dump($sql);exit;
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);

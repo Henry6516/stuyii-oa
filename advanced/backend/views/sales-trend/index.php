@@ -55,18 +55,11 @@ $this->title = '销售走势';
                     data-actions-box="true" title="--所有账号--">
                 <?php
                 foreach ($accountList as $account => $suffix) {
-                    if($model->create_range){
-                        foreach ($model->create_range as $k => $v) {
-                            if($suffix == $v){
-                                echo '<option class="account-select" value="' . $suffix . '" selected>' . $suffix . '</option>';
-                            }else{
-                                echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
-                            }
-                        }
+                    if($model->create_range && in_array($suffix,$model->create_range)){
+                        echo '<option class="account-select" value="' . $suffix . '" selected>' . $suffix . '</option>';
                     }else{
                         echo '<option class="account-select" value="' . $suffix . '">' . $suffix . '</option>';
                     }
-
                 }
                 ?>
             </select>
