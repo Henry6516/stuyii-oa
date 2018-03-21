@@ -15,7 +15,6 @@ class DevPerformController extends \yii\web\Controller
         $get = Yii::$app->request->get();
         if(isset($get['EntryForm'])){
             $data['type'] = $get['EntryForm']['type'];
-            $data['cat'] = $get['EntryForm']['cat'];
             $order_range = $get['EntryForm']['order_range'];
             $create_range = $get['EntryForm']['create_range'];
             $order = explode(' - ', $order_range);
@@ -25,12 +24,11 @@ class DevPerformController extends \yii\web\Controller
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
             $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
             $model->type = $get['EntryForm']['type'];
-            $model->cat = $get['EntryForm']['cat'];
             $model->order_range = $order_range;
             $model->create_range = $create_range;
         }else{
             $data['type'] = 0;
-            $data['cat'] = '';
+            //$data['cat'] = '';
             $data['order_start'] = date('Y-m-d',strtotime("-30 day"));
             $data['order_end'] = date('Y-m-d');
             $data['create_start'] = '';
@@ -38,7 +36,6 @@ class DevPerformController extends \yii\web\Controller
             $model->order_range = $data['order_start'].' - '.$data['order_end'];//设置时间初始值
         }
         $sql = "P_oa_DeveloperPerformance " . $data['type'] . " ,'" . $data['order_start'] . "','" . $data['order_end'] . "','" . $data['create_start'] . "','" . $data['create_end'] ."'";
-        //缓存数据
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
@@ -55,11 +52,11 @@ class DevPerformController extends \yii\web\Controller
             $arr1[$k] = ['name' => $v['SalerName'], 'value' => $v['codeNum']];
             $arr2[$k] = ['name' => $v['SalerName'], 'value' => $v['l_AMT']];
         }
-        $sale['data'] = $arr1;
-        $sale['maxValue'] = max(ArrayHelper::getColumn($result,'codeNum'));
-        $saleNum['data'] = $arr2;
-        $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'l_AMT'));;
-        //var_dump($sale['maxValue']);exit;
+        $saleNum['data'] = $arr1;
+        $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'codeNum'));
+        $sale['data'] = $arr2;
+        $sale['maxValue'] = max(ArrayHelper::getColumn($result,'l_AMT'));
+        //var_dump($sale);exit;
         return $this->render('index',[
             'model' => $model,
             'sale' => $sale,
@@ -67,18 +64,6 @@ class DevPerformController extends \yii\web\Controller
         ]);
     }
 
-    /**
-     * 获取图表数据
-     * @return string
-     */
-    public function actionDevelop()
-    {
-        $model = new EntryForm();
-        $devList = [];
-        return $this->render('index',[
-            'model' => $model,
-            'list' => $devList,
-        ]);
-    }
+
 
 }

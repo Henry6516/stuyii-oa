@@ -30,19 +30,10 @@ $this->title = '备货产品表现';
             ->dropDownList($list, ['prompt' => '请选择开发员'])->label('开发员:') ?>
 
 
-        <?= $form->field($model, 'order_range', [
+        <?= $form->field($model, 'code', [
             'template' => '{label}{input}{error}',
-            //'addon' => ['prepend' => ['content' => '<i class="glyphicon glyphicon-calendar"></i>']],
             'options' => ['class' => 'col-lg-3']
-        ])->widget(DateRangePicker::classname(), [
-            'pluginOptions' => [
-                'autoUpdateOnInit' => true,
-                'startDate' => date("Y-m-01"),
-                'endDate' => date("Y-m-d"),
-                //'autoclose'=>true,
-                'format' => 'yyyy-mm-dd',
-            ]
-        ])->label("<span style = 'color:red'>* 时间必选:</span>"); ?>
+        ])->textInput()->label("商品编码:"); ?>
 
         <?= $form->field($model, 'create_range', [
             'template' => '{label}{input}{error}',
@@ -107,7 +98,7 @@ $this->title = '备货产品表现';
                 'attribute' => 'Number',
                 'width' => '150px',
                 'hAlign' => 'right',
-                //'format' => ['decimal', 0],
+                'format' => ['decimal', 0],
                 'label' => '库存',
                 'pageSummary' => true
             ],
@@ -115,7 +106,7 @@ $this->title = '备货产品表现';
                 'attribute' => 'Money',
                 'width' => '150px',
                 'hAlign' => 'right',
-                //'format' => ['decimal', 0],
+                'format' => ['decimal', 2],
                 'label' => '库存金额',
                 'pageSummary' => true
             ],
