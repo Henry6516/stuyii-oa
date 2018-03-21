@@ -85,17 +85,17 @@ $this->title = '备货产品表现';
                 'pageSummaryOptions' => ['class' => 'text-right text-warning'],
             ],
             [
-                'attribute' => 'GoodsName',
+                'attribute' => 'goodsName',
                 'label' => '商品名称',
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'CreateDate',
+                'attribute' => 'devDatetime',
                 'label' => '开发日期',
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'Developer',
+                'attribute' => 'developer',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 2],
@@ -104,35 +104,43 @@ $this->title = '备货产品表现';
                 'pageSummaryFunc' => GridView::F_AVG
             ],
             [
-                'attribute' => 'Introducer',
+                'attribute' => 'Number',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 0],
-                'label' => '推荐人',
+                'label' => '库存',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'GoodsStatus',
+                'attribute' => 'Money',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 0],
-                'label' => '产品状态',
+                'label' => '库存金额',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'l_qty',
+                'attribute' => 'SellCount1',
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '销量',
+                'label' => '5天销量',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'l_AMT',
+                'attribute' => 'SellCount2',
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '销售额($)',
+                'label' => '10天销量',
+                'pageSummary' => true
+            ],
+            [
+                'attribute' => 'SellCount3',
+                'width' => '150px',
+                'hAlign' => 'right',
+                'format' => ['decimal', 0],
+                'label' => '20天销量',
                 'pageSummary' => true
             ],
         ],
