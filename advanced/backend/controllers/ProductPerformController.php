@@ -58,7 +58,7 @@ class ProductPerformController extends \yii\web\Controller
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
-                'pageSize' => 20,
+                'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
                 'attributes' => ['l_AMT', 'l_qty'],

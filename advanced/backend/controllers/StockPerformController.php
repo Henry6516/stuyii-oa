@@ -20,28 +20,22 @@ class StockPerformController extends \yii\web\Controller
         $devList = $this->getDevList();
         //获取搜索条件
         $get = Yii::$app->request->get();
-        //var_dump($get);exit;
         if(isset($get['EntryForm'])){
-            $data['cat'] = $get['EntryForm']['cat'];
-            $order_range = $get['EntryForm']['order_range'];
             $create_range = $get['EntryForm']['create_range'];
             $create = explode(' - ', $create_range);
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
             $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
-            $model->cat = $get['EntryForm']['cat'];
-            $model->order_range = $order_range;
+            $model->cat = $data['cat'] = $get['EntryForm']['cat'];
+            $model->code = $data['code'] = $get['EntryForm']['code'];
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
             $data['create_start'] = '';
             $data['create_end'] = '';
-            $model->order_range = $data['order_range'] = '';
+            $data['code'] = '';
         }
         //获取数据
-        //var_dump($data);exit;
-        //$sql = "P_oa_ProductPerformance 0" . " ,'" . $data['create_start'] . "','" . $data['create_end'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat']."'";
-
-        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['order_range'] . "'";
+        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['code'] . "'";
 
         //缓存数据
         $cache = Yii::$app->local_cache;
@@ -52,15 +46,13 @@ class StockPerformController extends \yii\web\Controller
             $result = Yii::$app->db->createCommand($sql)->queryAll();
             $cache->set($sql,$result,2592000);
         }
-        //$result = Yii::$app->db->createCommand($sql)->queryAll();
-        //var_dump($result);exit;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
-                'pageSize' => 20,
+                'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['l_AMT', 'l_qty'],
+                'attributes' => ['Number', 'Money', 'SellCount1', 'SellCount2', 'SellCount3'],
             ],
         ]);
 

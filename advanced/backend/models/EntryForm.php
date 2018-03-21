@@ -17,6 +17,7 @@ class EntryForm extends \yii\db\ActiveRecord
     public $cat;
     public $order_range;
     public $create_range;
+    public $code;
 
     public function rules()
     {
