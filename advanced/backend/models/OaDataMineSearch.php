@@ -15,7 +15,7 @@ class OaDataMineSearch extends OaDataMine
     /**
      *  varMainImage
      */
-    public $varMainImage;
+    public $MainImage;
 
 
     /**
@@ -26,7 +26,7 @@ class OaDataMineSearch extends OaDataMine
         return [
             [['id'], 'integer'],
             [['proId', 'platForm', 'progress', 'creator', 'createTime', 'updateTime'], 'safe'],
-            [['varMainImage'], 'safe']
+            [['MainImage'], 'safe']
         ];
     }
 

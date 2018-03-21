@@ -52,7 +52,7 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
     {
         return [
             [['mid', 'quantity', 'shipping'], 'integer'],
-            [['parentId', 'proName', 'description', 'tags', 'childId', 'color', 'proSize', 'shippingTime', 'varMainImage', 'extra_image0', 'extra_image1', 'extra_image2', 'extra_image3', 'extra_image4', 'extra_image5', 'extra_image6', 'extra_image7', 'extra_image8', 'extra_image9', 'extra_image10'], 'string'],
+            [['MainImage', 'parentId', 'proName', 'description', 'tags', 'childId', 'color', 'proSize', 'shippingTime', 'varMainImage', 'extra_image0', 'extra_image1', 'extra_image2', 'extra_image3', 'extra_image4', 'extra_image5', 'extra_image6', 'extra_image7', 'extra_image8', 'extra_image9', 'extra_image10'], 'string'],
             [['price', 'msrPrice', 'shippingWeight'], 'number'],
         ];
     }
@@ -79,6 +79,7 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
             'shippingWeight' => 'Shipping Weight',
             'shippingTime' => 'Shipping Time',
             'varMainImage' => 'Var Main Image',
+            'MainImage' => 'Main Image',
             'extra_image0' => 'Extra Image0',
             'extra_image1' => 'Extra Image1',
             'extra_image2' => 'Extra Image2',

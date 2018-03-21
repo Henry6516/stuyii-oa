@@ -50,7 +50,7 @@ class OaDataMine extends \yii\db\ActiveRecord
             'creator' => '创建人',
             'createTime' => '创建时间',
             'updateTime' => '更新时间',
-            'varMainImage' => '图片'
+            'MainImage' => '图片'
         ];
     }
 

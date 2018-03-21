@@ -46,7 +46,7 @@ class OaDataMineController extends Controller
     }
 
     /**
-     * Displays a single OaDataMine model.
+     * Displays OaDataMineDetail.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
