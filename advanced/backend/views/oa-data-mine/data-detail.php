@@ -19,7 +19,7 @@
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="180">
             </el-table-column>
-            <el-table-column prop="address" label="地址">
+            <el-table-column prop="address" label="地址" width="180">
             </el-table-column>
         </el-table>
     </template>
@@ -37,12 +37,7 @@
         created: function () {
             this.$http({url:'data-detail'}).then(function (response) {
                 var ret =  response.body;
-                for (var key in ret) {
-                    this.tableData.push({
-                        name:key,
-                        value:ret[key]
-                    });
-                }
+                this.tableData = ret;
                 this.loading = false;
             })
         }

@@ -70,15 +70,15 @@ class OaDataMineController extends Controller
 //        $response->format = Response::FORMAT_JSON;
 
          $data = [
-           [ 'data' =>'2016-05-02',
+           [ 'date' =>'2016-05-02',
             'name' =>'王小虎',
             'address' =>'上海市普陀区金沙江路 1517 弄'
                ],
-            [ 'data' =>'2016-05-02',
+            [ 'date' =>'2016-05-02',
                 'name' =>'王小虎',
                 'address' =>'上海市普陀区金沙江路 1517 弄'
             ],
-            [ 'data' =>'2016-05-02',
+            [ 'date' =>'2016-05-02',
                 'name' =>'王小虎',
                 'address' =>'上海市普陀区金沙江路 1517 弄'
             ],
