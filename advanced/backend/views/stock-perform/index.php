@@ -67,7 +67,7 @@ $this->title = '备货产品表现';
             [
                 'attribute' => 'GoodsCode',
                 'header' => '商品编码',
-                'width' => '310px',
+                'width' => '150px',
                 'value' => function ($model, $key, $index, $widget) {
                     return $model['GoodsCode'];
                 },
@@ -78,12 +78,12 @@ $this->title = '备货产品表现';
             [
                 'attribute' => 'goodsName',
                 'label' => '商品名称',
-                'pageSummary' => true,
+                //'pageSummary' => true,
             ],
             [
                 'attribute' => 'devDatetime',
                 'label' => '开发日期',
-                'pageSummary' => true,
+                //'pageSummary' => true,
             ],
             [
                 'attribute' => 'developer',
@@ -91,8 +91,8 @@ $this->title = '备货产品表现';
                 'hAlign' => 'right',
                 //'format' => ['decimal', 2],
                 'label' => '开发员',
-                'pageSummary' => true,
-                'pageSummaryFunc' => GridView::F_AVG
+                //'pageSummary' => true,
+                //'pageSummaryFunc' => GridView::F_AVG
             ],
             [
                 'attribute' => 'Number',
@@ -107,7 +107,7 @@ $this->title = '备货产品表现';
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
-                'label' => '库存金额',
+                'label' => '库存金额(￥)',
                 'pageSummary' => true
             ],
             [

@@ -35,7 +35,7 @@ class StockPerformController extends \yii\web\Controller
             $data['code'] = '';
         }
         //获取数据
-        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['code'] . "'";
+        $sql = "P_oa_StockProduct '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['code'] . "'";
 
         //缓存数据
         $cache = Yii::$app->local_cache;
@@ -75,35 +75,24 @@ class StockPerformController extends \yii\web\Controller
         $devList = $this->getDevList();
         //获取搜索条件
         $get = Yii::$app->request->get();
-        var_dump($get);exit;
+        //var_dump($get);exit;
         if(isset($get['EntryForm'])){
-            $data['type'] = $get['EntryForm']['type'];
-            $data['cat'] = $get['EntryForm']['cat'];
-            $order_range = $get['EntryForm']['order_range'];
             $create_range = $get['EntryForm']['create_range'];
-            $order = explode(' - ', $order_range);
-            $data['order_start'] = $order[0];
-            $data['order_end'] = $order[1];
             $create = explode(' - ', $create_range);
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
             $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
-            $model->type = $get['EntryForm']['type'];
-            $model->cat = $get['EntryForm']['cat'];
-            $model->order_range = $order_range;
+            $model->cat = $data['cat'] = $get['EntryForm']['cat'];
+            $model->code = $data['code'] = $get['EntryForm']['code'];
             $model->create_range = $create_range;
         }else{
-            $data['type'] = 0;
             $data['cat'] = '';
-            $data['order_start'] = date('Y-m-d',strtotime("-30 day"));
-            $data['order_end'] = date('Y-m-d');
+            $data['code'] = '';
             $data['create_start'] = '';
             $data['create_end'] = '';
-            $model->order_range = $data['order_start'].' - '.$data['order_end'];//设置时间初始值
         }
         //var_dump($data);exit;
         //获取数据
-        $sql = "P_oa_ProductPerformance " . $data['type'] . " ,'" . $data['order_start'] . "','" . $data['order_end'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat']."'";
-//        P_oa_CategoryPerformance_demo 0 ,'2018-01-01','2018-01-23','',''
+        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['code'] . "'";
 
         //缓存数据
         $cache = Yii::$app->local_cache;
@@ -115,18 +104,18 @@ class StockPerformController extends \yii\web\Controller
             $cache->set($sql,$result,2592000);
         }
         //$result = Yii::$app->db->createCommand($sql)->queryAll();
-        var_dump($result);exit;
+        //var_dump($result);exit;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
-                'pageSize' => 20,
+                'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
                 'attributes' => ['l_AMT', 'l_qty'],
             ],
         ]);
 
-        return $this->render('index', [
+        return $this->render('stock', [
             'model' => $model,
             'list' => $devList,
             'dataProvider' => $dataProvider,

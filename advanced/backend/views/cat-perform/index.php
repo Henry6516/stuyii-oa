@@ -12,7 +12,7 @@ use \kartik\form\ActiveForm;
 use kartik\daterange\DateRangePicker;
 
 
-$this->title = '类别表现';
+$this->title = '类目表现';
 $cat = Url::toRoute('category');
 $js = <<< JS
 //设置背景色

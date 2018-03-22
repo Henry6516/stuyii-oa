@@ -29,19 +29,10 @@ $this->title = '备货产品表现';
         <?= $form->field($model, 'cat', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-2']])
             ->dropDownList($list, ['prompt' => '请选择开发员'])->label('开发员:') ?>
 
-        <?= $form->field($model, 'order_range', [
+        <?= $form->field($model, 'code', [
             'template' => '{label}{input}{error}',
-            //'addon' => ['prepend' => ['content' => '<i class="glyphicon glyphicon-calendar"></i>']],
             'options' => ['class' => 'col-lg-3']
-        ])->widget(DateRangePicker::classname(), [
-            'pluginOptions' => [
-                'autoUpdateOnInit' => true,
-                'startDate' => date("Y-m-01"),
-                'endDate' => date("Y-m-d"),
-                //'autoclose'=>true,
-                'format' => 'yyyy-mm-dd',
-            ]
-        ])->label("<span style = 'color:red'>* 订单时间:</span>"); ?>
+        ])->textInput()->label("商品编码:"); ?>
 
         <?= $form->field($model, 'create_range', [
             'template' => '{label}{input}{error}',
@@ -75,7 +66,7 @@ $this->title = '备货产品表现';
             [
                 'attribute' => 'GoodsCode',
                 'header' => '商品编码',
-                'width' => '310px',
+                'width' => '150px',
                 'value' => function ($model, $key, $index, $widget) {
                     return $model['GoodsCode'];
                 },
@@ -84,38 +75,38 @@ $this->title = '备货产品表现';
                 'pageSummaryOptions' => ['class' => 'text-right text-warning'],
             ],
             [
-                'attribute' => 'GoodsName',
+                'attribute' => 'goodsName',
                 'label' => '商品名称',
-                'pageSummary' => true,
+                //'pageSummary' => true,
             ],
             [
-                'attribute' => 'CreateDate',
+                'attribute' => 'devDatetime',
                 'label' => '开发日期',
-                'pageSummary' => true,
+                //'pageSummary' => true,
             ],
             [
-                'attribute' => 'Developer',
+                'attribute' => 'developer',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 2],
                 'label' => '开发员',
-                'pageSummary' => true,
-                'pageSummaryFunc' => GridView::F_AVG
+                //'pageSummary' => true,
+                //'pageSummaryFunc' => GridView::F_AVG
             ],
             [
-                'attribute' => 'Introducer',
+                'attribute' => 'Number',
                 'width' => '150px',
                 'hAlign' => 'right',
-                //'format' => ['decimal', 0],
-                'label' => '推荐人',
+                'format' => ['decimal', 0],
+                'label' => '备货数量',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'GoodsStatus',
+                'attribute' => 'Money',
                 'width' => '150px',
                 'hAlign' => 'right',
-                //'format' => ['decimal', 0],
-                'label' => '产品状态',
+                'format' => ['decimal', 0],
+                'label' => '销售数量',
                 'pageSummary' => true
             ],
             [
@@ -123,15 +114,30 @@ $this->title = '备货产品表现';
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '销量',
+                'label' => '出单产品数量',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'l_AMT',
+                'attribute' => 'orderRate',
                 'width' => '150px',
                 'hAlign' => 'right',
-                'format' => ['decimal', 0],
-                'label' => '销售额($)',
+                'format' => ['decimal', 2],
+                'label' => '出单率(%)',
+                'pageSummary' => true
+            ],
+            [
+                'attribute' => 'hotStyleRate',
+                'width' => '150px',
+                'hAlign' => 'right',
+                'format' => ['decimal', 2],
+                'label' => '爆款率(%)',
+                'pageSummary' => true
+            ],[
+                'attribute' => 'exuStyleRate',
+                'width' => '150px',
+                'hAlign' => 'right',
+                'format' => ['decimal', 2],
+                'label' => '旺款率(%)',
                 'pageSummary' => true
             ],
         ],
