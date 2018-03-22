@@ -13,6 +13,12 @@ use app\models\OaDataMine;
 class OaDataMineSearch extends OaDataMine
 {
     /**
+     *  varMainImage
+     */
+    public $MainImage;
+
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -20,6 +26,7 @@ class OaDataMineSearch extends OaDataMine
         return [
             [['id'], 'integer'],
             [['proId', 'platForm', 'progress', 'creator', 'createTime', 'updateTime'], 'safe'],
+            [['MainImage'], 'safe']
         ];
     }
 
@@ -42,6 +49,8 @@ class OaDataMineSearch extends OaDataMine
     public function search($params)
     {
         $query = OaDataMine::find();
+        $query->joinWith(['oa_data_mine_detail']);
+        $query->orderBy(['oa_data_mine.id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
