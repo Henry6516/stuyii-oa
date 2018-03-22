@@ -55,8 +55,9 @@ class OaDataMineController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('data-detail', [
-            'mid' => $id,
+        $mine = OaDataMineDetail::findOne(['mid' => $id]);
+        return $this->render('show-detail', [
+            'mine' => $mine,
         ]);
     }
 
