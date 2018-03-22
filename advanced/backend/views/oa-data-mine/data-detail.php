@@ -4,8 +4,9 @@
  * @author: turpure
  * @since: 2018-03-21 14:52
  */
+use yii\helpers\Url;
 
-
+$detailUrl = Url::to(['data-detail', 'mid'=>$mid]);
 ?>
 <!--element-ui-->
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -15,17 +16,17 @@
 <div id="app">
     <template>
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="date" label="日期" width="180">
+            <el-table-column prop="proName" label="日期" width="180">
             </el-table-column>
-            <el-table-column prop="name" label="姓名" width="180">
+            <el-table-column prop="color" label="姓名" width="180">
             </el-table-column>
-            <el-table-column prop="address" label="地址" width="180">
+            <el-table-column prop="price" label="地址" width="200">
             </el-table-column>
         </el-table>
     </template>
 </div>
-
 <script>
+
     new Vue({
         el: '#app',
         data: function() {
@@ -35,11 +36,15 @@
             }
         },
         created: function () {
-            this.$http({url:'data-detail'}).then(function (response) {
+            var detailUrl = window.location.href.replace('view','data-detail');
+            this.$http({url:detailUrl}).then(function (response) {
                 var ret =  response.body;
                 this.tableData = ret;
                 this.loading = false;
             })
         }
     })
+
 </script>
+
+

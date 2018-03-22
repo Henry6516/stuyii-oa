@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\IntegrityException;
+use yii\web\Response;
 
 /**
  * OaDataMineController implements the CRUD actions for OaDataMine model.
@@ -54,9 +55,8 @@ class OaDataMineController extends Controller
      */
     public function actionView($id)
     {
-        $detail = OaDataMineDetail::findAll(['mid' => $id]);
         return $this->render('data-detail', [
-            'model' => $detail,
+            'mid' => $id,
         ]);
     }
 
@@ -66,25 +66,13 @@ class OaDataMineController extends Controller
      */
     public function actionDataDetail($id='')
     {
-//        $response = Yii::$app->response;
-//        $response->format = Response::FORMAT_JSON;
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+        $detail = OaDataMineDetail::findAll(['mid' => $id]);
+//        $ret = json_decode(CJSON::encode($detail),TRUE);
+        return $detail;
 
-         $data = [
-           [ 'date' =>'2016-05-02',
-            'name' =>'王小虎',
-            'address' =>'上海市普陀区金沙江路 1517 弄'
-               ],
-            [ 'date' =>'2016-05-02',
-                'name' =>'王小虎',
-                'address' =>'上海市普陀区金沙江路 1517 弄'
-            ],
-            [ 'date' =>'2016-05-02',
-                'name' =>'王小虎',
-                'address' =>'上海市普陀区金沙江路 1517 弄'
-            ],
 
-        ];
-         echo json_encode($data);
     }
     /**
      * Creates a new OaDataMine model.
