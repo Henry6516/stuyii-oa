@@ -86,7 +86,7 @@ class OaGoodsSearch extends OaGoods
             $query = OaGoods::find()->orderBy(['nid' => SORT_DESC])
                 ->where(['<>','introducer',''])
                 ->andWhere(['<>','checkStatus','已作废'])
-                ->andWhere(['=','checkStatus','未认领'])
+                //->andWhere(['=','checkStatus','未认领'])
             ;
         }
 
@@ -101,6 +101,12 @@ class OaGoodsSearch extends OaGoods
             }elseif ($role[0]['item_name']=='美工'){
                 $query->andWhere(['in', 'introducer', $users]);
             }
+            if(!isset($params['OaGoodsSearch'])){
+                $query->andWhere(['checkStatus' => '未认领']);
+            }else{
+                $query->andWhere(['in', 'checkStatus', ['未认领', '已认领']]);
+            }
+
         }elseif($unit == '正向开发'||$unit == '逆向开发'){
             if($role[0]['item_name']=='部门主管'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);

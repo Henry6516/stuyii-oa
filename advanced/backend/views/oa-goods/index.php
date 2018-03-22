@@ -339,7 +339,20 @@ function centerFormat($name)
             centerFormat('origin1'),
             centerFormat('introducer'),
             centerFormat('introReason'),
-            centerFormat('checkStatus'),
+            [
+                'attribute' => 'checkStatus',
+                'width' => '100px',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return "<span class='cell'>" . strval($model->checkStatus) . "</span>";
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>['未认领' => '未认领','已认领' => '已认领'],
+                'filterWidgetOptions'=>[
+                    'pluginOptions'=>['allowClear'=>true],
+                ],
+                'filterInputOptions' => ['placeholder' => '产品状态'],
+            ],
             centerFormat('approvalNote'),
             //centerFormat('createDate'),
             //centerFormat('updateDate'),
