@@ -56,25 +56,32 @@ class OaDataMineController extends Controller
     public function actionView($id)
     {
         $mine = OaDataMineDetail::findOne(['mid' => $id]);
-        return $this->render('show-detail', [
+        return $this->render('show-basic', [
             'mine' => $mine,
         ]);
     }
 
+
     /**
-     * @brief data detail in Json
+     * @brief mine detail
      * @return mixed
      */
-    public function actionDataDetail($id='')
+    public function actionMineDetail($id='')
     {
-        $response = Yii::$app->response;
-        $response->format = Response::FORMAT_JSON;
-        $detail = OaDataMineDetail::findAll(['mid' => $id]);
-//        $ret = json_decode(CJSON::encode($detail),TRUE);
-        return $detail;
 
+        $response=Yii::$app->response;
+        $response->format=Response::FORMAT_JSON;
+        $query = OaDataMineDetail::find();
+        $query->select([
+            'id','childId','color','proSize',
+            'quantity','price','msrPrice','shipping',
+            'shippingWeight','shippingTime','varMainImage'
+        ]);
+        $query->andWhere(['mid' => $id]);
+        return $query->all();
 
     }
+
     /**
      * Creates a new OaDataMine model.
      * If creation is successful, the browser will be redirected to the 'view' page.
