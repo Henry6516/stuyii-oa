@@ -86,6 +86,10 @@ $this->title = '备货产品表现';
                 //'pageSummary' => true,
             ],
             [
+                'attribute' => 'GoodsStatus',
+                'label' => '产品状态',
+            ],
+            [
                 'attribute' => 'developer',
                 'width' => '150px',
                 'hAlign' => 'right',
@@ -99,7 +103,7 @@ $this->title = '备货产品表现';
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '库存',
+                'label' => '库存数量',
                 'pageSummary' => true
             ],
             [

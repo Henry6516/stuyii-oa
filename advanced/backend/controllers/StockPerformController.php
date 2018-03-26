@@ -82,17 +82,15 @@ class StockPerformController extends \yii\web\Controller
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
             $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
             $model->cat = $data['cat'] = $get['EntryForm']['cat'];
-            $model->code = $data['code'] = $get['EntryForm']['code'];
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
-            $data['code'] = '';
             $data['create_start'] = '';
             $data['create_end'] = '';
         }
         //var_dump($data);exit;
         //获取数据
-        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "','".$data['code'] . "'";
+        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
 
         //缓存数据
         $cache = Yii::$app->local_cache;
