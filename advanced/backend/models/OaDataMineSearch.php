@@ -48,14 +48,18 @@ class OaDataMineSearch extends OaDataMine
      */
     public function search($params)
     {
-        $query = OaDataMine::find();
+        $query = OaDataMine::find()->select(['oa_data_mine.*','max(MainImage) as MainImage']);
         $query->joinWith(['oa_data_mine_detail']);
+        $query->groupBy(['oa_data_mine.id','proId','platForm','progress','creator','createTime','updateTime']);
         $query->orderBy(['oa_data_mine.id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
 
         $this->load($params);

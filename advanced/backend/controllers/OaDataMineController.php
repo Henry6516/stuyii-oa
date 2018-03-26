@@ -5,10 +5,12 @@ namespace backend\controllers;
 use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
+use app\models\OaDataMineDetail;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\IntegrityException;
+use yii\web\Response;
 
 /**
  * OaDataMineController implements the CRUD actions for OaDataMine model.
@@ -53,9 +55,31 @@ class OaDataMineController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $mine = OaDataMineDetail::findOne(['mid' => $id]);
+        return $this->render('show-basic', [
+            'mine' => $mine,
         ]);
+    }
+
+
+    /**
+     * @brief mine detail
+     * @return mixed
+     */
+    public function actionMineDetail($id='')
+    {
+
+        $response=Yii::$app->response;
+        $response->format=Response::FORMAT_JSON;
+        $query = OaDataMineDetail::find();
+        $query->select([
+            'id','childId','color','proSize',
+            'quantity','price','msrPrice','shipping',
+            'shippingWeight','shippingTime','varMainImage'
+        ]);
+        $query->andWhere(['mid' => $id]);
+        return $query->all();
+
     }
 
     /**
