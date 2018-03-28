@@ -101,15 +101,13 @@ class StockPerformController extends \yii\web\Controller
             $result = Yii::$app->db->createCommand($sql)->queryAll();
             $cache->set($sql,$result,2592000);
         }
-        //$result = Yii::$app->db->createCommand($sql)->queryAll();
-        //var_dump($result);exit;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
                 'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['l_AMT', 'l_qty'],
+                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate', 'exuStyleNum', 'exuStyleRate'],
             ],
         ]);
 
