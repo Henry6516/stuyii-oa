@@ -157,6 +157,12 @@ function centerFormat($name) {
                     $value = $data->stockUp?'是':'否';
                     return "<span class='cell'>" . $value . "</span>";
                 },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => [0 =>'否', 1 => '是'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
             ],
             //centerFormat('cate'),
             [
