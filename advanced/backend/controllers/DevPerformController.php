@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\EntryForm;
+use backend\models\OaGoodsinfo;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -56,7 +57,21 @@ class DevPerformController extends \yii\web\Controller
         $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'codeNum'));
         $sale['data'] = $arr2;
         $sale['maxValue'] = max(ArrayHelper::getColumn($result,'l_AMT'));
-        //var_dump($sale);exit;
+
+        //获取开发员开发产品款数(不受订单影响)
+        $numSql = 'SELECT SalerName AS name,count(GoodsCode) AS value FROM B_Goods b 
+                    LEFT JOIN [user] u ON u.username=b.SalerName
+                    WHERE u.username<>\'\' ';
+        if($data['create_start'] && $data['create_end']){
+            $numSql .= " AND CreateDate BETWEEN '" . $data['create_start'] . "' AND '" . $data['create_end'] . "'";
+        }
+        $numSql .= ' GROUP BY SalerName';
+        $result = Yii::$app->db->createCommand($numSql)->queryAll();
+        $saleNum['data'] = $result;
+        $saleNum['name'] = ArrayHelper::getColumn($result,'name');
+        $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'value'));
+
+        //var_dump($saleNum);exit;
         return $this->render('index',[
             'model' => $model,
             'sale' => $sale,

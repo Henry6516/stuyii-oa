@@ -29,11 +29,6 @@ $this->title = '备货产品表现';
         <?= $form->field($model, 'cat', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-2']])
             ->dropDownList($list, ['prompt' => '请选择开发员'])->label('开发员:') ?>
 
-        <?= $form->field($model, 'code', [
-            'template' => '{label}{input}{error}',
-            'options' => ['class' => 'col-lg-3']
-        ])->textInput()->label("商品编码:"); ?>
-
         <?= $form->field($model, 'create_range', [
             'template' => '{label}{input}{error}',
             //'addon' => ['prepend' => ['content' => '<i class="glyphicon glyphicon-calendar"></i>']],
@@ -64,81 +59,67 @@ $this->title = '备货产品表现';
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
-                'attribute' => 'GoodsCode',
-                'header' => '商品编码',
-                'width' => '150px',
-                'value' => function ($model, $key, $index, $widget) {
-                    return $model['GoodsCode'];
-                },
-                'group' => true,  // enable grouping
+                'attribute' => 'developer',
+                //'width' => '150px',
+                'hAlign' => 'right',
+                'label' => '开发员',
                 'pageSummary' => 'Page Summary',
                 'pageSummaryOptions' => ['class' => 'text-right text-warning'],
             ],
             [
-                'attribute' => 'goodsName',
-                'label' => '商品名称',
-                //'pageSummary' => true,
-            ],
-            [
-                'attribute' => 'devDatetime',
-                'label' => '开发日期',
-                //'pageSummary' => true,
-            ],
-            [
-                'attribute' => 'developer',
-                'width' => '150px',
-                'hAlign' => 'right',
-                //'format' => ['decimal', 2],
-                'label' => '开发员',
-                //'pageSummary' => true,
-                //'pageSummaryFunc' => GridView::F_AVG
-            ],
-            [
                 'attribute' => 'Number',
-                'width' => '150px',
+                //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '备货数量',
+                'label' => '备货产品款数',
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'Money',
-                'width' => '150px',
+                'attribute' => 'orderNum',
+                //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '销售数量',
-                'pageSummary' => true
-            ],
-            [
-                'attribute' => 'l_qty',
-                'width' => '150px',
-                'hAlign' => 'right',
-                'format' => ['decimal', 0],
-                'label' => '出单产品数量',
+                'label' => '出单产品款数',
                 'pageSummary' => true
             ],
             [
                 'attribute' => 'orderRate',
-                'width' => '150px',
+                //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
                 'label' => '出单率(%)',
-                'pageSummary' => true
+                //'pageSummary' => true
+            ],
+            [
+                'attribute' => 'hotStyleNum',
+                'label' => '爆款数量',
+                'hAlign' => 'right',
+                //'width' => '150px',
+                'format' => ['decimal', 0],
+                'pageSummary' => true,
             ],
             [
                 'attribute' => 'hotStyleRate',
-                'width' => '150px',
+                //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
                 'label' => '爆款率(%)',
-                'pageSummary' => true
-            ],[
+                //'pageSummary' => true
+            ],
+            [
+                'attribute' => 'exuStyleNum',
+                'label' => '旺款数量',
+                'hAlign' => 'right',
+                'format' => ['decimal', 0],
+                'pageSummary' => true,
+            ],
+            [
                 'attribute' => 'exuStyleRate',
-                'width' => '150px',
+                //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
                 'label' => '旺款率(%)',
-                'pageSummary' => true
+                //'pageSummary' => true
             ],
         ],
     ]); ?>
