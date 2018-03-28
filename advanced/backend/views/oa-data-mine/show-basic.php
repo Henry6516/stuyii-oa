@@ -114,20 +114,56 @@ echo "
         <template>
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column prop="id" label="编号" ></el-table-column>
-                <el-table-column prop="childId" label="唯一编码" ></el-table-column>
-                <el-table-column prop="color" label="颜色" ></el-table-column>
-                <el-table-column prop="proSize" label="尺码/型号" ></el-table-column>
-                <el-table-column prop="quantity" label="库存" ></el-table-column>
-                <el-table-column prop="price" label="价格" ></el-table-column>
-                <el-table-column prop="msrPrice" label="MSR价格" ></el-table-column>
-                <el-table-column prop="shipping" label="运费" ></el-table-column>
-                <el-table-column prop="shippingWeight" label="重量" ></el-table-column>
-                <el-table-column prop="shippingTime" label="配送时间" ></el-table-column>
+                <el-table-column prop="childId" label="唯一编码">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.childId"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="color" label="颜色">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.color"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="proSize" label="尺码/型号">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.proSize"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="quantity" label="库存">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.quantity"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="price" label="价格">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.price"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="msrPrice" label="MSR价格">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.msrPrice"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="shipping" label="运费">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.shipping"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="shippingWeight" label="重量">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.shippingWeight"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="shippingTime" label="配送时长">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.shippingTime"  size="small" controls-position="right" />
+                    </template>
+                </el-table-column>
                 <el-table-column label="图片" width="180">
                     <template scope="scope">
                         <image :src="scope.row.varMainImage" width="50" height="50"/>
                     </template>
-                </el-table-column>
+                </el-table-column>e
             </el-table>
         </template>
     </div>
@@ -163,6 +199,10 @@ echo "
 
     .thumbnail:hover {
         border: 2px solid #00a65a;
+    }
+
+    .el-table__body input {
+        border-radius: 15px ;
     }
 </style>
 
