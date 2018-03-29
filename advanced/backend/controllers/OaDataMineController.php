@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\unitools\PHPExcelTools;
 use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
@@ -58,6 +59,7 @@ class OaDataMineController extends Controller
         $mine = OaDataMineDetail::findOne(['mid' => $id]);
         return $this->render('show-basic', [
             'mine' => $mine,
+            'mid' => $id,
         ]);
     }
 
@@ -171,6 +173,83 @@ class OaDataMineController extends Controller
             $msg = "该商品已采集过，不可重复采集！";
         }
         return json_encode(['msg' =>$msg]);
+    }
+
+    /**
+     * @brief export csv
+     * @param @mid int
+     */
+    public function actionExport($mid)
+    {
+        $db = Yii::$app->db;
+        $sql = "select parentId,proName,description,tags,
+                childId,color,proSize,quantity,price,msrPrice,
+                shipping,shippingTime,MainImage,varMainImage,
+                extra_image0,extra_image1,extra_image2,extra_image3,
+                extra_image4,extra_image5,extra_image6,extra_image7,
+                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
+                where mid=:mid";
+        $query = $db->createCommand($sql ,[':mid' => $mid]);
+        $ret = $query->queryAll();
+        $heard_name = [
+            'Parent Unique ID',
+            '*Product Name',
+            'Description',
+            '*Tags',
+            '*Unique ID',
+            'Color',
+            'Size',
+            '*Quantity',
+            '*Price',
+            '*MSRP',
+            '*Shipping',
+            'Shipping weight',
+            'Shipping Time(enter without " ", just the estimated days )',
+            '*Product Main Image URL',
+            'Variant Main Image URL',
+            'Extra Image URL',
+            'Extra Image URL 1',
+            'Extra Image URL 2',
+            'Extra Image URL 3',
+            'Extra Image URL 4',
+            'Extra Image URL 5',
+            'Extra Image URL 6',
+            'Extra Image URL 7',
+            'Extra Image URL 8',
+            'Extra Image URL 9',
+            'Extra Image URL 10',
+        ];
+
+        $excel = new \PHPExcel();
+        $sheet_num = 0;
+        $excel->getActiveSheetIndex($sheet_num);
+        header('Content-Type: application/vnd.ms-excel');
+        $file_name = $mid . "-Joom-" . date("d-m-Y-His") . ".xls";
+        header('Content-Disposition: attachment;filename=' . $file_name . ' ');
+        header('Cache-Control: max-age=0');
+        foreach ($heard_name as $index => $name)
+        {
+            $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
+
+        }
+
+        foreach ($ret as $row_num => $row)
+        {
+            if(!\is_array($row)){
+                return;
+            }
+
+            $cell_num = 0;
+            foreach ($row as $index => $name)
+            {
+                $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($cell_num) .($row_num + 2), $name);
+                ++$cell_num;
+            }
+
+        }
+        $writer =  new \PHPExcel_Writer_Excel5($excel);
+        $writer->save('php://output');
+
     }
 
     /**

@@ -170,7 +170,7 @@ echo "
         <div style="margin-top: 3%; margin-left: 5%">
             <el-row>
                 <el-button type="primary" round>保存数据</el-button>
-                <el-button type="success" round>导出数据</el-button>
+                <el-button id="export-btn" type="success" round>导出数据</el-button>
             </el-row>
         </div>
     </div>
@@ -265,7 +265,13 @@ echo "
 
 
 <?php
+
+$exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
+
 $js = <<<JS
+/*
+back to top
+ */
 
 if ($('#back-to-top').length) {
     var scrollTrigger = 100, // px
@@ -288,6 +294,14 @@ if ($('#back-to-top').length) {
         }, 700);
     });
 }
+
+/*
+export to csv
+ */
+$('#export-btn').on('click',function() {
+    window.location = '$exportUrl';
+})
+
 
 JS;
 
