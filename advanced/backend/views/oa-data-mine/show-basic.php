@@ -165,16 +165,17 @@ echo "
                     </template>
                 </el-table-column>
             </el-table>
-
         </template>
         <div style="margin-top: 3%; margin-left: 5%">
             <el-row>
-                <el-button type="primary" round>保存数据</el-button>
+                <el-button id="save-btn" type="primary" round>保存数据</el-button>
                 <el-button id="export-btn" type="success" round>导出数据</el-button>
             </el-row>
         </div>
+        <span id='table-data' style="display: none">{{tableData}}</span>
     </div>
 </div>
+
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
 <?php ActiveForm::end() ?>
 
@@ -248,7 +249,7 @@ echo "
         data: function() {
             return {
                 tableData: [],
-                loading: true
+                loading: true,
             }
         },
         created: function () {
@@ -267,8 +268,9 @@ echo "
 <?php
 
 $exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
-
+$saveUrl = Url::toRoute(['save', 'mid' => $mid ]);
 $js = <<<JS
+
 /*
 back to top
  */
@@ -302,7 +304,37 @@ $('#export-btn').on('click',function() {
     window.location = '$exportUrl';
 })
 
+/*
+save data
+ */
+$('#save-btn').on('click',function() {
+    var tableData = $('#table-data').text();
+    var formData = $('form#detail-form').serializeObject();
+    $.ajax({
+        url:'$saveUrl',
+        type:'post',
+        data:{'tableData':tableData, 'formData':formData},
+        success:function(res) {
+            alert(res);
+        }
+    });
+})
 
+
+$.prototype.serializeObject = function() {  
+    var a, o, h, i, e;  
+    a = this.serializeArray();  
+    o = {};  
+    h = o.hasOwnProperty;  
+    for (i = 0; i < a.length; i++) {  
+        e = a[i];  
+        if (!h.call(o, e.name)) {  
+            var key = e.name.replace('OaDataMineDetail[','').replace(']','')
+            o[key] = e.value;  
+        }  
+    }  
+    return o;
+};   
 JS;
 
 

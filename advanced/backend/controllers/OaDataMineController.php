@@ -252,6 +252,56 @@ class OaDataMineController extends Controller
 
     }
 
+
+    /**
+     * @brief save data
+     */
+    public function actionSave($mid)
+    {
+        $post = Yii::$app->request->post();
+        $table_data = json_decode($post['tableData']);
+        $form_data = $post['formData'];
+
+        //update,create or delete oa-data-mine-detail
+        $trans = Yii::$app->db->beginTransaction();
+
+        try {
+            foreach($table_data as $row)
+            {
+                $row = json_decode(json_encode($row), true);
+
+                // add basic info to detail
+                $row['proName'] = $form_data['proName'];
+                $row['tags'] = $form_data['tags'];
+                $row['parentId'] = $form_data['parentId'];
+
+                $detail_model = OaDataMineDetail::findOne(['id'=>$row['id']]);
+                if(empty($detail_model)){
+                    $detail_model = new OaDataMineDetail();
+                    //create new one
+
+                }
+                else {
+                    // update
+
+                    $detail_model->setAttributes($row,false);
+                    if(!$detail_model->save(false)){
+                        throw new \Exception("更新失败");
+                    }
+
+                }
+            }
+            $trans->commit();
+            $msg = '保存成功';
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '保存失败';
+        }
+        return $msg;
+    }
+
+
     /**
      * Finds the OaDataMine model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
