@@ -113,6 +113,19 @@ echo "
     <div id="app" style="margin-bottom: 5%">
         <template>
             <el-table :data="tableData" style="width: 100%">
+                <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="120">
+                    <template slot-scope="scope">
+                        <el-button
+                                @click.native.prevent="deleteRow(scope.$index, tableData)"
+                                type="text"
+                                size="small">
+                            移除
+                        </el-button>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="id" label="编号" ></el-table-column>
                 <el-table-column prop="childId" label="唯一编码">
                     <template slot-scope="scope">
@@ -246,6 +259,7 @@ echo "
 
     new Vue({
         el: '#app',
+
         data: function() {
             return {
                 tableData: [],
@@ -259,6 +273,13 @@ echo "
                 this.tableData = ret;
                 this.loading = false;
             })
+        },
+        methods:{
+            deleteRow: function(index, rows) {
+                var id = rows[index].id;
+                rows.splice(index, 1);
+                $.get('delete-detail',{'id':id});
+            }
         }
     })
 

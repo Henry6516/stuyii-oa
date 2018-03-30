@@ -303,6 +303,15 @@ class OaDataMineController extends Controller
 
 
     /**
+     * @brief delete detail
+     * @param @id int
+     */
+    public function actionDeleteDetail($id)
+    {
+        OaDataMineDetail::deleteAll(['id'=>$id]);
+    }
+
+    /**
      * Finds the OaDataMine model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
