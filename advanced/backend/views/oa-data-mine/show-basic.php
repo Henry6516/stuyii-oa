@@ -114,6 +114,10 @@ echo "
         <template>
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column
+                        type="index"
+                        width="50">
+                </el-table-column>
+                <el-table-column
                         fixed="right"
                         label="操作"
                         width="120">
@@ -124,9 +128,15 @@ echo "
                                 size="small">
                             移除
                         </el-button>
+                        <el-button
+                                @click.native.prevent="addRow(tableData)"
+                                type="text"
+                                size="small">
+                            增加
+                        </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="id" label="编号" ></el-table-column>
+                <el-table-column v-if="false" prop="id" label="编号" ></el-table-column>
                 <el-table-column prop="childId" label="唯一编码">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.childId"  size="small" controls-position="right" />
@@ -279,6 +289,23 @@ echo "
                 var id = rows[index].id;
                 rows.splice(index, 1);
                 $.get('delete-detail',{'id':id});
+            },
+            addRow: function (rows) {
+                console.log(rows);
+                var row = {
+                    'childId': '',
+                    'color': '',
+                    'id': '',
+                    'msrPrice': '',
+                    'price': '',
+                    'proSize': '',
+                    'quantity': '',
+                    'shipping': '',
+                    'shippingTime': '',
+                    'shippingWeight': '',
+                    'varMainImage': ''
+                };
+                rows.push(row);
             }
         }
     })
