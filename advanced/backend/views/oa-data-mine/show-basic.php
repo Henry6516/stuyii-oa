@@ -33,7 +33,6 @@ echo "<div><img src='{$mine->MainImage}' width=60 height=60}></div>";
 <?= $form->field($mine,'proName')?>
 <?= $form->field($mine,'tags')?>
 <?= $form->field($mine,'parentId')?>
-<?= $form->field($mine,'childId')?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
     <div class="blockTitle" >
