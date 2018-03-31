@@ -56,10 +56,9 @@ class OaDataMineController extends Controller
      */
     public function actionView($id)
     {
-        $mine = OaDataMineDetail::findOne(['mid' => $id]);
-        return $this->render('show-basic', [
-            'mine' => $mine,
-            'mid' => $id,
+        $mine = OaDataMine::findOne(['id' => $id]);
+        return $this->render('view', [
+            'model' => $mine,
         ]);
     }
 
@@ -111,14 +110,10 @@ class OaDataMineController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('update', [
-            'model' => $model,
+        $mine = OaDataMineDetail::findOne(['mid' => $id]);
+        return $this->render('show-basic', [
+            'mine' => $mine,
+            'mid' => $id,
         ]);
     }
 
@@ -275,15 +270,20 @@ class OaDataMineController extends Controller
                 $row['tags'] = $form_data['tags'];
                 $row['parentId'] = $form_data['parentId'];
 
-                $detail_model = OaDataMineDetail::findOne(['id'=>$row['id']]);
-                if(empty($detail_model)){
-                    $detail_model = new OaDataMineDetail();
-                    //create new one
 
+                if(empty($row['id'])){
+                    //create new one
+                    $new_detail = new OaDataMineDetail();
+                    unset($row['id']);
+                    $row['mid'] = $mid;
+                    $new_detail->setAttributes($row,false);
+                    if(!$new_detail->save(false)){
+                        throw new \Exception("更新失败");
+                    }
                 }
                 else {
                     // update
-
+                    $detail_model = OaDataMineDetail::findOne(['id'=>$row['id']]);
                     $detail_model->setAttributes($row,false);
                     if(!$detail_model->save(false)){
                         throw new \Exception("更新失败");

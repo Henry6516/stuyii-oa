@@ -277,7 +277,7 @@ echo "
             }
         },
         created: function () {
-            var detailUrl = window.location.href.replace('view','mine-detail');
+            var detailUrl = window.location.href.replace('update','mine-detail');
             this.$http({url:detailUrl}).then(function (response) {
                 var ret =  response.body;
                 this.tableData = ret;
@@ -357,6 +357,7 @@ save data
  */
 $('#save-btn').on('click',function() {
     var tableData = $('#table-data').text();
+    console.log(tableData);
     var formData = $('form#detail-form').serializeObject();
     $.ajax({
         url:'$saveUrl',
