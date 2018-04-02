@@ -7,10 +7,10 @@ use yii\helpers\Url;
 $this->title = '数据详情';
 
 ?>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>
 
 <?php
 echo "<div><img src='{$mine->MainImage}' width=60 height=60}></div>";
@@ -35,167 +35,50 @@ echo "<div><img src='{$mine->MainImage}' width=60 height=60}></div>";
 <?= $form->field($mine,'parentId')?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
-    <div class="blockTitle" >
-        <span>附加图</span>
-    </div>
+<div class="blockTitle" >
+    <span>图片信息</span>
+</div>
+<div class="all-img">
 <?php
-echo "
-<div class='row' style='margin-left: 18%'>
-  <div class='col-xs-6 col-md-1'>   
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image0}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6  col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image1}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image2}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image3}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image4}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>   
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image5}' alt=''>
-    </div> 
-  </div>
+echo '<div class="form-group field-oadataminedetail-mainimage has-success">
+<label class="control-label col-md-2" for="oadataminedetail-mainimage">主图</label>
+<div class="col-lg-8">
+    <div class="col-md-4">
+        <input type="text" id="oadataminedetail-mainimage" class="main-image form-control" name="OaDataMineDetail[MainImage]" value="'.$mine->MainImage.'" style="margin-top:2%; aria-invalid="false">
+     </div>
+     <div class="col-md-2">
+        <img width="50" height="50" src="'.$mine->MainImage.'">
+     </div>
 </div>
-<div class='row' style='margin-left: 18%'>
-  
-  <div class='col-xs-6  col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image6}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image7}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image8}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image9}' alt=''>
-    </div> 
-  </div>
-  <div class='col-xs-6 col-md-1'>
-    <div class='thumbnail'>
-      <img src='{$mine->extra_image10}' alt=''>
-    </div> 
-  </div>
-</div>
-"
+<div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>
+</div>'
+;
+for($i=0;$i<=10;$i++){
+    $extra_image = 'extra_image'.(string)$i;
+    $label_name = '附加图#'.(string)($i+1);
+    echo '
+    <div class="form-group field-oadataminedetail-extra_image0 has-success">
+    <label class="control-label col-md-2" for="oadataminedetail-extra_image0">'.$label_name.'</label>
+    <div class="col-lg-8">
+        <div class="col-md-4"><input type="text" id="oadataminedetail-extra_image0" class="extra-img form-control" name="OaDataMineDetail[extra_image0]" value="https://img.joomcdn.net/d52c0613cb8e02329298ac88ca1571600e38e889_original.jpeg" style="margin-top:2%;" aria-invalid="false"></div>
+         <div class="col-md-4">
+         <button class="btn add-img">增加</button>
+         <button class="btn del-img">删除</button>
+         <button class="btn up-img">上移</button>
+         <button class="btn down-img">下移</button>
+        <img width="50" height="50" src="'.$mine->$extra_image.'">
+     </div>
+    </div>
+    <div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>
+    </div>
+    ';
+
+}
 ?>
-
-
+</div>
 
 <div class="blockTitle" >
     <span>多属性信息</span>
-</div>
-<div>
-    <div id="app" style="margin-bottom: 5%">
-        <template>
-            <el-table :data="tableData" style="width: 100%">
-                <el-table-column
-                        type="index"
-                        width="50">
-                </el-table-column>
-                <el-table-column
-                        fixed="right"
-                        label="操作"
-                        width="120">
-                    <template slot-scope="scope">
-                        <el-button
-                                @click.native.prevent="deleteRow(scope.$index, tableData)"
-                                type="text"
-                                size="small">
-                            移除
-                        </el-button>
-                        <el-button
-                                @click.native.prevent="addRow(tableData)"
-                                type="text"
-                                size="small">
-                            增加
-                        </el-button>
-                    </template>
-                </el-table-column>
-                <el-table-column v-if="false" prop="id" label="编号" ></el-table-column>
-                <el-table-column prop="childId" label="唯一编码">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.childId"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="color" label="颜色">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.color"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="proSize" label="尺码/型号">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.proSize"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="quantity" label="库存">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.quantity"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="price" label="价格">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.price"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="msrPrice" label="MSR价格">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.msrPrice"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="shipping" label="运费">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.shipping"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="shippingWeight" label="重量">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.shippingWeight"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="shippingTime" label="配送时长">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.shippingTime"  size="small" controls-position="right" />
-                    </template>
-                </el-table-column>
-                <el-table-column label="图片" width="180">
-                    <template scope="scope">
-                        <image :src="scope.row.varMainImage" width="50" height="50"/>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </template>
-        <div style="margin-top: 3%; margin-left: 5%">
-            <el-row>
-                <el-button id="save-btn" type="primary" round>保存数据</el-button>
-                <el-button id="export-btn" type="success" round>导出数据</el-button>
-            </el-row>
-        </div>
-        <span id='table-data' style="display: none">{{tableData}}</span>
-    </div>
 </div>
 
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
@@ -260,56 +143,8 @@ echo "
     #back-to-top.show {
         opacity: 1;
     }
+
 </style>
-
-
-
-<script>
-
-    new Vue({
-        el: '#app',
-
-        data: function() {
-            return {
-                tableData: [],
-                loading: true,
-            }
-        },
-        created: function () {
-            var detailUrl = window.location.href.replace('update','mine-detail');
-            this.$http({url:detailUrl}).then(function (response) {
-                var ret =  response.body;
-                this.tableData = ret;
-                this.loading = false;
-            })
-        },
-        methods:{
-            deleteRow: function(index, rows) {
-                var id = rows[index].id;
-                rows.splice(index, 1);
-                $.get('delete-detail',{'id':id});
-            },
-            addRow: function (rows) {
-                console.log(rows);
-                var row = {
-                    'childId': '',
-                    'color': '',
-                    'id': '',
-                    'msrPrice': '',
-                    'price': '',
-                    'proSize': '',
-                    'quantity': '',
-                    'shipping': '',
-                    'shippingTime': '',
-                    'shippingWeight': '',
-                    'varMainImage': ''
-                };
-                rows.push(row);
-            }
-        }
-    })
-
-</script>
 
 
 <?php
@@ -383,6 +218,53 @@ $.prototype.serializeObject = function() {
     }  
     return o;
 };   
+
+
+/*
+listen to image
+ */
+$('.main-image').on('change',function() {
+    var new_image =  $(this).val();
+    $(this).parents('div .form-group').find('img').attr('src', new_image);
+})
+
+
+/*
+operate images
+ */
+
+$('.del-img').on('click', function() {
+    $(this).closest('div .form-group').remove();
+});
+
+$('.add-img').on('click',function() {
+    //be able to add?
+    var image_num = $('.extra-img').length;
+    if(image_num>=11){
+        alert("已经达到图片个数上限！");
+        return false ;
+    }
+    var element = '<div class="form-group field-oadataminedetail-extra_image7 has-success">\
+    <label class="control-label col-md-2" for="oadataminedetail-extra_image0"></label>\
+    <div class="col-lg-8">\
+        <div class="col-md-4"><input type="text" id="oadataminedetail-extra_image0" class="extra-img form-control" name="OaDataMineDetail[extra_image0]" value="https://img.joomcdn.net/d52c0613cb8e02329298ac88ca1571600e38e889_original.jpeg" style="margin-top:2%;" aria-invalid="false"></div>\
+         <div class="col-md-4">\
+         <button class="btn add-img">增加</button>\
+         <button class="btn del-img">删除</button>\
+         <button class="btn up-img">上移</button>\
+         <button class="btn down-img">下移</button>\
+        <img width="50" height="50" src="">\
+     </div>\
+    </div>\
+    <div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>\
+    </div>';
+    
+    $('.al' 
+  ;
+    
+})
+
+
 JS;
 
 
