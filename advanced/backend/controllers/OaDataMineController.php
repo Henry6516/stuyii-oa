@@ -12,7 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\IntegrityException;
 use yii\web\Response;
-
+use yii\data\ActiveDataProvider;
 /**
  * OaDataMineController implements the CRUD actions for OaDataMine model.
  */
@@ -27,7 +27,7 @@ class OaDataMineController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['POST','GET'],
                 ],
             ],
         ];
@@ -117,6 +117,26 @@ class OaDataMineController extends Controller
         ]);
     }
 
+
+    /**
+     * @brief detail for modal
+     */
+    public function actionDetail($mid)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => OaDataMineDetail::find()->where(['mid' => $mid])->orderBy('id'),
+            'pagination' => [
+                'pageSize' => 200,
+
+            ],
+        ]);
+        return $this->renderAjax('show-detail',[
+            'dataProvider' => $dataProvider,
+            'mid' => $mid
+
+        ]);
+    }
+
     /**
      * Deletes an existing OaDataMine model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -126,7 +146,6 @@ class OaDataMineController extends Controller
      */
     public function actionDelete($id)
     {
-
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -249,46 +268,21 @@ class OaDataMineController extends Controller
 
 
     /**
-     * @brief save data
+     * @brief save basic data
      */
-    public function actionSave($mid)
+    public function actionSaveBasic($mid)
     {
         $post = Yii::$app->request->post();
-        $table_data = json_decode($post['tableData']);
-        $form_data = $post['formData'];
-
-        //update,create or delete oa-data-mine-detail
+        $images = $post['images'];
+        $form = $post['form'];
+        $detail_models = OaDataMineDetail::findAll(['mid'=>$mid]);
         $trans = Yii::$app->db->beginTransaction();
-
         try {
-            foreach($table_data as $row)
-            {
-                $row = json_decode(json_encode($row), true);
-
-                // add basic info to detail
-                $row['proName'] = $form_data['proName'];
-                $row['tags'] = $form_data['tags'];
-                $row['parentId'] = $form_data['parentId'];
-
-
-                if(empty($row['id'])){
-                    //create new one
-                    $new_detail = new OaDataMineDetail();
-                    unset($row['id']);
-                    $row['mid'] = $mid;
-                    $new_detail->setAttributes($row,false);
-                    if(!$new_detail->save(false)){
-                        throw new \Exception("更新失败");
-                    }
-                }
-                else {
-                    // update
-                    $detail_model = OaDataMineDetail::findOne(['id'=>$row['id']]);
-                    $detail_model->setAttributes($row,false);
-                    if(!$detail_model->save(false)){
-                        throw new \Exception("更新失败");
-                    }
-
+            foreach($detail_models as $detail){
+                $detail->setAttributes($form);
+                $detail->setAttributes($images);
+                if(!$detail->save()){
+                   throw new \Exception("保存失败！");
                 }
             }
             $trans->commit();
@@ -306,9 +300,59 @@ class OaDataMineController extends Controller
      * @brief delete detail
      * @param @id int
      */
-    public function actionDeleteDetail($id)
+    public function actionDeleteDetail($id=null)
     {
+        $id = $id?$id:Yii::$app->request->post()['id'];
         OaDataMineDetail::deleteAll(['id'=>$id]);
+    }
+
+
+    /**
+     * @brief save detail
+     * @param @id int
+     * @throws
+     * @return mixed
+     */
+    public function actionSaveDetail($mid)
+    {
+        $post = Yii::$app->request->post();
+        $details = $post['OaDataMineDetail'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            $basic = OaDataMineDetail::findOne(['mid'=>$mid]);
+            foreach($details as $key => $row){
+                if(strpos($key,'New-')!==false){
+                    //create
+                    $model = new OaDataMineDetail();
+                    $model->attributes = $basic->attributes;
+                    $model->setAttributes($row);
+                    if(!$model->save()){
+                        throw new \Exception('fail to create');
+                    }
+
+                }
+                else{
+                    //update
+                    $model = OaDataMineDetail::findOne(['id' => $key]);
+                    $model->setAttributes($row);
+                    if(!$model->update()){
+                        throw new \Exception('fail to update');
+                    }
+
+                }
+            }
+            $trans->commit();
+            $msg = '保存成功！';
+        }
+
+        catch(\Exception $why){
+            $trans->rollBack();
+            $msg = '保存失败！';
+        }
+        return $msg;
+
+        //create or update
+
     }
 
     /**

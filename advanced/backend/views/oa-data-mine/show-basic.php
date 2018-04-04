@@ -2,15 +2,24 @@
 
 use kartik\widgets\ActiveForm;
 use yii\helpers\Url;
-
+use yii\bootstrap\Modal;
 
 $this->title = '数据详情';
 
+
+Modal::begin([
+    'id' => 'detail-modal',
+    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+    'size' => "modal-xl"
+]);
+//echo
+Modal::end();
+
 ?>
-<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>
+<!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+<!--<script src="https://unpkg.com/vue/dist/vue.js"></script>-->
+<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+<!--<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>-->
 
 <?php
 echo "<div><img src='{$mine->MainImage}' width=60 height=60}></div>";
@@ -60,7 +69,7 @@ for($i=0;$i<=10;$i++){
     <div class="form-group field-oadataminedetail-extra_image0 has-success">
     <label class="control-label col-md-2" for="oadataminedetail-extra_image0">'.$label_name.'</label>
     <div class="col-lg-8">
-        <div class="col-md-4"><input type="text" id="oadataminedetail-extra_image0" class="extra-img form-control" name="OaDataMineDetail[extra_image0]" value="https://img.joomcdn.net/d52c0613cb8e02329298ac88ca1571600e38e889_original.jpeg" style="margin-top:2%;" aria-invalid="false"></div>
+        <div class="col-md-4"><input type="text"  class="extra-img form-control"  value="'.$mine->$extra_image.'" style="margin-top:2%;" aria-invalid="false"></div>
          <div class="col-md-4">
          <button class="btn add-img">增加</button>
          <button class="btn del-img">删除</button>
@@ -80,8 +89,12 @@ for($i=0;$i<=10;$i++){
 <div class="blockTitle" >
     <span>多属性信息</span>
 </div>
-
+<a data-toggle="modal" data-target="#detail-modal" class=" var-btn btn btn-default ">设置多属性</a>
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
+<div class="blockTitle" >
+<button class="btn btn-info save-btn">保存当前数据 </button>
+<button class="btn  btn-success export-btn">导出Joom模板 </button>
+</div>
 <?php ActiveForm::end() ?>
 
 
@@ -144,13 +157,23 @@ for($i=0;$i<=10;$i++){
         opacity: 1;
     }
 
+
+    @media (min-width: 1000px) {
+        .modal-xl {
+            width: 80%;
+            /*max-width:1200px;*/
+        }
+    }
+
 </style>
 
 
 <?php
 
 $exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
-$saveUrl = Url::toRoute(['save', 'mid' => $mid ]);
+$saveUrl = Url::toRoute(['save-basic', 'mid' => $mid ]);
+$detailUrl = Url::toRoute(['detail','mid' => $mid]);
+
 $js = <<<JS
 
 /*
@@ -182,8 +205,9 @@ if ($('#back-to-top').length) {
 /*
 export to csv
  */
-$('#export-btn').on('click',function() {
+$('.export-btn').on('click',function() {
     window.location = '$exportUrl';
+    return false;
 })
 
 /*
@@ -233,11 +257,13 @@ $('.main-image').on('change',function() {
 operate images
  */
 
+//del
 $('.del-img').on('click', function() {
     $(this).closest('div .form-group').remove();
 });
 
-$('.add-img').on('click',function() {
+//add
+$('body').on('click','.add-img',function() {
     //be able to add?
     var image_num = $('.extra-img').length;
     if(image_num>=11){
@@ -245,9 +271,9 @@ $('.add-img').on('click',function() {
         return false ;
     }
     var element = '<div class="form-group field-oadataminedetail-extra_image7 has-success">\
-    <label class="control-label col-md-2" for="oadataminedetail-extra_image0"></label>\
+    <label class="control-label col-md-2" for="oadataminedetail-extra_image0">附加图#</label>\
     <div class="col-lg-8">\
-        <div class="col-md-4"><input type="text" id="oadataminedetail-extra_image0" class="extra-img form-control" name="OaDataMineDetail[extra_image0]" value="https://img.joomcdn.net/d52c0613cb8e02329298ac88ca1571600e38e889_original.jpeg" style="margin-top:2%;" aria-invalid="false"></div>\
+        <div class="col-md-4"><input type="text"  class="extra-img form-control"  value="" style="margin-top:2%;" aria-invalid="false"></div>\
          <div class="col-md-4">\
          <button class="btn add-img">增加</button>\
          <button class="btn del-img">删除</button>\
@@ -259,12 +285,136 @@ $('.add-img').on('click',function() {
     <div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>\
     </div>';
     
-    $('.al' 
-  ;
+    $('.all-img').append(element);
+    listenImage();
+    return false;
+})
+
+//change
+
+function listenImage() {
+    $('.extra-img').each(function() {
+    var ele = $(this);
+    ele.change(function() {
+        var new_image = $(this).val();
+        $(this).parents('div .form-group').find('img').attr('src',new_image);
+    })
+})
+  
+}
+
+//move-up
+
+$('body').on('click','.up-img',function() {
+    var position = $('.up-img').index(this);
+    if(position === 0){
+        alert("已经在最上面了！")
+            return false;
+    }
+    var images = [];
+    $('.extra-img').each(function(index) {
+        if(index === position-1 || index === position ){
+            images.push($(this).val())    
+        }
+            
+    })
+   
+    $('.extra-img').each(function(index) {
+        if(index === position-1){
+            $(this).val(images[1]);
+            $(this).parents('div .form-group').find('img').attr('src',images[1])
+        }
+        if(index === position){
+            $(this).val(images[0]);
+            $(this).parents('div .form-group').find('img').attr('src',images[0])
+        }
+            
+    })
     
+    return false;
+  
+})
+
+//move-down
+$('body').on('click','.down-img',function() {
+    var position = $('.down-img').index(this);
+    var image_num = $('.extra-img').length;
+    if(position + 1 === image_num){
+        alert("已经在最下面了！")
+            return false;
+    }
+    var images = [];
+    $('.extra-img').each(function(index) {
+        if(index === position || index === position +1 ){
+            images.push($(this).val())    
+        }
+            
+    })
+   
+    $('.extra-img').each(function(index) {
+        if(index === position){
+            $(this).val(images[1]);
+            $(this).parents('div .form-group').find('img').attr('src',images[1])
+        }
+        if(index === position + 1){
+            $(this).val(images[0]);
+            $(this).parents('div .form-group').find('img').attr('src',images[0])
+        }
+            
+    })
+    
+    return false;
+  
+})
+
+/*
+save data
+ */
+
+$('.save-btn').on('click',function() {
+    var images = {};
+    $('.extra-img').each(function(index) {
+        images['extra_image' + index] = $(this).val();
+    });
+    var form_data = $('form#detail-form').serializeObject();
+    // var image_data = JOSN.stringify(images);
+    $.ajax({
+        url:'$saveUrl',
+        type:'post',
+        data:{'form': form_data, 'images':images},
+        success:(function(ret) { 
+            alert(ret);
+        })
+    });
+    return false;
 })
 
 
+// 多属性设置模态框
+$(".var-btn").click(function() {
+    $('.modal-body').children('*').remove(); //清空数据
+    $.get('$detailUrl',
+        function(data) {
+            $('.modal-body').html(data);
+        }
+    );
+});
+
+
+$.prototype.serializeObject = function() {  
+    var a, o, h, i, e;  
+    a = this.serializeArray();  
+    o = {};  
+    h = o.hasOwnProperty;  
+    for (i = 0; i < a.length; i++) {  
+        e = a[i];  
+        if (!h.call(o, e.name)) {  
+            var key = e.name.replace('OaDataMineDetail[','').replace(']','')
+            o[key] = e.value;  
+        }  
+    }  
+    return o;
+};  
 JS;
 
 
