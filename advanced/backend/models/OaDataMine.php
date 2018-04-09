@@ -33,7 +33,7 @@ class OaDataMine extends \yii\db\ActiveRecord
         return [
             [['proId', 'platForm', 'progress', 'creator'], 'string'],
             [['createTime', 'updateTime'], 'safe'],
-            [['varMainImage'], 'safe']
+            [['detailStatus','cat','subCat','goodsCode','varMainImage'], 'safe']
         ];
     }
 
@@ -50,7 +50,11 @@ class OaDataMine extends \yii\db\ActiveRecord
             'creator' => '创建人',
             'createTime' => '创建时间',
             'updateTime' => '更新时间',
-            'MainImage' => '图片'
+            'MainImage' => '图片',
+            'detailStatus' =>'产品状态',
+            'cat' => '主类目',
+            'subCat' => '子类目',
+            'goodsCode' => '商品编码',
         ];
     }
 

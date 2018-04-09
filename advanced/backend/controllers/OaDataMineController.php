@@ -157,21 +157,20 @@ class OaDataMineController extends Controller
      */
     public function actionCreateJob()
     {
-
-        $job_model = new OaDataMine();
-        $request = Yii::$app->request->post();
-        $pro_id = trim($request['proId']);
-        $platform = $request['platform'];
-        $creator = Yii::$app->user->identity->username;
-        $current_time = date('Y-m-d H:i:s');
-        $job_model->proId = $pro_id;
-        $job_model->platForm = $platform;
-        $job_model->creator = $creator;
-        $job_model->createTime = $current_time;
-        $job_model->updateTime = $current_time;
-        $job_model->progress = '待采集';
         try
         {
+            $job_model = new OaDataMine();
+            $request = Yii::$app->request->post();
+            $pro_id = trim($request['proId']);
+            $platform = $request['platform'];
+            $creator = Yii::$app->user->identity->username;
+            $current_time = date('Y-m-d H:i:s');
+            $job_model->proId = $pro_id;
+            $job_model->platForm = $platform;
+            $job_model->creator = $creator;
+            $job_model->createTime = $current_time;
+            $job_model->updateTime = $current_time;
+            $job_model->progress = '待采集';
             if($job_model->save()){
                 $job_id = $job_model->id;
                 $redis = Yii::$app->redis;
@@ -185,6 +184,9 @@ class OaDataMineController extends Controller
         }
         catch(IntegrityException $why){
             $msg = "该商品已采集过，不可重复采集！";
+        }
+        catch (\Exception $why){
+            $msg = $why;
         }
         return json_encode(['msg' =>$msg]);
     }

@@ -26,7 +26,7 @@ class OaDataMineSearch extends OaDataMine
         return [
             [['id'], 'integer'],
             [['proId', 'platForm', 'progress', 'creator', 'createTime', 'updateTime'], 'safe'],
-            [['MainImage'], 'safe']
+            [['detailStatus','cat','subCat','goodsCode','MainImage'], 'safe']
         ];
     }
 
@@ -50,7 +50,9 @@ class OaDataMineSearch extends OaDataMine
     {
         $query = OaDataMine::find()->select(['oa_data_mine.*','max(MainImage) as MainImage']);
         $query->joinWith(['oa_data_mine_detail']);
-        $query->groupBy(['oa_data_mine.id','proId','platForm','progress','creator','createTime','updateTime']);
+        $query->groupBy(['oa_data_mine.id','proId','platForm','progress',
+            'creator','createTime','updateTime','detailStatus','cat','subCat','goodsCode',
+            ]);
         $query->orderBy(['oa_data_mine.id' => SORT_DESC]);
 
         // add conditions that should always apply here
@@ -73,15 +75,35 @@ class OaDataMineSearch extends OaDataMine
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'createTime' => $this->createTime,
-            'updateTime' => $this->updateTime,
         ]);
+
+        if($this->createTime) {
+            $createTime = explode('/', $this->createTime);
+            $query->andFilterWhere([
+                'and',
+                ['>=', 'convert(varchar(10),createTime,121)', $createTime[0]],
+                ['<=', 'convert(varchar(10),createTime,121)', $createTime[1]],
+            ]);
+
+        }
+        if($this->updateTime) {
+            $updateTime = explode('/', $this->updateTime);
+            $query->andFilterWhere([
+                'and',
+                ['>=', 'convert(varchar(10),updateTime,121)', $updateTime[0]],
+                ['<=', 'convert(varchar(10),updateTime,121)', $updateTime[1]],
+            ]);
+
+        }
 
         $query->andFilterWhere(['like', 'proId', $this->proId])
             ->andFilterWhere(['like', 'platForm', $this->platForm])
             ->andFilterWhere(['like', 'progress', $this->progress])
+            ->andFilterWhere(['like', 'detailStatus', $this->detailStatus])
+            ->andFilterWhere(['like', 'cat', $this->cat])
+            ->andFilterWhere(['like', 'subCat', $this->subCat])
+            ->andFilterWhere(['like', 'goodsCode', $this->goodsCode])
             ->andFilterWhere(['like', 'creator', $this->creator]);
-
         return $dataProvider;
     }
 }

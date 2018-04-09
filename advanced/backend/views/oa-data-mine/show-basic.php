@@ -21,10 +21,8 @@ Modal::end();
 <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
 <!--<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>-->
 
-<?php
-echo "<div><img src='{$mine->MainImage}' width=60 height=60}></div>";
-?>
-
+    <button class="btn btn-info save-btn">保存当前数据 </button>
+    <button class="btn  btn-success export-btn">导出Joom模板 </button>
 
 <?php $form = ActiveForm::begin([
     'id' => 'detail-form',

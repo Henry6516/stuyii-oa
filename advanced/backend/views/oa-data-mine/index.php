@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\Url;
 use \kartik\form\ActiveForm;
 use yii\widgets\Pjax;
@@ -66,31 +66,108 @@ $createJobUrl = URl::toRoute('create-job')
 
 
     <?php Pjax::begin(['id' => 'job-table']) ?>
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            ['class' => 'yii\grid\ActionColumn'],
-            [   'attribute' => 'varMainImage',
-                'format' => 'raw',
-                'contentOptions' => ['style' => 'width:80px; white-space: normal;'],
-                'value' => function($model,$key)
-                {
-                    $image = $model->oa_data_mine_detail?$model->oa_data_mine_detail->MainImage:'';
-                    $anchor = 'https://joom.com/en/products/'.$model->proId ;
-                    return "<div align='center'><a target='_blank' href='{$anchor}'> <img  src='{$image}' width='60' height='60'></a></div>";
-                },
-                'label' => '图片',
+    <?php try {
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'pjax' => 'true',
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                ['class' => 'yii\grid\ActionColumn'],
+                [   'attribute' => 'varMainImage',
+                    'format' => 'raw',
+                    'contentOptions' => ['style' => 'width:80px; white-space: normal;'],
+                    'value' => function($model,$key)
+                    {
+                        $image = $model->oa_data_mine_detail?$model->oa_data_mine_detail->MainImage:'';
+                        $anchor = 'https://joom.com/en/products/'.$model->proId ;
+                        return "<div align='center'><a target='_blank' href='{$anchor}'> <img  src='{$image}' width='60' height='60'></a></div>";
+                    },
+                    'label' => '图片',
+                ],
+                'proId',
+                'platForm',
+                'progress',
+                'creator',
+                ['attribute' => 'createTime',
+                    'format' => 'raw',
+                    'value' => function($model) {
+                        return substr((string)$model->createTime,0,10);
+
+                    },
+                    'width' => '200px',
+                    'filterType' => GridView::FILTER_DATE_RANGE,
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => [
+//                            'value' => Yii::$app->request->get('OaDataMineSearch')['createTime'],
+                            'convertFormat' => true,
+                            'useWithAddon' => true,
+                            'format' => 'php:Y-m-d',
+                            'todayHighlight' => true,
+                            'locale'=>[
+                                'format' => 'YYYY-MM-DD',
+                                'separator'=>'/',
+                                'applyLabel' => '确定',
+                                'cancelLabel' => '取消',
+                                'daysOfWeek'=>false,
+                            ],
+                            'opens'=>'left',
+                        ],
+                        'model' =>$searchModel,
+                        'attribute' => 'createTime',
+
+                    ],
+
+                ],
+                ['attribute' => 'updateTime',
+                    'format' => 'raw',
+                    'value' => function($model) {
+                        return substr((string)$model->updateTime,0,10);
+
+                    },
+                    'width' => '200px',
+                    'filterType' => GridView::FILTER_DATE_RANGE,
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => [
+//                            'value' => Yii::$app->request->get('OaDataMineSearch')['updateTime'],
+                            'convertFormat' => true,
+                            'useWithAddon' => true,
+                            'format' => 'php:Y-m-d',
+                            'todayHighlight' => true,
+                            'locale'=>[
+                                'format' => 'YYYY-MM-DD',
+                                'separator'=>'/',
+                                'applyLabel' => '确定',
+                                'cancelLabel' => '取消',
+                                'daysOfWeek'=>false,
+                            ],
+                            'opens'=>'left',
+                        ],
+                        'model' =>$searchModel,
+                        'attribute' => 'createTime',
+
+                    ],
+
+                ],
+                ['attribute' => 'detailStatus',
+                    'format' => 'raw',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ['未完善' =>'未完善', '已完善' => '已完善'],
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => '-请选择-'],
+
+                ],
+                'cat',
+                'subCat',
+                'goodsCode'
             ],
-            'proId',
-            'platForm',
-            'progress',
-            'creator',
-            'createTime',
-            'updateTime',
-        ],
-    ]); ?>
+        ]);
+        }
+        catch (\Exception $why){
+
+        }?>
     <?php Pjax::end() ?>
 </div>
 
@@ -111,8 +188,8 @@ $('form#create-job').on('beforeSubmit', function() {
     type:'POST',
     success:function(res) {
         var msg = res['msg']; 
-      alert(msg);
-      $.pjax.reload({container:"#job-table",timeout: false});
+        alert(msg);
+        $.pjax.reload({container:"#job-table",timeout: 5000});
     }
     });
 }).on('submit',function(e) {
