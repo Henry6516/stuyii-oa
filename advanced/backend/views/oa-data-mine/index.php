@@ -159,8 +159,26 @@ $createJobUrl = URl::toRoute('create-job')
                     'filterInputOptions' => ['placeholder' => '-请选择-'],
 
                 ],
-                'cat',
-                'subCat',
+                ['attribute' => 'cat',
+                    'format' => 'raw',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => array_combine($cat, $cat),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => '-请选择-'],
+
+                ],
+                ['attribute' => 'subCat',
+                    'format' => 'raw',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => array_combine($subCat, $subCat),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => '-请选择-'],
+
+                ],
                 'goodsCode'
             ],
         ]);

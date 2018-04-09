@@ -41,10 +41,20 @@ class OaDataMineController extends Controller
     {
         $searchModel = new OaDataMineSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $cat_sql  = 'select CategoryName from B_GoodsCats where CategoryLevel=1';
+        $sub_cat_sql = 'select CategoryName from B_GoodsCats where CategoryLevel=2';
+        $db = Yii::$app->db;
+        $cat = $db->createCommand($cat_sql)->queryAll();
+        $cat = array_map(function ($arr){return $arr['CategoryName'];}, $cat);
+        $sub_cat = $db->createCommand($sub_cat_sql)->queryAll();
+        $sub_cat = array_map(function ($arr){return $arr['CategoryName'];}, $sub_cat);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'cat' => $cat,
+            'subCat' =>$sub_cat
         ]);
     }
 
