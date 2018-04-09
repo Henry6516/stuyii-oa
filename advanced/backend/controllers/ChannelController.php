@@ -716,14 +716,14 @@ class ChannelController extends Controller
 
     public function actionNameTags($id,$table){
 
-        if($table=='oa_wishgoods') {
-            $sql2 = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE infoid=' . $id;
+        if($table === 'oa_wishgoods') {
+            $sql = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE infoid=' . $id;
         }
-        if($table=='oa_templates') {
-            $sql2 = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE nid=' . $id;
+        if($table === 'oa_templates') {
+            $sql = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE nid=' . $id;
         }
         $db = yii::$app->db;
-        $query = $db->createCommand($sql2);
+        $query = $db->createCommand($sql);
         $words = $query->queryAll();
         if (empty($words)){
             return;
@@ -740,13 +740,13 @@ class ChannelController extends Controller
      * 乱序数组
      */
     public function actionNonOrder($data,$div){
-        if($div == 'eBay'){
+        if($div === 'eBay'){
             $max_length = 80;
         }
-        if($div == 'Wish'){
+        if($div === 'Wish'){
             $max_length = 110;
         }
-        if($div == 'Joom'){
+        if($div === 'Joom'){
             $max_length = 100;
         }
         $head = [$data['head']];
@@ -769,7 +769,7 @@ class ChannelController extends Controller
             return '';
         }
         //判断固定部分的长度
-        $unchanged_len = strlen(implode(' ',array_merge($head,$need,$tail)));
+        $unchanged_len = \strlen(implode(' ',array_merge($head,$need,$tail)));
         if($unchanged_len > $max_length){
             shuffle($need);
             $real_len =  implode(' ',array_merge($head,$need,$tail));
@@ -779,19 +779,18 @@ class ChannelController extends Controller
         $available_len = $max_length - $unchanged_len - 1;
         shuffle($random); //摇匀词库
         $random_str1 = [array_shift($random)]; //从摇匀的词库里不放回抽一个
-        $random_arr = array_slice($random,0,4);//从剩余的词库里抽四个
-        $real_len = strlen(implode(' ',array_merge($random_str1,$random_arr)));
+        $random_arr = \array_slice($random,0,4);//从剩余的词库里抽四个
+        $real_len = \strlen(implode(' ',array_merge($random_str1,$random_arr)));
         for($i=0;$i<4;$i++){
             if($real_len<=$available_len){
                 break;
             }
-            else{
-                array_shift($random_arr); //去掉一个随机词
-                $real_len = strlen(implode(' ',array_merge($random_str1,$random_arr)));
-            }
+            array_shift($random_arr); //去掉一个随机词
+            $real_len = \strlen(implode(' ',array_merge($random_str1,$random_arr)));
+
         }
         shuffle($need);
-        return  (implode(' ',array_merge($head,$random_str1,$need,$random_arr,$tail)));
+        return  implode(' ',array_merge($head,$random_str1,$need,$random_arr,$tail));
     }
 
     /*
@@ -916,8 +915,8 @@ class ChannelController extends Controller
     public function actionExportJoom($id)
     {
         $da = $this->actionNameTags($id,'oa_wishgoods');
-        $name = $this->actionNonOrder($da,'Joom');
-        $name = str_replace("'","''",$name);
+        $pro_name = $this->actionNonOrder($da,'Joom');
+        $name = str_replace("'","''",$pro_name);
         $sql = 'P_oa_toJoom @pid=' . $id.",@name='".$name."'";
         $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
         $db = yii::$app->db;
@@ -938,10 +937,47 @@ class ChannelController extends Controller
                     break;
                 }
             }
-            array_push($filter_ret,$joom) ;
+            $filter_ret[] = $joom;
         }
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom模板csv';
+        $this->actionExportCsv($filter_ret, $header_data, $file_name);
+
+    }
+
+    /**
+     * 导出Joom2
+     * @param int $id 商品id
+     */
+    public function actionExportSecJoom($id)
+    {
+        $da = $this->actionNameTags($id,'oa_wishgoods');
+        $name = $this->actionNonOrder($da,'Joom');
+        $name = str_replace("'","''",$name);
+        $sql = 'P_oa_toSecJoom @pid=' . $id.",@name='".$name."'";
+        $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
+        $db = yii::$app->db;
+        $query = $db->createCommand($sql);
+        $joomRes = $query->queryAll();
+        $adjust_ret = $db->createCommand($adjust_sql)->queryAll();
+        if (empty($joomRes)) {
+            return;
+        }
+
+        // adjust price according to weight
+        $filter_ret = [];
+        foreach ($joomRes as $joom) {
+            $weight = $joom['Shipping weight'] * 1000 ;
+            foreach ($adjust_ret as $adjust) {
+                if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
+                    $joom['*Price'] += $adjust['added_price'] ;
+                    break;
+                }
+            }
+            $filter_ret[] = $joom;
+        }
+        $header_data = array_keys($joomRes[0]);
+        $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom2模板csv';
         $this->actionExportCsv($filter_ret, $header_data, $file_name);
 
     }

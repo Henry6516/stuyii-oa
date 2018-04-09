@@ -83,6 +83,7 @@ if (empty($sku->randomKeywords)) {
         <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
         <button class="btn btn-success export" type="button">导出ibay模版</button>
         <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
+        <button class="btn btn-danger joom-2-csv" type="button">导出joom-2(csv)</button>
 <!--        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
     </div>
     <div class="blockTitle">
@@ -244,6 +245,7 @@ if (empty($sku->randomKeywords)) {
     <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
     <button class="btn btn-success export" type="button">导出ibay模版</button>
     <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
+    <button class="btn btn-danger joom-2-csv" type="button">导出joom-2(csv)</button>
 <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
@@ -326,6 +328,7 @@ $requestUrlsku = Url::toRoute(['variations']);//弹窗的html内容，下面的j
 $updateUrl = Url::toRoute(['update', 'id' => $sku->infoid]);
 $exportUrl = Url::to(['export', 'id' => $sku->infoid]);
 $joomUrl = Url::to(['export-joom', 'id' => $sku->infoid]);
+$joomSecUrl = Url::to(['export-sec-joom', 'id' => $sku->infoid]);
 $wishUrl = Url::toRoute(['wish-sign', 'id' => $sku->infoid]);
 $shopeeUrl = Url::toRoute(['export-shopee', 'id' => $sku->infoid]);
 $js = <<< JS
@@ -435,6 +438,12 @@ $('body').on('click','.down-btn',function() {
     $('.joom-csv').on('click',function(){
         alert('确定导出Joom模板?');
          window.location.href = '{$joomUrl}';
+    });
+    
+    //导出数据joom2 CSV
+    $('.joom-2-csv').on('click',function(){
+        alert('确定导出Joom模板?');
+         window.location.href = '{$joomSecUrl}'
     });
     
     //导出数据shopee
