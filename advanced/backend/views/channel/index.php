@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Html;
 use kartik\grid\GridView;
+use yii\helpers\Url;
+
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ChannelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -10,13 +12,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="channel-index" style="width: 8000px">
     <p>
-        <?= Html::a(Yii::t('app', '标记已完善'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', '标记已完善'), ['create'], ['class' => 'btn btn-info']) ?>
+        <?= Html::button(Yii::t('app', '批量导出Joom'), ['class' => 'btn joom-btn btn-warning']) ?>
+        <?= Html::button(Yii::t('app', '批量导出Joom2'), ['class' => 'btn joom-sec-btn btn-danger']) ?>
     </p>
+
     </div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'id' => 'chanel-table',
         'pjax'=>true,
         'pjaxSettings'=>[
             'neverTimeout'=>true,
@@ -183,3 +189,35 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 </div>
+
+<?php
+$joomUrl = Url::toRoute(['export-lots-joom']);
+
+$js = <<< JS
+
+/*
+批量导出joom模板
+ */
+
+//joom模板
+
+$('.joom-btn').on('click', function() {
+    alert('确定导出Joom模板?');
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    var flag = 'first';
+    window.location.href = '{$joomUrl}' + '?pids=' + pids + '&flag=' + flag;
+})
+
+
+//joom2模板
+$('.joom-sec-btn').on('click', function() {
+    alert('确定导出Joom模板?');
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    var flag = 'second';
+    window.location.href = '{$joomUrl}' + '?pids=' + pids + '&flag=' + flag;
+})
+
+JS;
+
+$this->registerJs($js);
+?>

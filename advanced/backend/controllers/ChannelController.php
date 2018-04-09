@@ -983,6 +983,62 @@ class ChannelController extends Controller
     }
 
     /**
+     * 批量导出Joom
+     * @param string $pids
+     * @param string $flag
+     *
+     */
+    public function actionExportLotsJoom($pids, $flag)
+    {
+
+        if(empty($pids)){
+            $this->actionExportCsv([], [], 'none');
+            return;
+        }
+        $pids = explode(',', $pids);
+        if($flag === 'first'){
+            $procedur = 'P_oa_toJoom ';
+        }
+        if($flag === 'second'){
+            $procedur = 'P_oa_toSecJoom ';
+        }
+        $filter_ret = [];
+        $header = [];
+        foreach ($pids as $pid) {
+            $da = $this->actionNameTags($pid,'oa_wishgoods');
+            $name = $this->actionNonOrder($da,'Joom');
+            $name = str_replace("'","''",$name);
+            $sql = $procedur.'@pid=' . $pid.",@name='".$name."'";
+            $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
+            $db = yii::$app->db;
+            $query = $db->createCommand($sql);
+            $joomRes = $query->queryAll();
+            $adjust_ret = $db->createCommand($adjust_sql)->queryAll();
+            if (empty($joomRes)) {
+                return;
+            }
+
+            // adjust price according to weight
+
+            foreach ($joomRes as $joom) {
+                $weight = $joom['Shipping weight'] * 1000 ;
+                foreach ($adjust_ret as $adjust) {
+                    if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
+                        $joom['*Price'] += $adjust['added_price'] ;
+                        break;
+                    }
+                }
+                $filter_ret[] = $joom;
+            }
+            $header['header'] = array_keys($joomRes[0]);
+        }
+        $file_name = date('Y-m-d') . '-Joom模板csv';
+        $this->actionExportCsv($filter_ret, $header['header'], $file_name);
+
+
+    }
+
+    /**
      * 导出Shopee
      * @param int $id 商品id
      */
