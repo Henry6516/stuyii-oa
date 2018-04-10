@@ -168,43 +168,53 @@ class OaDataMineController extends Controller
     {
         try
         {
-            $job_model = new OaDataMine();
             $request = Yii::$app->request->post();
             $db = Yii::$app->db;
             $max_code_sql = 'select goodsCode from oa_data_mine 
                         where datediff(d,createTime,getdate())=0 
                         and id =(select max(id) from oa_data_mine 
                         where datediff(d,createTime,getdate())=0 )';
-            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
-            $goods_code = $this->generateCode($max_code);
-            $pro_id = trim($request['proId']);
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
-            $current_time = date('Y-m-d H:i:s');
-            $job_model->proId = $pro_id;
-            $job_model->platForm = $platform;
-            $job_model->creator = $creator;
-            $job_model->createTime = $current_time;
-            $job_model->updateTime = $current_time;
-            $job_model->progress = '待采集';
-            $job_model->goodsCode = $goods_code;
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
+            $jobs= explode(',',$request['proId']);
+            $trans = $db->beginTransaction();
+            try{
+                foreach ($jobs as $pro_id){
+                    $job_model = new OaDataMine();
+                    $pro_id = trim($pro_id);
+                    $goods_code = $this->generateCode($max_code);
+                    $current_time = date('Y-m-d H:i:s');
+                    $job_model->proId = $pro_id;
+                    $job_model->platForm = $platform;
+                    $job_model->creator = $creator;
+                    $job_model->createTime = $current_time;
+                    $job_model->updateTime = $current_time;
+                    $job_model->progress = '待采集';
+                    $job_model->goodsCode = $goods_code;
+                    $job_model->detailStatus = '未完善';
+                    if($job_model->save()){
+                        $job_id = $job_model->id;
+                        $redis = Yii::$app->redis;
+                        $redis->lpush('job_list',$job_id.','.$pro_id);
+                        $max_code =  $goods_code;
+                    }
+                    else {
+                        throw  new \Exception("fail to save");
+                    }
 
-            if($job_model->save()){
-                $job_id = $job_model->id;
-                $redis = Yii::$app->redis;
-                $redis->lpush('job_list',$job_id.','.$pro_id);
-                $msg = "任务已添加到队列！";
+                }
+                $trans->commit();
+                $msg = '任务添加成功！';
             }
-            else {
-                $msg = "任务添加失败，请重新添加";
+            catch (\Exception $why){
+                $trans->rollBack();
+                $msg = '任务添加失败！';
             }
 
-        }
-        catch(IntegrityException $why){
-            $msg = "该商品已采集过，不可重复采集！";
         }
         catch (\Exception $why){
-            $msg = $why;
+            $msg = '任务添加失败！';
         }
         return json_encode(['msg' =>$msg]);
     }
