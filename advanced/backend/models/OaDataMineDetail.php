@@ -36,7 +36,12 @@ use Yii;
  * @property string $extra_image10
  */
 class OaDataMineDetail extends \yii\db\ActiveRecord
+
 {
+    public $cat;
+    public $subCat;
+
+
     /**
      * @inheritdoc
      */
@@ -54,6 +59,7 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
             [['mid', 'quantity', 'shipping'], 'integer'],
             [['MainImage', 'parentId', 'proName', 'description', 'tags', 'childId', 'color', 'proSize', 'shippingTime', 'varMainImage', 'extra_image0', 'extra_image1', 'extra_image2', 'extra_image3', 'extra_image4', 'extra_image5', 'extra_image6', 'extra_image7', 'extra_image8', 'extra_image9', 'extra_image10'], 'string'],
             [['price', 'msrPrice', 'shippingWeight'], 'number'],
+            [['cat', 'subCat'], 'safe'],
         ];
     }
 
@@ -80,6 +86,8 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
             'shippingTime' => '配送时间',
             'varMainImage' => '变体主图',
             'MainImage' => '主图',
+            'cat' => '主类目',
+            'subCat' => '子类目',
             'extra_image0' => '附加图#1',
             'extra_image1' => '附加图#2',
             'extra_image2' => '附加图#3',
@@ -92,5 +100,13 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
             'extra_image9' => '附加图#10',
             'extra_image10' => '附加图#11',
         ];
+    }
+
+    /*
+     * @brief join with oa-data-mine
+     */
+    public function getoa_data_mine()
+    {
+        return $this->hasOne(OaDataMine::className(),['id'=>'mid']);
     }
 }

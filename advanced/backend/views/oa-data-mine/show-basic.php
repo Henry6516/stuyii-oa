@@ -41,6 +41,8 @@ Modal::end();
 <?= $form->field($mine,'proName')?>
 <?= $form->field($mine,'tags')?>
 <?= $form->field($mine,'parentId')?>
+<?= $form->field($mine,'cat')?>
+<?= $form->field($mine,'subCat')?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
 <div class="blockTitle" >

@@ -60,6 +60,7 @@ $createJobUrl = URl::toRoute('create-job')
     </div><!-- /.col-lg-6 -->
     <div class="col-lg-4">
         <button type="submit" class="btn btn-success">开始采集</button>
+        <button type="button" class="btn export-lots-btn btn-danger">批量导出Joom-csv</button>
     </div><!-- /.col-lg-6 -->
         <?php ActiveForm::end(); ?>
 </div><!-- /.row -->
@@ -70,6 +71,7 @@ $createJobUrl = URl::toRoute('create-job')
         echo GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'id' =>'mine-table',
             'pjax' => 'true',
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
@@ -191,8 +193,13 @@ $createJobUrl = URl::toRoute('create-job')
 </div>
 
 <?php
+$exportLotsUrl = Url::toRoute(['export-lots']);
+
 $js = <<< JS
 
+/*
+create job
+ */
 $('form#create-job').on('beforeSubmit', function() {
     
     if($('#pro-id').val()===''){
@@ -215,6 +222,14 @@ $('form#create-job').on('beforeSubmit', function() {
     e.preventDefault();
 });
 
+/*
+export lots
+ */
+$('.export-lots-btn').on('click', function() {
+    var lots_mid = $('#mine-table').yiiGridView("getSelectedRows");
+    window.location = '$exportLotsUrl' + '?lots_mid='+ lots_mid;
+    return false;
+})
 
 JS;
 $this->registerJs($js);
