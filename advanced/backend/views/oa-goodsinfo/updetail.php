@@ -826,7 +826,15 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 
 // 保存并完善改为Ajax方式
     $('#save-complete').on('click', function() {
-        $.ajax({
+        $.each($('#sku-table .sku'),function(i,item) {
+            if(item.value.length == 0){
+                flag = 1;return false;
+            }
+        })
+        if (flag == 1){
+            alert('商品SKU不能为空！');
+        }else{
+            $.ajax({
                 cache: true,
                 type: "POST",
                 url: $('#save-complete').data('href'),
@@ -837,6 +845,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                     location.reload();
                 }
             });
+        }
     });
 
 
