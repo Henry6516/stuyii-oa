@@ -22,6 +22,7 @@ Modal::end();
 <!--<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>-->
 
     <button class="btn btn-info save-btn">保存当前数据 </button>
+    <button class="btn btn-danger save-complete-btn">保存并完善 </button>
     <button class="btn  btn-success export-btn">导出Joom模板 </button>
 
 <?php $form = ActiveForm::begin([
@@ -91,6 +92,7 @@ for($i=0;$i<=10;$i++){
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
 <div class="blockTitle" >
 <button class="btn btn-info save-btn">保存当前数据 </button>
+    <button class="btn btn-danger save-complete-btn">保存并完善 </button>
 <button class="btn  btn-success export-btn">导出Joom模板 </button>
 </div>
 <?php ActiveForm::end() ?>
@@ -170,6 +172,7 @@ for($i=0;$i<=10;$i++){
 
 $exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
 $saveUrl = Url::toRoute(['save-basic', 'mid' => $mid ]);
+$saveCompleteUrl = Url::toRoute(['save-basic', 'mid' => $mid,'flag' => 'complete' ]);
 $detailUrl = Url::toRoute(['detail','mid' => $mid]);
 
 $js = <<<JS
@@ -387,6 +390,27 @@ $('.save-btn').on('click',function() {
     return false;
 })
 
+/*
+save-complete
+ */
+ 
+$('.save-complete-btn').on('click',function() {
+    var images = {};
+    $('.extra-img').each(function(index) {
+        images['extra_image' + index] = $(this).val();
+    });
+    var form_data = $('form#detail-form').serializeObject();
+    // var image_data = JOSN.stringify(images);
+    $.ajax({
+        url:'$saveCompleteUrl',
+        type:'post',
+        data:{'form': form_data, 'images':images},
+        success:(function(ret) { 
+            alert(ret);
+        })
+    });
+    return false;
+})
 
 // 多属性设置模态框
 $(".var-btn").click(function() {

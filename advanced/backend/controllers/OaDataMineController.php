@@ -7,6 +7,7 @@ use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
 use app\models\OaDataMineDetail;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -176,7 +177,7 @@ class OaDataMineController extends Controller
                         where datediff(d,createTime,getdate())=0 )';
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
-            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00008';
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
             $jobs= explode(',',$request['proId']);
             $trans = $db->beginTransaction();
             try{
@@ -300,7 +301,7 @@ class OaDataMineController extends Controller
     /**
      * @brief save basic data
      */
-    public function actionSaveBasic($mid)
+    public function actionSaveBasic($mid,$flag='')
     {
         $post = Yii::$app->request->post();
         $images = $post['images'];
@@ -308,6 +309,13 @@ class OaDataMineController extends Controller
         $detail_models = OaDataMineDetail::findAll(['mid'=>$mid]);
         $trans = Yii::$app->db->beginTransaction();
         try {
+            if($flag === 'complete'){
+                $mine = OaDataMine::findOne(['id'=>$mid]);
+                $mine->detailStatus = '已完善';
+                if(!$mine->save()){
+                    throw new \Exception('标记失败！');
+                }
+            }
             foreach($detail_models as $detail){
                 $detail->setAttributes($form);
                 $detail->setAttributes($images);

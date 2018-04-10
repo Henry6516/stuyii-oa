@@ -73,6 +73,7 @@ $createJobUrl = URl::toRoute('create-job')
             'pjax' => 'true',
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
+                ['class' => 'yii\grid\CheckboxColumn'],
                 ['class' => 'yii\grid\ActionColumn'],
                 [   'attribute' => 'varMainImage',
                     'format' => 'raw',
