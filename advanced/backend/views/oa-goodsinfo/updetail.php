@@ -826,6 +826,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 
 // 保存并完善改为Ajax方式
     $('#save-complete').on('click', function() {
+        var flag = 0;
         $.each($('#sku-table .sku'),function(i,item) {
             if(item.value.length == 0){
                 flag = 1;return false;
