@@ -176,7 +176,7 @@ class OaDataMineController extends Controller
                         where datediff(d,createTime,getdate())=0 )';
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
-            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00008';
             $jobs= explode(',',$request['proId']);
             $trans = $db->beginTransaction();
             try{
@@ -408,7 +408,7 @@ class OaDataMineController extends Controller
      */
     private function generateCode($max_code)
     {
-        $number = (int)substr($max_code,8,-1) + 1;
+        $number = (int)substr($max_code,8,\strlen($max_code)-1) + 1;
         $base = '00000';
         $code = substr($base,0,\strlen($base) - \strlen($number)).$number;
         return date('Ymd').$code;
