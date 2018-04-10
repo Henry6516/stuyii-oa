@@ -35,13 +35,14 @@ try{
                     ];
                     return Html::a('<span  class="del-detail glyphicon glyphicon-trash"></span>','#', $options);
                 },
-                'width' => '60px'
+                'width' => '30px'
             ],
         ],
         'attributes'=>[
 
             'childId'=>['label'=>'唯一编码', 'type'=>TabularForm::INPUT_TEXT,
                 'options'=>['class'=>'childId'],
+                'columnOptions'=>['width'=>'170px']
             ],
             'color'=>['label'=>'颜色', 'type'=>TabularForm::INPUT_TEXT,
                 'options'=>['class'=>'color'],

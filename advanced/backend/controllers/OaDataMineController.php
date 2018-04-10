@@ -152,12 +152,11 @@ class OaDataMineController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        OaDataMineDetail::deleteAll(['mid' => $id]);
         return $this->redirect(['index']);
     }
 
@@ -171,6 +170,13 @@ class OaDataMineController extends Controller
         {
             $job_model = new OaDataMine();
             $request = Yii::$app->request->post();
+            $db = Yii::$app->db;
+            $max_code_sql = 'select goodsCode from oa_data_mine 
+                        where datediff(d,createTime,getdate())=0 
+                        and id =(select max(id) from oa_data_mine 
+                        where datediff(d,createTime,getdate())=0 )';
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
+            $goods_code = $this->generateCode($max_code);
             $pro_id = trim($request['proId']);
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
@@ -181,6 +187,8 @@ class OaDataMineController extends Controller
             $job_model->createTime = $current_time;
             $job_model->updateTime = $current_time;
             $job_model->progress = '待采集';
+            $job_model->goodsCode = $goods_code;
+
             if($job_model->save()){
                 $job_id = $job_model->id;
                 $redis = Yii::$app->redis;
@@ -381,5 +389,18 @@ class OaDataMineController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * @brief generate goods code
+     * @param string $max_code
+     * @return string
+     */
+    private function generateCode($max_code)
+    {
+        $number = (int)substr($max_code,8,-1) + 1;
+        $base = '00000';
+        $code = substr($base,0,\strlen($base) - \strlen($number)).$number;
+        return date('Ymd').$code;
     }
 }
