@@ -19,7 +19,7 @@ class AppAsset extends AssetBundle
         'plugins/bootbox/bootbox.min.js',
         'plugins/app.min.js',
         'plugins/layer/layer.js',
-        'js/pageSize.js',
+        //'js/pageSize.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

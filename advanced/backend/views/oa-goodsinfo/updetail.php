@@ -831,7 +831,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             if(item.value.length == 0){
                 flag = 1;return false;
             }
-        })
+        });
         if (flag == 1){
             alert('商品SKU不能为空！');
         }else{

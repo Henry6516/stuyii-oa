@@ -152,5 +152,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'isVar',
 
     ],
+    'pager' =>[
+        'class' => \common\widgets\MLinkPager::className(),
+        'firstPageLabel' => '首页',
+        'prevPageLabel' => '<',
+        'nextPageLabel' => '>',
+        'lastPageLabel' => '尾页',
+        'goPageLabel' => true,
+        'goPageSizeArr' => ['10' => 10,'20' => 20,'50' => 50,'100' => 100,'500' => 500,'1000' => 1000],
+        'totalPageLable' => '共x页',
+        'goButtonLable' => '确定',
+        'maxButtonCount' => 10
+    ],
 ]); ?>
 </div>
