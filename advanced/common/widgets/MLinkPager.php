@@ -121,10 +121,10 @@ class MLinkPager extends LinkPager
 
         //gopage
         if ($this->goPageLabel) {
-            $input = "&nbsp记录条数：".Html::dropDownList('pageSize',$this->pagination->pageParam,$this->goPageSizeArr,array_merge([
+            $input = Html::dropDownList('pageSize',$this->pagination->pageParam,$this->goPageSizeArr,array_merge([
                 //'min' => 1,
-                'placeholder' => '请选择分页大小',
-                'style' => 'height:34px;width:120px;display:inline-block;margin:0 3px 0 3px',
+                'prompt' => '请选择分页大小',
+                'style' => 'height:34px;width:150px;display:inline-block;margin:0 3px 0 3px',
                 'class' => 'form-control',
             ],$this->goPageLabelOptions));
             $buttons[] = Html::tag('li',$input,[]);
