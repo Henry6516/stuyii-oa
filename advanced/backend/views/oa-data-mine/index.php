@@ -54,7 +54,7 @@ $createJobUrl = URl::toRoute('create-job')
       <span class="input-group-btn">
         <button class="btn btn-default" type="button">商品编号</button>
       </span>
-            <input id='pro-id' name="proId" type="text" class="form-control" placeholder="1504779018437136151-176-1-26193-2505906393">
+            <input id='pro-id' name="proId" type="text" class="form-control" placeholder="1504779018437136151-176(多个用逗号隔开)">
             <input name="platform" type="text" value="joom" hidden="hidden">
         </div><!-- /input-group -->
     </div><!-- /.col-lg-6 -->
