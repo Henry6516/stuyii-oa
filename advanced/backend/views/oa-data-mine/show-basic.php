@@ -43,7 +43,7 @@ Modal::end();
 <?= $form->field($mine,'tags')?>
 <?= $form->field($mine,'parentId')?>
 <?= $form->field($mine, 'cat')->dropDownList(array_combine($cat,$cat), ['class'=>'cat-list','prompt' => '--请选择主类目--']) ?>
-<?= $form->field($mine, 'subCat')->dropDownList($subCat, ['class'=>'sub-list','prompt' => '--请选择子类目--',]) ?>
+<?= $form->field($mine, 'subCat')->dropDownList(array_combine($subCat,$subCat), ['class'=>'sub-list','prompt' => '--请选择子类目--',]) ?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
 <div class="blockTitle" >
