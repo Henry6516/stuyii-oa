@@ -5,7 +5,8 @@ use yii\helpers\Url;
 use yii\bootstrap\Modal;
 
 $this->title = '数据详情';
-
+$default_cat = $mine->cat?:'none';
+$default_sub_cat = $mine->subCat?:'none';
 
 Modal::begin([
     'id' => 'detail-modal',
@@ -461,9 +462,9 @@ $('.cat-list').on('change',function(){
 })
 
 //default cat
-$("option[value={$mine->cat}]").attr("selected",true);
+$("option[value={$default_cat}]").attr("selected",true);
 
-$("option:contains({$mine->subCat})").attr("selected",true);
+$("option:contains({$default_sub_cat})").attr("selected",true);
 JS;
 
 
