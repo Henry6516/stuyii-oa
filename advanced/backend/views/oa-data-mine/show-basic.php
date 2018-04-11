@@ -41,8 +41,8 @@ Modal::end();
 <?= $form->field($mine,'proName')?>
 <?= $form->field($mine,'tags')?>
 <?= $form->field($mine,'parentId')?>
-<?= $form->field($mine,'cat')?>
-<?= $form->field($mine,'subCat')?>
+<?= $form->field($mine, 'cat')->dropDownList(array_combine($cat,$cat), ['class'=>'cat-list','prompt' => '--请选择主类目--']) ?>
+<?= $form->field($mine, 'subCat')->dropDownList($subCat, ['class'=>'sub-list','prompt' => '--请选择子类目--',]) ?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
 <div class="blockTitle" >
@@ -132,6 +132,9 @@ for($i=0;$i<=10;$i++){
     .el-table__body input {
         border-radius: 15px ;
     }
+    .el-table__body select {
+        border-radius: 15px ;
+    }
 
 
     #back-to-top {
@@ -176,6 +179,7 @@ $exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
 $saveUrl = Url::toRoute(['save-basic', 'mid' => $mid ]);
 $saveCompleteUrl = Url::toRoute(['save-basic', 'mid' => $mid,'flag' => 'complete' ]);
 $detailUrl = Url::toRoute(['detail','mid' => $mid]);
+$subCatUrl = Url::toRoute(['sub-cat']);
 
 $js = <<<JS
 
@@ -438,7 +442,28 @@ $.prototype.serializeObject = function() {
         }  
     }  
     return o;
-};  
+};
+
+
+/*
+two-level select
+ */
+$('.cat-list').on('change',function(){
+    var cat =$('.cat-list option:selected').val();
+    $('.sub-list option').not(':first').remove();
+    $.get("$subCatUrl",{cat:cat},function(cats) {
+        var select = $('.sub-list');
+        $.each(JSON.parse(cats), function(index,value) {
+            var html = '<option value="'+ value +'">'+ value +'</option>';
+            select.append(html);
+        })
+    })
+})
+
+//default cat
+$("option[value={$mine->cat}]").attr("selected",true);
+
+$("option:contains({$mine->subCat})").attr("selected",true);
 JS;
 
 

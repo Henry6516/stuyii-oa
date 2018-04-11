@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use backend\models\GoodsCats;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "oa_data_mine_detail".
@@ -109,4 +111,5 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
     {
         return $this->hasOne(OaDataMine::className(),['id'=>'mid']);
     }
+
 }

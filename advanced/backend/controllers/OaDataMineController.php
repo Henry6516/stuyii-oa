@@ -121,10 +121,22 @@ class OaDataMineController extends Controller
      */
     public function actionUpdate($id)
     {
-        $mine = OaDataMineDetail::findOne(['mid' => $id]);
+        $query = OaDataMineDetail::find()->joinWith('oa_data_mine');
+        $query->select('oa_data_mine_detail.*,oa_data_mine.cat,oa_data_mine.subCat');
+        $query->where(['mid'=>$id]);
+        $mine = $query->one();
+        $cat_sql  = 'select CategoryName from B_GoodsCats where CategoryLevel=1';
+        $sub_cat_sql = 'select CategoryName from B_GoodsCats where CategoryParentName=:cat ';
+        $db = Yii::$app->db;
+        $cat = $db->createCommand($cat_sql)->queryAll();
+        $cat = array_map(function ($arr){return $arr['CategoryName'];}, $cat);
+        $sub_cat = $db->createCommand($sub_cat_sql,['cat'=>$mine->cat])->queryAll();
+        $sub_cat = array_map(function ($arr){return $arr['CategoryName'];}, $sub_cat);
         return $this->render('show-basic', [
             'mine' => $mine,
             'mid' => $id,
+            'cat' => $cat,
+            'subCat' => $sub_cat,
         ]);
     }
 
@@ -396,8 +408,17 @@ class OaDataMineController extends Controller
         $detail_models = OaDataMineDetail::findAll(['mid'=>$mid]);
         $trans = Yii::$app->db->beginTransaction();
         try {
+            $cat = $form['cat'];
+            $sub_cat = $form['subCat'];
+            $mine = OaDataMine::findOne(['id'=>$mid]);
+            $mine->cat = $cat;
+            $mine->subCat = $sub_cat;
+
+            if(!$mine->save()){
+                throw new \Exception('保存失败！');
+            }
+
             if($flag === 'complete'){
-                $mine = OaDataMine::findOne(['id'=>$mid]);
                 $mine->detailStatus = '已完善';
                 if(!$mine->save()){
                     throw new \Exception('标记失败！');
@@ -508,4 +529,30 @@ class OaDataMineController extends Controller
         $code = substr($base,0,\strlen($base) - \strlen($number)).$number;
         return date('Ymd').$code;
     }
+
+    /**
+     * @brief get sub-cat
+     * @param $cat string
+     * @return array
+     */
+    public function actionSubCat($cat)
+    {
+        if(empty($cat)){
+            return json_encode([]);
+        }
+        $db = yii::$app->db;
+        $cache = yii::$app->local_cache;
+        $cat_sql = 'select categoryName from b_goodsCats where CategoryParentName=:cat';
+        $ret = $cache->get($cat);
+        if($ret !== false){
+            $result = $ret;
+        }
+        else{
+            $result = $db->createCommand($cat_sql,['cat'=>$cat])->queryAll();
+            $cache->set($cat,$result,2592000);
+        }
+        return  json_encode(\array_map(function ($ele) { return $ele['categoryName'];},$result));
+    }
+
+
 }

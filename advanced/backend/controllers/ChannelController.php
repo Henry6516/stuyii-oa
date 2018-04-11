@@ -751,14 +751,15 @@ class ChannelController extends Controller
         }
         $head = [$data['head']];
         $tail = [$data['tail']];
-        $need = array_filter($data['need'],
+
+        $need = array_filter($data['need']?:[],
             function ($ele)
             {
                 if(!empty($ele)){
                     return $ele;
                 }
             });
-        $random = array_filter($data['random'],
+        $random = array_filter($data['random']?:[],
             function ($ele)
             {
                 if(!empty($ele)){
