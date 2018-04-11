@@ -64,9 +64,9 @@ echo '<div class="form-group field-oadataminedetail-mainimage has-success">
 <div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>
 </div>'
 ;
-for($i=0;$i<=10;$i++){
+for($i=1;$i<=10;$i++){
     $extra_image = 'extra_image'.(string)$i;
-    $label_name = '附加图#'.(string)($i+1);
+    $label_name = '附加图#'.(string)($i);
     echo '
     <div class="form-group field-oadataminedetail-extra_image0 has-success">
     <label class="control-label col-md-2" for="oadataminedetail-extra_image0">'.$label_name.'</label>

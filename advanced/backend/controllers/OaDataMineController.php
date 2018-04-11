@@ -242,7 +242,7 @@ class OaDataMineController extends Controller
         $sql = "select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                extra_image0,extra_image1,extra_image2,extra_image3,
+                '' as extra_image0,extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
                 extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
                 where mid=:mid";
@@ -321,7 +321,7 @@ class OaDataMineController extends Controller
         $sql = 'select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                extra_image0,extra_image1,extra_image2,extra_image3,
+                mainImage,extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
                 extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
                 where mid=:mid';
