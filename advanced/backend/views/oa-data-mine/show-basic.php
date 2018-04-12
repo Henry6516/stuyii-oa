@@ -5,7 +5,8 @@ use yii\helpers\Url;
 use yii\bootstrap\Modal;
 
 $this->title = '数据详情';
-
+$default_cat = $mine->cat?:'none';
+$default_sub_cat = $mine->subCat?:'none';
 
 Modal::begin([
     'id' => 'detail-modal',
@@ -22,6 +23,7 @@ Modal::end();
 <!--<script src="https://cdn.bootcss.com/vue-resource/1.5.0/vue-resource.min.js"></script>-->
 
     <button class="btn btn-info save-btn">保存当前数据 </button>
+    <button class="btn btn-danger save-complete-btn">保存并完善 </button>
     <button class="btn  btn-success export-btn">导出Joom模板 </button>
 
 <?php $form = ActiveForm::begin([
@@ -40,6 +42,8 @@ Modal::end();
 <?= $form->field($mine,'proName')?>
 <?= $form->field($mine,'tags')?>
 <?= $form->field($mine,'parentId')?>
+<?= $form->field($mine, 'cat')->dropDownList(array_combine($cat,$cat), ['class'=>'cat-list','prompt' => '--请选择主类目--']) ?>
+<?= $form->field($mine, 'subCat')->dropDownList(array_combine($subCat,$subCat), ['class'=>'sub-list','prompt' => '--请选择子类目--',]) ?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
 <div class="blockTitle" >
@@ -60,9 +64,9 @@ echo '<div class="form-group field-oadataminedetail-mainimage has-success">
 <div class="col-lg-8"><div class="col-md-offset-2 col-md-10"><div class="help-block"></div></div></div>
 </div>'
 ;
-for($i=0;$i<=10;$i++){
+for($i=1;$i<=10;$i++){
     $extra_image = 'extra_image'.(string)$i;
-    $label_name = '附加图#'.(string)($i+1);
+    $label_name = '附加图#'.(string)($i);
     echo '
     <div class="form-group field-oadataminedetail-extra_image0 has-success">
     <label class="control-label col-md-2" for="oadataminedetail-extra_image0">'.$label_name.'</label>
@@ -91,6 +95,7 @@ for($i=0;$i<=10;$i++){
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
 <div class="blockTitle" >
 <button class="btn btn-info save-btn">保存当前数据 </button>
+    <button class="btn btn-danger save-complete-btn">保存并完善 </button>
 <button class="btn  btn-success export-btn">导出Joom模板 </button>
 </div>
 <?php ActiveForm::end() ?>
@@ -126,6 +131,9 @@ for($i=0;$i<=10;$i++){
     }
 
     .el-table__body input {
+        border-radius: 15px ;
+    }
+    .el-table__body select {
         border-radius: 15px ;
     }
 
@@ -170,7 +178,9 @@ for($i=0;$i<=10;$i++){
 
 $exportUrl = Url::toRoute(['export', 'mid' => $mid ]);
 $saveUrl = Url::toRoute(['save-basic', 'mid' => $mid ]);
+$saveCompleteUrl = Url::toRoute(['save-basic', 'mid' => $mid,'flag' => 'complete' ]);
 $detailUrl = Url::toRoute(['detail','mid' => $mid]);
+$subCatUrl = Url::toRoute(['sub-cat']);
 
 $js = <<<JS
 
@@ -387,6 +397,27 @@ $('.save-btn').on('click',function() {
     return false;
 })
 
+/*
+save-complete
+ */
+ 
+$('.save-complete-btn').on('click',function() {
+    var images = {};
+    $('.extra-img').each(function(index) {
+        images['extra_image' + index] = $(this).val();
+    });
+    var form_data = $('form#detail-form').serializeObject();
+    // var image_data = JOSN.stringify(images);
+    $.ajax({
+        url:'$saveCompleteUrl',
+        type:'post',
+        data:{'form': form_data, 'images':images},
+        success:(function(ret) { 
+            alert(ret);
+        })
+    });
+    return false;
+})
 
 // 多属性设置模态框
 $(".var-btn").click(function() {
@@ -412,7 +443,28 @@ $.prototype.serializeObject = function() {
         }  
     }  
     return o;
-};  
+};
+
+
+/*
+two-level select
+ */
+$('.cat-list').on('change',function(){
+    var cat =$('.cat-list option:selected').val();
+    $('.sub-list option').not(':first').remove();
+    $.get("$subCatUrl",{cat:cat},function(cats) {
+        var select = $('.sub-list');
+        $.each(JSON.parse(cats), function(index,value) {
+            var html = '<option value="'+ value +'">'+ value +'</option>';
+            select.append(html);
+        })
+    })
+})
+
+//default cat
+$("option[value={$default_cat}]").attr("selected",true);
+
+$("option:contains({$default_sub_cat})").attr("selected",true);
 JS;
 
 

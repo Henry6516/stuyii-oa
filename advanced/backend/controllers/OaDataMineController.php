@@ -8,6 +8,7 @@ use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
 use app\models\OaDataMineDetail;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -121,10 +122,22 @@ class OaDataMineController extends BaseController
      */
     public function actionUpdate($id)
     {
-        $mine = OaDataMineDetail::findOne(['mid' => $id]);
+        $query = OaDataMineDetail::find()->joinWith('oa_data_mine');
+        $query->select('oa_data_mine_detail.*,oa_data_mine.cat,oa_data_mine.subCat');
+        $query->where(['mid'=>$id]);
+        $mine = $query->one();
+        $cat_sql  = 'select CategoryName from B_GoodsCats where CategoryLevel=1';
+        $sub_cat_sql = 'select CategoryName from B_GoodsCats where CategoryParentName=:cat ';
+        $db = Yii::$app->db;
+        $cat = $db->createCommand($cat_sql)->queryAll();
+        $cat = array_map(function ($arr){return $arr['CategoryName'];}, $cat);
+        $sub_cat = $db->createCommand($sub_cat_sql,['cat'=>$mine->cat])->queryAll();
+        $sub_cat = array_map(function ($arr){return $arr['CategoryName'];}, $sub_cat);
         return $this->render('show-basic', [
             'mine' => $mine,
             'mid' => $id,
+            'cat' => $cat,
+            'subCat' => $sub_cat,
         ]);
     }
 
@@ -177,7 +190,7 @@ class OaDataMineController extends BaseController
                         where datediff(d,createTime,getdate())=0 )';
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
-            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? 'A'.date('Ydm').'0000';
             $jobs= explode(',',$request['proId']);
             $trans = $db->beginTransaction();
             try{
@@ -230,9 +243,9 @@ class OaDataMineController extends BaseController
         $sql = "select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                extra_image0,extra_image1,extra_image2,extra_image3,
+                extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
+                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
                 where mid=:mid";
         $query = $db->createCommand($sql ,[':mid' => $mid]);
         $ret = $query->queryAll();
@@ -268,8 +281,8 @@ class OaDataMineController extends BaseController
         $excel = new \PHPExcel();
         $sheet_num = 0;
         $excel->getActiveSheetIndex($sheet_num);
-        header('Content-Type: application/vnd.ms-excel');
-        $file_name = $mid . "-Joom-" . date("d-m-Y-His") . ".xls";
+        header('Content-type: text/csv');
+        $file_name = $mid . "-Joom-" . date("d-m-Y-His") . ".csv";
         header('Content-Disposition: attachment;filename=' . $file_name . ' ');
         header('Cache-Control: max-age=0');
         foreach ($heard_name as $index => $name)
@@ -292,16 +305,134 @@ class OaDataMineController extends BaseController
             }
 
         }
-        $writer =  new \PHPExcel_Writer_Excel5($excel);
+//        $writer =  new \PHPExcel_Writer_Excel5($excel);
+        $writer = \PHPExcel_IOFactory::createWriter($excel,'CSV');
+        $writer->setDelimiter(',');
         $writer->save('php://output');
 
     }
 
 
     /**
+     * @brief export lots csv
+     * @param @lots_mid string
+     */
+    public function actionExportLots($lots_mid)
+    {
+        $lots_mid = explode(',',$lots_mid);
+        $db = Yii::$app->db;
+        $sql = 'select parentId,proName,description,tags,
+                childId,color,proSize,quantity,price,msrPrice,
+                shipping,shippingWeight,shippingTime,MainImage,varMainImage,
+                mainImage,extra_image1,extra_image2,extra_image3,
+                extra_image4,extra_image5,extra_image6,extra_image7,
+                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
+                where mid=:mid';
+
+
+        $heard_name = [
+            'Parent Unique ID',
+            '*Product Name',
+            'Description',
+            '*Tags',
+            '*Unique ID',
+            'Color',
+            'Size',
+            '*Quantity',
+            '*Price',
+            '*MSRP',
+            '*Shipping',
+            'Shipping weight',
+            'Shipping Time(enter without " ", just the estimated days )',
+            '*Product Main Image URL',
+            'Variant Main Image URL',
+            'Extra Image URL',
+            'Extra Image URL 1',
+            'Extra Image URL 2',
+            'Extra Image URL 3',
+            'Extra Image URL 4',
+            'Extra Image URL 5',
+            'Extra Image URL 6',
+            'Extra Image URL 7',
+            'Extra Image URL 8',
+            'Extra Image URL 9',
+            'Extra Image URL 10',
+        ];
+
+        $excel = new \PHPExcel();
+        $sheet_num = 0;
+        $excel->getActiveSheetIndex($sheet_num);
+        header('Content-type: text/csv');
+        $file_name = "Joom-" . date("d-m-Y-His") . ".csv";
+        header('Content-Disposition: attachment;filename=' . $file_name . ' ');
+        header('Cache-Control: max-age=0');
+        foreach ($heard_name as $index => $name)
+        {
+            $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
+
+        }
+
+        $row_count = 2;
+        foreach ($lots_mid as $mid){
+            $query = $db->createCommand($sql ,[':mid' => $mid]);
+            $ret = $query->queryAll();
+            foreach ($ret as $row_num => $row)
+            {
+                if(!\is_array($row)){
+                    return;
+                }
+
+                $cell_num = 0;
+                foreach ($row as $index => $name)
+                {
+                    $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($cell_num) .($row_num + $row_count), $name);
+                    ++$cell_num;
+                }
+
+            }
+            $row_count += \count($ret);
+
+        }
+
+        $writer = \PHPExcel_IOFactory::createWriter($excel,'CSV');
+        $writer->setDelimiter(',');
+        $writer->save('php://output');
+
+    }
+
+
+    /*
+     * @brief complete lots
+     * @return string
+     */
+    public function actionCompleteLots()
+    {
+        $post = Yii::$app->request->post();
+        $lots_mid = $post['lots_mid'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $mine = OaDataMine::findOne(['id' => $mid]);
+                $mine->setAttribute('detailStatus','已完善');
+                if(!$mine->update()){
+                    throw  new \Exception('fail to update！');
+                }
+            }
+            $trans->commit();
+            $msg = '标记成功！';
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '标记失败';
+        }
+        return $msg;
+    }
+
+
+    /**
      * @brief save basic data
      */
-    public function actionSaveBasic($mid)
+    public function actionSaveBasic($mid,$flag='')
     {
         $post = Yii::$app->request->post();
         $images = $post['images'];
@@ -309,6 +440,22 @@ class OaDataMineController extends BaseController
         $detail_models = OaDataMineDetail::findAll(['mid'=>$mid]);
         $trans = Yii::$app->db->beginTransaction();
         try {
+            $cat = $form['cat'];
+            $sub_cat = $form['subCat'];
+            $mine = OaDataMine::findOne(['id'=>$mid]);
+            $mine->cat = $cat;
+            $mine->subCat = $sub_cat;
+
+            if(!$mine->save()){
+                throw new \Exception('保存失败！');
+            }
+
+            if($flag === 'complete'){
+                $mine->detailStatus = '已完善';
+                if(!$mine->save()){
+                    throw new \Exception('标记失败！');
+                }
+            }
             foreach($detail_models as $detail){
                 $detail->setAttributes($form);
                 $detail->setAttributes($images);
@@ -409,9 +556,38 @@ class OaDataMineController extends BaseController
      */
     private function generateCode($max_code)
     {
-        $number = (int)substr($max_code,8,-1) + 1;
-        $base = '00000';
+        $number = (int)substr($max_code,8,\strlen($max_code)-1) + 1;
+        $base = '0000';
+        if(\strlen($number) === \strlen($base)){
+            return 'A'.date('Ymd').$number;
+        }
         $code = substr($base,0,\strlen($base) - \strlen($number)).$number;
-        return date('Ymd').$code;
+        return 'A'.date('Ymd').$code;
     }
+
+    /**
+     * @brief get sub-cat
+     * @param $cat string
+     * @return array
+     */
+    public function actionSubCat($cat)
+    {
+        if(empty($cat)){
+            return json_encode([]);
+        }
+        $db = yii::$app->db;
+        $cache = yii::$app->local_cache;
+        $cat_sql = 'select categoryName from b_goodsCats where CategoryParentName=:cat';
+        $ret = $cache->get($cat);
+        if($ret !== false){
+            $result = $ret;
+        }
+        else{
+            $result = $db->createCommand($cat_sql,['cat'=>$cat])->queryAll();
+            $cache->set($cat,$result,2592000);
+        }
+        return  json_encode(\array_map(function ($ele) { return $ele['categoryName'];},$result));
+    }
+
+
 }
