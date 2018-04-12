@@ -189,7 +189,7 @@ class OaDataMineController extends Controller
                         where datediff(d,createTime,getdate())=0 )';
             $platform = $request['platform'];
             $creator = Yii::$app->user->identity->username;
-            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? date('Ydm').'00000';
+            $max_code = $db->createCommand($max_code_sql)->queryOne()['goodsCode']?? 'A'.date('Ydm').'0000';
             $jobs= explode(',',$request['proId']);
             $trans = $db->beginTransaction();
             try{
@@ -242,9 +242,9 @@ class OaDataMineController extends Controller
         $sql = "select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                '' as extra_image0,extra_image1,extra_image2,extra_image3,
+                extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
+                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
                 where mid=:mid";
         $query = $db->createCommand($sql ,[':mid' => $mid]);
         $ret = $query->queryAll();
@@ -280,8 +280,8 @@ class OaDataMineController extends Controller
         $excel = new \PHPExcel();
         $sheet_num = 0;
         $excel->getActiveSheetIndex($sheet_num);
-        header('Content-Type: application/vnd.ms-excel');
-        $file_name = $mid . "-Joom-" . date("d-m-Y-His") . ".xls";
+        header('Content-type: text/csv');
+        $file_name = $mid . "-Joom-" . date("d-m-Y-His") . ".csv";
         header('Content-Disposition: attachment;filename=' . $file_name . ' ');
         header('Cache-Control: max-age=0');
         foreach ($heard_name as $index => $name)
@@ -304,7 +304,9 @@ class OaDataMineController extends Controller
             }
 
         }
-        $writer =  new \PHPExcel_Writer_Excel5($excel);
+//        $writer =  new \PHPExcel_Writer_Excel5($excel);
+        $writer = \PHPExcel_IOFactory::createWriter($excel,'CSV');
+        $writer->setDelimiter(',');
         $writer->save('php://output');
 
     }
@@ -359,8 +361,8 @@ class OaDataMineController extends Controller
         $excel = new \PHPExcel();
         $sheet_num = 0;
         $excel->getActiveSheetIndex($sheet_num);
-        header('Content-Type: application/vnd.ms-excel');
-        $file_name = "Joom-" . date("d-m-Y-His") . ".xls";
+        header('Content-type: text/csv');
+        $file_name = "Joom-" . date("d-m-Y-His") . ".csv";
         header('Content-Disposition: attachment;filename=' . $file_name . ' ');
         header('Cache-Control: max-age=0');
         foreach ($heard_name as $index => $name)
@@ -391,7 +393,8 @@ class OaDataMineController extends Controller
 
         }
 
-        $writer =  new \PHPExcel_Writer_Excel5($excel);
+        $writer = \PHPExcel_IOFactory::createWriter($excel,'CSV');
+        $writer->setDelimiter(',');
         $writer->save('php://output');
 
     }
@@ -525,9 +528,12 @@ class OaDataMineController extends Controller
     private function generateCode($max_code)
     {
         $number = (int)substr($max_code,8,\strlen($max_code)-1) + 1;
-        $base = '00000';
+        $base = '0000';
+        if(\strlen($number) === \strlen($base)){
+            return 'A'.date('Ymd').$number;
+        }
         $code = substr($base,0,\strlen($base) - \strlen($number)).$number;
-        return date('Ymd').$code;
+        return 'A'.date('Ymd').$code;
     }
 
     /**
