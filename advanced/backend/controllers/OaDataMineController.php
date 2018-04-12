@@ -400,6 +400,34 @@ class OaDataMineController extends Controller
     }
 
 
+    /*
+     * @brief complete lots
+     * @return string
+     */
+    public function actionCompleteLots()
+    {
+        $post = Yii::$app->request->post();
+        $lots_mid = $post['lots_mid'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $mine = OaDataMine::findOne(['id' => $mid]);
+                $mine->setAttribute('detailStatus','已完善');
+                if(!$mine->update()){
+                    throw  new \Exception('fail to update！');
+                }
+            }
+            $trans->commit();
+            $msg = '标记成功！';
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '标记失败';
+        }
+        return $msg;
+    }
+
+
     /**
      * @brief save basic data
      */

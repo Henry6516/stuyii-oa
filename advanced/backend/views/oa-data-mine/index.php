@@ -61,6 +61,7 @@ $createJobUrl = URl::toRoute('create-job')
     <div class="col-lg-4">
         <button type="submit" class="btn btn-success">开始采集</button>
         <button type="button" class="btn export-lots-btn btn-danger">批量导出Joom-csv</button>
+        <button type="button" class="btn complete-lots-btn btn-warning">批量标记完善</button>
     </div><!-- /.col-lg-6 -->
         <?php ActiveForm::end(); ?>
 </div><!-- /.row -->
@@ -194,6 +195,8 @@ $createJobUrl = URl::toRoute('create-job')
 
 <?php
 $exportLotsUrl = Url::toRoute(['export-lots']);
+$completeLotsUrl = Url::toRoute(['complete-lots']);
+
 
 $js = <<< JS
 
@@ -229,6 +232,22 @@ $('.export-lots-btn').on('click', function() {
     var lots_mid = $('#mine-table').yiiGridView("getSelectedRows");
     window.location = '$exportLotsUrl' + '?lots_mid='+ lots_mid;
     return false;
+})
+
+/*
+complete lots
+ */
+$('.complete-lots-btn').on('click', function() {
+    var lots_mid = $('#mine-table').yiiGridView('getSelectedRows');
+    $.ajax({
+        url: '$completeLotsUrl',
+        type: 'post',
+        data:({'lots_mid': lots_mid}),
+        success:(function(ret) {
+            alert(ret);
+            $.pjax.reload({container:"#job-table"});
+        })
+    });
 })
 
 JS;
