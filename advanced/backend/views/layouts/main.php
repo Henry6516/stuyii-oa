@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use backend\assets\AppAsset;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -17,10 +18,13 @@ if (Yii::$app->controller->action->id === 'login') {
 } else {
 
     if (class_exists('backend\assets\AppAsset')) {
-        backend\assets\AppAsset::register($this);
+        AppAsset::register($this);
     } else {
         app\assets\AppAsset::register($this);
     }
+    //加载临时添加的JS和CSS
+    AppAsset::addJs($this,$this->context->data['js']);
+    AppAsset::addCss($this,$this->context->data['css']);
 
     dmstr\web\AdminLteAsset::register($this);
 

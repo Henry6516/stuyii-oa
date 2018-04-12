@@ -2,17 +2,17 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\Countries;
 use backend\models\CountriesSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * CountriesController implements the CRUD actions for Countries model.
  */
-class CountriesController extends Controller
+class CountriesController extends BaseController
 {
     /**
      * @inheritdoc

@@ -6,10 +6,11 @@ namespace backend\controllers;
 use backend\models\EntryForm;
 use backend\models\OaEbaySuffix;
 use backend\models\WishSuffixDictionary;
+use common\components\BaseController;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class SalesTrendController extends \yii\web\Controller
+class SalesTrendController extends BaseController
 {
     public function actionIndex()
     {

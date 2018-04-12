@@ -2,17 +2,17 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\WishSuffixDictionary;
 use backend\models\WishSuffixDictionarySearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * WishSuffixDictionaryController implements the CRUD actions for WishSuffixDictionary model.
  */
-class WishSuffixDictionaryController extends Controller
+class WishSuffixDictionaryController extends BaseController
 {
     /**
      * @inheritdoc

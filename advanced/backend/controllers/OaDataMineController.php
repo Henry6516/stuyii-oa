@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\unitools\PHPExcelTools;
+use common\components\BaseController;
 use Yii;
 use app\models\OaDataMine;
 use app\models\OaDataMineSearch;
@@ -16,7 +17,7 @@ use yii\data\ActiveDataProvider;
 /**
  * OaDataMineController implements the CRUD actions for OaDataMine model.
  */
-class OaDataMineController extends Controller
+class OaDataMineController extends BaseController
 {
     /**
      * @inheritdoc

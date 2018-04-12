@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\OaTemplates;
 use backend\models\OaTemplatesSearch;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * OaTemplatesController implements the CRUD actions for OaTemplates model.
  */
-class OaTemplatesController extends Controller
+class OaTemplatesController extends BaseController
 {
     /**
      * @inheritdoc

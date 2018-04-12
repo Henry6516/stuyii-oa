@@ -3,11 +3,11 @@
 namespace backend\controllers;
 
 use backend\models\EntryForm;
+use common\components\BaseController;
 use Yii;
-use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 
-class GlobalMarketController extends \yii\web\Controller
+class GlobalMarketController extends BaseController
 {
     /**
      * 订货产品表现

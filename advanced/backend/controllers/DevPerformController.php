@@ -3,11 +3,11 @@
 namespace backend\controllers;
 
 use backend\models\EntryForm;
-use backend\models\OaGoodsinfo;
+use common\components\BaseController;
 use Yii;
 use yii\helpers\ArrayHelper;
 
-class DevPerformController extends \yii\web\Controller
+class DevPerformController extends BaseController
 {
     public function actionIndex()
     {

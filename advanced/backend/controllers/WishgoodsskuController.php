@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\Goodssku;
+use common\components\BaseController;
 use PHPUnit\Framework\Exception;
 use Yii;
 use backend\models\Wishgoodssku;
@@ -14,7 +15,7 @@ use yii\filters\VerbFilter;
 /**
  * WishgoodsskuController implements the CRUD actions for Wishgoodssku model.
  */
-class WishgoodsskuController extends Controller
+class WishgoodsskuController extends BaseController
 {
     /**
      * @inheritdoc

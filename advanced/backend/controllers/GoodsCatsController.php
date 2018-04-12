@@ -2,11 +2,11 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\GoodsCats;
 use backend\models\OaGoods;
 use backend\models\GoodsCatsSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
@@ -14,7 +14,7 @@ use yii\web\Response;
 /**
  * GoodsCatsController implements the CRUD actions for GoodsCats model.
  */
-class GoodsCatsController extends Controller
+class GoodsCatsController extends BaseController
 {
     /**
      * @inheritdoc

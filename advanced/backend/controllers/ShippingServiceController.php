@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\OaEbayCountry;
+use common\components\BaseController;
 use Yii;
 use backend\models\OaShippingService;
 use backend\models\ShippingServiceSearch;
@@ -13,7 +14,7 @@ use yii\filters\VerbFilter;
 /**
  * ShippingServiceController implements the CRUD actions for OaShippingService model.
  */
-class ShippingServiceController extends Controller
+class ShippingServiceController extends BaseController
 {
     /**
      * @inheritdoc

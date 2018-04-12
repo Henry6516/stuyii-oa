@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use app\models\OaJoomWish;
 use app\models\OaJoomWishSearch;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * OaJoomWishController implements the CRUD actions for OaJoomWish model.
  */
-class OaJoomWishController extends Controller
+class OaJoomWishController extends BaseController
 {
     /**
      * @inheritdoc

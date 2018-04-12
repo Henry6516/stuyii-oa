@@ -31,11 +31,11 @@ Modal::end();
 
 //绑定模态框事件
 
-$requestUrl = Url::toRoute('heart');
-$viewUrl = Url::toRoute('view');
-$updateUrl = Url::toRoute('update');
-$createUrl = Url::toRoute('create');
-$delete_lot = Url::toRoute(['oa-goods/delete-lots']);
+//$requestUrl = Url::toRoute('heart');
+//$viewUrl = Url::toRoute('view');
+//$updateUrl = Url::toRoute('update');
+//$createUrl = Url::toRoute('create');
+//$delete_lot = Url::toRoute(['oa-goods/delete-lots']);
 $js = <<<JS
 krajeeYiiConfirm = function(dialog) {
         dialog = dialog || 'krajeeDialog';
@@ -66,66 +66,66 @@ krajeeYiiConfirm = function(dialog) {
             }
             });
         });
-    // 批量作废
-    $('.delete-lots').on('click',function() {
+  // 批量作废
+$('.delete-lots').on('click',function() {
     var ids = $("#oa-goods").yiiGridView("getSelectedRows");
     var self = $(this);
     if(ids.length == 0) return false;
-     $.ajax({
-           url:'{$delete_lot}',
-           type:"post",
-           data:{id:ids},
-           success:function(res){
-                console.log("yeah lots failed!");
-           }
-        });
+    $.ajax({
+        url:$('.delete-lots').data('url'),
+        type:"post",
+        data:{id:ids},
+        success:function(res){
+            console.log("yeah lots failed!");
+        }
     });
-    
-    //认领对话
-    $('.data-heart').on('click',  function () {
-       $('.modal-body').children('div').remove();
-        $.get('{$requestUrl}',  { id: $(this).closest('tr').data('key') },
-            function (data) {
-                $('.modal-body').html(data);
-            }
-        );
-    });
-    
-    //图标剧中
-        $('.glyphicon-eye-open').addClass('icon-cell');
-        $('.wrapper').addClass('body-color');
+});
 
-    
+//认领对话
+$('.data-heart').on('click',  function () {
+    $('.modal-body').children('div').remove();
+    $.get($('.data-heart').data('url'),  { id: $(this).closest('tr').data('key') },
+        function (data) {
+            $('.modal-body').html(data);
+        }
+    );
+});
+
+//图标剧中
+$('.glyphicon-eye-open').addClass('icon-cell');
+$('.wrapper').addClass('body-color');
+
+
 // 查看框
 $('.index-view').on('click',  function () {
-        $('.modal-body').children('div').remove();
-        $.get('{$viewUrl}',  { id: $(this).closest('tr').data('key') },
-            function (data) {
+    $('.modal-body').children('div').remove();
+    $.get($('.index-view').data('url'),  { id: $(this).closest('tr').data('key') },
+        function (data) {
             console.log(data);
-                $('.modal-body').html(data);
-            }
-        );
-    });
+            $('.modal-body').html(data);
+        }
+    );
+});
 
 //更新框
 $('.index-update').on('click',  function () {
-       $('.modal-body').children('div').remove();
-        $.get('{$updateUrl}',  { id: $(this).closest('tr').data('key') },
-            function (data) {
-                $('.modal-body').html(data);
-            }
-        );
-    });   
-    
+    $('.modal-body').children('div').remove();
+    $.get($('.index-update').data('url'),  { id: $(this).closest('tr').data('key') },
+        function (data) {
+            $('.modal-body').html(data);
+        }
+    );
+});
+
 //创建框
 $('.index-create').on('click',  function () {
-        $('.modal-body').children('div').remove();
-        $.get('{$createUrl}',
-            function (data) {
-                $('.modal-body').html(data);
-            }
-        );
-    }); 
+    $('.modal-body').children('div').remove();
+    $.get($('.index-create').data('url'),
+        function (data) {
+            $('.modal-body').html(data);
+        }
+    );
+});
     
 
 JS;
@@ -240,9 +240,13 @@ function centerFormat($name)
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('新增产品', "javascript:void(0);", ['title' => 'create', 'data-toggle' => 'modal', 'data-target' => '#index-modal', 'class' => 'index-create btn btn-primary']) ?>
-        <?= Html::a('批量导入', "javascript:void(0);", ['title' => 'upload', 'class' => 'upload btn btn-info']) ?>
-        <?= Html::a('批量删除', "javascript:void(0);", ['title' => 'deleteLots', 'class' => 'delete-lots btn btn-danger']) ?>
+        <?= Html::a('新增产品', "javascript:void(0);",
+            ['title' => 'create', 'data-toggle' => 'modal',
+                'data-target' => '#index-modal',
+                'data-url' => Url::toRoute(['create']),
+                'class' => 'index-create btn btn-primary']) ?>
+        <?= Html::a('批量导入', "javascript:void(0);", ['title' => 'upload', 'class' => 'upload btn btn-info', 'data-url' => Url::toRoute(['oa-goods/import'])]) ?>
+        <?= Html::a('批量删除', "javascript:void(0);", ['title' => 'deleteLots', 'class' => 'delete-lots btn btn-danger', 'data-url' => Url::toRoute(['oa-goods/delete-lots'])]) ?>
         <?= Html::a('下载模板', ['template'], ['class' => 'btn btn-success']) ?>
         <input type="file" id="import" name="import" style="display: none">
     </p>
@@ -286,6 +290,7 @@ function centerFormat($name)
                             'data-id' => $key,
                             'class' => 'index-view',
                             'type'=>'button',
+                            'data-url' => Url::toRoute(['view'])
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-eye-open"></span>', '', $options);
                     },
@@ -298,6 +303,7 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'index-update',
+                            'data-url' => Url::toRoute(['update'])
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', 'javascript:void(0)', $options);
                     },
@@ -310,6 +316,7 @@ function centerFormat($name)
                             'data-target' => '#index-modal',
                             'data-id' => $key,
                             'class' => 'data-heart',
+                            'data-url' => Url::toRoute(['heart'])
                         ];
                         return Html::a('<span  class="glyphicon glyphicon-heart"></span>', 'javascript:void(0)', $options);
                     }
@@ -1353,7 +1360,6 @@ function centerFormat($name)
                         }
                         output.push(line);
                     }
-
                     // push the value to a callback if one is defined
                     return $.csv.fromArrays(output, options, config.callback);
                 }
@@ -1369,10 +1375,7 @@ function centerFormat($name)
             if (typeof module !== 'undefined' && module.exports) {
                 module.exports = $.csv;
             }
-
         });
-    </script>
-    <script>
 
         //文件导入事件
         $(".upload").on('click', function () {
@@ -1392,7 +1395,7 @@ function centerFormat($name)
                     var data = $.csv.toObjects(csvdata);
                     console.log(csvdata);
                     $.ajax({
-                        url: "<?= Url::to(['oa-goods/import'])?>",
+                        url: $('.upload').data('url'),
                         type: 'post',
                         data: {
                             data: JSON.stringify({'data': data})
@@ -1406,16 +1409,14 @@ function centerFormat($name)
                                 alert('上传成功！');
                             }
                         }
-
                     });
                     console.log(data);
-
                 };
                 reader.readAsText(file, 'GB2312');
-
             });
-//            fileInput.outerHTML = fileInput.outerHTML; //清空选择的文件
+            //fileInput.outerHTML = fileInput.outerHTML; //清空选择的文件
         })
+
     </script>
 
 </div>

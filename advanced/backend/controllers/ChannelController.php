@@ -5,6 +5,7 @@ use backend\models\OaGoods;
 use backend\models\OaGoodsinfo;
 use backend\models\OaWishgoodssku;
 use backend\unitools\PHPExcelTools;
+use common\components\BaseController;
 use Yii;
 use backend\models\Channel;
 use backend\models\OaTemplatesVar;
@@ -24,7 +25,7 @@ use kartik\helpers\Html;
 /**
  * ChannelController implements the CRUD actions for Channel model.
  */
-class ChannelController extends Controller
+class ChannelController extends BaseController
 {
     /**
      * @inheritdoc

@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\User;
 use backend\models\UserSearch;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * UserController implements the CRUD actions for User model.
  */
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * @inheritdoc

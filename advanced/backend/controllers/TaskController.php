@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\OaTaskSendee;
 use backend\models\User;
+use common\components\BaseController;
 use Yii;
 use backend\models\OaTask;
 use backend\models\OaTaskSearch;
@@ -15,7 +16,7 @@ use yii\filters\VerbFilter;
 /**
  * TaskController implements the CRUD actions for OaTask model.
  */
-class TaskController extends Controller
+class TaskController extends BaseController
 {
     /**
      * @inheritdoc

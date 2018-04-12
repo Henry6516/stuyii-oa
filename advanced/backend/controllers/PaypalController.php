@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use backend\models\OaPaypal;
 use backend\models\PaypalSearch;
+use common\components\BaseController;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * EbayPaypalController implements the CRUD actions for OaEbayPaypal model.
  */
-class PaypalController extends Controller
+class PaypalController extends BaseController
 {
     /**
      * @inheritdoc

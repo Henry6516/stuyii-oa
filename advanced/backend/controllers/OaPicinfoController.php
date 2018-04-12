@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use yii\base\Model;
 use backend\models\OaGoodsinfo;
@@ -24,7 +25,7 @@ use yii\widgets\ActiveForm;
 /**
  * OaGoodsinfoController implements the CRUD actions for OaGoodsinfo model.
  */
-class OaPicinfoController extends Controller
+class OaPicinfoController extends BaseController
 {
 
     public $pid;

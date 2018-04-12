@@ -121,6 +121,7 @@ class OaGoodsSearch extends OaGoods
             //没有搜索条件，则添加默认显示产品状态条件
             if(!isset($params['OaGoodsSearch'])){
                 $query->andWhere(['or',['checkStatus' => '已认领'], ['checkStatus' => '待审批'],['checkStatus' => '待提交']]);
+                //$query->andWhere(['checkStatus' => '已认领'])->union(['checkStatus' => '待审批'],true)->union(['checkStatus' => '待提交'],true);
             }
         }
 

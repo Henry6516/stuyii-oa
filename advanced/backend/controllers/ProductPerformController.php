@@ -3,10 +3,11 @@
 namespace backend\controllers;
 
 use backend\models\EntryForm;
+use common\components\BaseController;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-class ProductPerformController extends \yii\web\Controller
+class ProductPerformController extends BaseController
 {
     public function actionIndex()
     {

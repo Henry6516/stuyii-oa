@@ -9,6 +9,7 @@ use backend\models\OaTemplates;
 use backend\models\OaTemplatesVar;
 use backend\models\OaWishgoods;
 use backend\models\OaWishgoodssku;
+use common\components\BaseController;
 use PHPUnit\Framework\Exception;
 use Yii;
 use yii\base\Model;
@@ -32,7 +33,7 @@ use yii\widgets\ActiveForm;
 /**
  * OaGoodsinfoController implements the CRUD actions for OaGoodsinfo model.
  */
-class OaGoodsinfoController extends Controller
+class OaGoodsinfoController extends BaseController
 {
 
     public $pid;

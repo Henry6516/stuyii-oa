@@ -1,6 +1,7 @@
 <?php
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -10,7 +11,7 @@ use common\models\LoginForm;
 /**
  * Site controller
  */
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * @inheritdoc

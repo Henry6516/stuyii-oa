@@ -3,10 +3,11 @@
 namespace backend\controllers;
 
 use backend\models\EntryForm;
+use common\components\BaseController;
 use Yii;
 use yii\data\ArrayDataProvider;
 
-class StockPerformController extends \yii\web\Controller
+class StockPerformController extends BaseController
 {
     /**
      * 订货产品表现

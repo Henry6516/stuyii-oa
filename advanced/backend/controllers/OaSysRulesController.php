@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use Yii;
 use backend\models\OaSysRules;
 use backend\models\OaSysRulesSearch;
@@ -12,7 +13,7 @@ use yii\filters\VerbFilter;
 /**
  * OaSysRulesController implements the CRUD actions for OaSysRules model.
  */
-class OaSysRulesController extends Controller
+class OaSysRulesController extends BaseController
 {
     /**
      * @inheritdoc

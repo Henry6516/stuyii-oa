@@ -10,6 +10,7 @@ namespace backend\controllers;
 
 use backend\models\GoodsCats;
 use backend\models\SalesTrendForm;
+use common\components\BaseController;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
@@ -18,7 +19,7 @@ use yii\data\SqlDataProvider;
 use yii\data\ArrayDataProvider;
 
 
-class CatPerformController extends Controller
+class CatPerformController extends BaseController
 {
     public function actionIndex()
     {

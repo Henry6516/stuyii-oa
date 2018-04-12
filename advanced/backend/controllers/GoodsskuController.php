@@ -2,27 +2,24 @@
 
 namespace backend\controllers;
 
-use backend\models\OaGoods;
 use backend\models\OaTaskAttributeLog;
+use common\components\BaseController;
 use PHPUnit\Framework\Exception;
 use Yii;
-use yii\base\Model;
 use backend\models\Goodssku;
 use backend\models\OaSysRules;
 use backend\models\OaGoodsinfo;
 use backend\models\GoodsskuSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 //actionSave中对应的命名空间要加上
-use yii\web\Response;
 
 
 /**
  * GoodsskuController implements the CRUD actions for Goodssku model.
  */
-class GoodsskuController extends Controller
+class GoodsskuController extends BaseController
 {
     /**
      * @inheritdoc

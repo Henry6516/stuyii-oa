@@ -5,11 +5,11 @@ namespace backend\controllers;
 use backend\models\EbaySuffixDictionarySearch;
 use backend\models\OaEbayPaypal;
 use backend\models\OaPaypal;
+use common\components\BaseController;
 use Yii;
 use yii\db\Exception;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
-use yii\web\Controller;
 use backend\models\OaEbaySuffix;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -17,7 +17,7 @@ use yii\filters\VerbFilter;
 /**
  * WishSuffixDictionaryController implements the CRUD actions for WishSuffixDictionary model.
  */
-class EbaySuffixDictionaryController extends Controller
+class EbaySuffixDictionaryController extends BaseController
 {
     /**
      * @inheritdoc

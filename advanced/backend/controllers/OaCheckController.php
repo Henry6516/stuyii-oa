@@ -2,20 +2,20 @@
 
 namespace backend\controllers;
 
+use common\components\BaseController;
 use PHPUnit\Framework\Exception;
 use Yii;
 use backend\models\OaGoods;
 use backend\models\OaGoodsSearch;
 use backend\models\OaGoodsinfo;
 use backend\models\OaSysRules;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 /**
  * OaCheckController implements the CRUD actions for OaGoods model.
  */
-class OaCheckController extends Controller
+class OaCheckController extends BaseController
 {
     /**
      * @inheritdoc

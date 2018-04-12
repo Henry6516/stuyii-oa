@@ -6,6 +6,7 @@ use backend\models\GoodsCats;
 use backend\models\OaForwardGoods;
 use backend\models\OaBackwardGoods;
 use backend\models\OaGoodsinfo;
+use common\components\BaseController;
 use PHPUnit\Framework\Exception;
 use Yii;
 use backend\models\OaGoods;
@@ -21,7 +22,7 @@ use yii\web\Response;
 /**
  * OaGoodsController implements the CRUD actions for OaGoods model.
  */
-class OaGoodsController extends Controller
+class OaGoodsController extends BaseController
 {
     /**
      * @inheritdoc
@@ -44,6 +45,7 @@ class OaGoodsController extends Controller
      */
     public function actionIndex()
     {
+        //$this -> data['js'] = 'js/backend/oa-goods/index.js';
         $searchModel = new OaGoodsSearch();
         $model = new OaGoods();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, '', '','产品推荐');

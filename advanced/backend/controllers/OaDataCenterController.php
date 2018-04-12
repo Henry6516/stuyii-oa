@@ -2,6 +2,7 @@
 namespace backend\controllers;
 use backend\models\OaGoodsinfo;
 use backend\unitools\PHPExcelTools;
+use common\components\BaseController;
 use Yii;
 use backend\models\Channel;
 use backend\models\OaTemplatesVar;
@@ -10,7 +11,6 @@ use backend\models\ChannelSearch;
 use backend\models\WishSuffixDictionary;
 use backend\models\OaWishgoods;
 use backend\models\Wishgoodssku;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
@@ -18,7 +18,7 @@ use yii\data\ActiveDataProvider;
 /**
  * ChannelController implements the CRUD actions for Channel model.
  */
-class OaDataCenterController extends Controller
+class OaDataCenterController extends BaseController
 {
     /**
      * @inheritdoc
