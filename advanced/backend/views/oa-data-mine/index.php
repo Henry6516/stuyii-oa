@@ -62,7 +62,38 @@ $createJobUrl = URl::toRoute('create-job')
         <button type="submit" class="btn btn-success">开始采集</button>
         <button type="button" class="btn export-lots-btn btn-danger">批量导出Joom-csv</button>
         <button type="button" class="btn complete-lots-btn btn-warning">批量标记完善</button>
+
     </div><!-- /.col-lg-6 -->
+    <div class="col-lg-4">
+        <div class="input-group">
+            <div class="input-group-btn">
+                <button type="button" class="op-btn btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">=<span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a class="operation" href="#"><span style="font-size: 17px">=</span></a></li>
+                    <li><a class="operation" href="#"><span style="font-size: 17px">+</span></a></li>
+                    <li><a class="operation" href="#"><span style="font-size: 17px">-</span></a></li>
+                    <li><a class="operation" href="#"<span style="font-size: 17px">*</span></a></li>
+                    <li><a class="operation" href="#"<span style="font-size: 17px">/</span></a></li>
+                </ul>
+            </div><!-- /btn-group -->
+            <div class="input-group" >
+                <input type="text" class="price-replace form-control"   placeholder="--设置价格--">
+                <span class="input-group-btn">
+                                <button id="price-set" class="btn btn-default" type="button">确定</button>
+                            </span>
+            </div>
+        </div>
+        <div class="cat">
+            <select prompt="--请选择主类目--">
+                <option>--请选择主类目--</option>
+            </select>
+        </div>
+
+        <div class="sub-cat">
+
+        </div>
+
+    </div>
         <?php ActiveForm::end(); ?>
 </div><!-- /.row -->
 

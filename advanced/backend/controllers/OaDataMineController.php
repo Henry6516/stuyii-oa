@@ -556,7 +556,7 @@ class OaDataMineController extends BaseController
      */
     private function generateCode($max_code)
     {
-        $number = (int)substr($max_code,8,\strlen($max_code)-1) + 1;
+        $number = (int)substr($max_code,9,\strlen($max_code)-1) + 1;
         $base = '0000';
         if(\strlen($number) === \strlen($base)){
             return 'A'.date('Ymd').$number;
