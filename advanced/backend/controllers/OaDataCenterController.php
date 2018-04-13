@@ -11,6 +11,7 @@ use backend\models\ChannelSearch;
 use backend\models\WishSuffixDictionary;
 use backend\models\OaWishgoods;
 use backend\models\Wishgoodssku;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
@@ -44,9 +45,15 @@ class OaDataCenterController extends BaseController
         $searchModel = new ChannelSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'oa-data-center','平台信息');
 
+        //获取商品状态列表
+        $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
+
         return $this->render('products', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'goodsStatusList' => $list
         ]);
 
     }

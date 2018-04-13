@@ -53,9 +53,15 @@ class ChannelController extends BaseController
         //var_dump($params);exit;
         $dataProvider = $searchModel->search($params,'channel','平台信息');
 
+        //获取商品状态列表
+        $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'goodsStatusList' => $list
         ]);
     }
 

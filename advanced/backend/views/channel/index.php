@@ -75,6 +75,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'filterInputOptions' => ['placeholder' => '-请选择-'],
             ],
+            [
+                'attribute' => 'wishpublish',
+                //'value'=>'oa_goods.cate',
+                'width' => '150px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['Y' => 'Y', 'N' => 'N'],
+                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
+            ],
              'GoodsName',
             [
                 'attribute' => 'cate',
@@ -186,6 +199,21 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'DictionaryName',
             'isVar',
+            //'goodsstatus',
+            [
+                'attribute' => 'goodsstatus',
+                //'value'=>'oa_goods.cate',
+                'width' => '150px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $goodsStatusList,
+                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
+            ],
+            'stockdays'
         ],
         'pager' =>[
             'class' => \common\widgets\MLinkPager::className(),

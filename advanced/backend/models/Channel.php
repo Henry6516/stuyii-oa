@@ -56,8 +56,10 @@ class Channel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid'], 'integer'],
-            [['isVar','description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus', 'developer', 'picStatus', 'AttributeName','completeStatus'], 'string'],
+            [['IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'stockdays'], 'integer'],
+            [['isVar','description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName',
+                'SupplierName', 'StoreName', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus',
+                'developer', 'picStatus', 'AttributeName','completeStatus', 'goodsstatus', 'wishpublish'], 'string'],
             [['DeclaredValue'], 'number'],
             [['devDatetime', 'updateTime'], 'safe'],
         ];
@@ -105,6 +107,9 @@ class Channel extends \yii\db\ActiveRecord
             'subCate' => Yii::t('app', '子类目'),
             'isVar' => Yii::t('app', '是否多属性'),
             'stockUp' => Yii::t('app', '是否备货'),
+            'wishpublish' => Yii::t('app', 'Wish待刊登'),
+            'goodsstatus' => Yii::t('app', '商品状态'),
+            'stockdays' => Yii::t('app', '采购到货天数'),
         ];
     }
 

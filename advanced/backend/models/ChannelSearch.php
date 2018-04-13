@@ -32,8 +32,10 @@ class ChannelSearch extends Channel
     {
         return [
             [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid'], 'integer'],
-            [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName', 'SupplierName', 'StoreName',
-                'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate', 'subCat'], 'safe'],
+            [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
+                'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
+                'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
+                'subCat','wishpublish', 'goodsstatus', 'stockdays'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -149,6 +151,9 @@ class ChannelSearch extends Channel
                 ],
                 'isVar',
                 'stockUp',
+                'wishpublish',
+                'goodsstatus',
+                'stockdays'
             ]
         ]);
 
@@ -173,6 +178,9 @@ class ChannelSearch extends Channel
             'StoreID' => $this->StoreID,
             'bgoodsid' => $this->bgoodsid,
             'isVar' => $this->isVar,
+            'wishpublish' => $this->wishpublish,
+            'goodsstatus' => $this->goodsstatus,
+            'stockdays' => $this->stockdays,
         ]);
 
         if ($this->devDatetime) {
