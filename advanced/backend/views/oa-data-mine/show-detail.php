@@ -281,7 +281,6 @@ $('.operation').on('click',function() {
 $('#price-set').on('click',function() {
     var price_replace = $('.price-replace').val()?parseFloat($('.price-replace').val()):0;
     var op = $('.op-btn').html()[0]
-    console.log(op);
     
     $('.price').each(function() {
         if(op ==='='){

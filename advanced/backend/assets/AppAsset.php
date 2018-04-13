@@ -20,6 +20,7 @@ class AppAsset extends AssetBundle
         'plugins/app.min.js',
         'plugins/layer/layer.js',
         'js/pageSize.js',
+        'plugins/bootstrap-select/bootstrap-select.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

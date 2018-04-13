@@ -429,6 +429,40 @@ class OaDataMineController extends Controller
 
 
     /**
+     * @brief set price
+     */
+    public  function  actionSetPrice()
+    {
+        $post = Yii::$app->request->post();
+        $op = $post['op'];
+        $lots_mid = $post['lots_mid'];
+        $price_replace = $post['price_replace'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $detail = OaDataMineDetail::findAll(['mid' => $mid]);
+                foreach ($detail as $row) {
+                    $current_price = $row->price;
+                    $new_price = round($this->calculate($op, $current_price, $price_replace),2);
+                    $row->setAttribute('price', $new_price);
+                    if(!$row->update()){
+                        throw new Exception('fail to update!');
+                    }
+                }
+            }
+            $trans->commit();
+            $msg = '价格设置成功！';
+
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '价格设置失败';
+        }
+        return $msg;
+
+    }
+
+    /**
      * @brief save basic data
      */
     public function actionSaveBasic($mid,$flag='')
@@ -588,5 +622,46 @@ class OaDataMineController extends Controller
         return  json_encode(\array_map(function ($ele) { return $ele['categoryName'];},$result));
     }
 
+
+    /**
+     * @brief calculate
+     * @param operator string
+     * @param price float
+     * @param price_replace float
+     *
+     * @return float
+     */
+    private function calculate($operator, $price, $price_replace){
+        if(!is_numeric($price) || !is_numeric($price_replace)){
+            return '';
+        }
+
+        $price = (float)$price;
+        $price_replace = (float)$price_replace;
+
+        if($operator === '='){
+           $ret = $price_replace;
+        }
+
+        if($operator === '+'){
+            $ret = $price + $price_replace;
+
+        }
+
+        if($operator === '-'){
+            $ret = $price - $price_replace;
+
+        }
+
+        if($operator === '*'){
+            $ret = $price * $price_replace;
+
+        }
+        if($operator === '/'){
+            $ret = $price / $price_replace;
+
+        }
+        return $ret;
+    }
 
 }

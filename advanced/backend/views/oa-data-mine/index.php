@@ -14,6 +14,7 @@ $this->title = '数据采集';
 $this->params['breadcrumbs'][] = $this->title;
 $createJobUrl = URl::toRoute('create-job')
 ?>
+
 <div class="oa-data-mine-index">
 
     <?= Tabs::widget([
@@ -49,51 +50,68 @@ $createJobUrl = URl::toRoute('create-job')
             'options' => ['data-pjax' => true ],
         ]); ?>
 
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <div class="input-group">
       <span class="input-group-btn">
         <button class="btn btn-default" type="button">商品编号</button>
       </span>
-            <input id='pro-id' name="proId" type="text" class="form-control" placeholder="1504779018437136151-176(多个用逗号隔开)">
+            <input id='pro-id' name="proId" type="text" class="form-control" placeholder="15047790-18437136151(多个用逗号隔开)">
             <input name="platform" type="text" value="joom" hidden="hidden">
         </div><!-- /input-group -->
     </div><!-- /.col-lg-6 -->
-    <div class="col-lg-4">
+    <div class="col-lg-3">
         <button type="submit" class="btn btn-success">开始采集</button>
         <button type="button" class="btn export-lots-btn btn-danger">批量导出Joom-csv</button>
         <button type="button" class="btn complete-lots-btn btn-warning">批量标记完善</button>
 
     </div><!-- /.col-lg-6 -->
-    <div class="col-lg-4">
-        <div class="input-group">
-            <div class="input-group-btn">
-                <button type="button" class="op-btn btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">=<span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <li><a class="operation" href="#"><span style="font-size: 17px">=</span></a></li>
-                    <li><a class="operation" href="#"><span style="font-size: 17px">+</span></a></li>
-                    <li><a class="operation" href="#"><span style="font-size: 17px">-</span></a></li>
-                    <li><a class="operation" href="#"<span style="font-size: 17px">*</span></a></li>
-                    <li><a class="operation" href="#"<span style="font-size: 17px">/</span></a></li>
-                </ul>
-            </div><!-- /btn-group -->
-            <div class="input-group" >
-                <input type="text" class="price-replace form-control"   placeholder="--设置价格--">
-                <span class="input-group-btn">
+    <div class="col-lg-6">
+        <div class="col-sm-4">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="op-btn btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">=<span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a class="operation" href="javascript:void(0);"><span style="font-size: 17px">=</span></a></li>
+                        <li><a class="operation" href="javascript:void(0);"><span style="font-size: 17px">+</span></a></li>
+                        <li><a class="operation" href="javascript:void(0);"><span style="font-size: 17px">-</span></a></li>
+                        <li><a class="operation" href="javascript:void(0);"<span style="font-size: 17px">*</span></a></li>
+                        <li><a class="operation" href="javascript:void(0);"<span style="font-size: 17px">/</span></a></li>
+                    </ul>
+                </div><!-- /btn-group -->
+                <div class="input-group" >
+                    <input type="text" class="price-replace form-control"   placeholder="--设置价格--">
+                    <span class="input-group-btn">
                                 <button id="price-set" class="btn btn-default" type="button">确定</button>
                             </span>
+                </div>
             </div>
         </div>
-        <div class="cat">
-            <select prompt="--请选择主类目--">
-                <option>--请选择主类目--</option>
+        <div class=" cat col-sm-2">
+            <select class="selectpicker"  data-width="100%" >
+                <?php
+                echo '<option value="">--主类目--</option>';
+                foreach ($cat as $name ){
+                    echo "<option value='{$name}'>{$name}</option>";
+                }
+                ?>
             </select>
+
+        </div>
+        <div class=" sub-cat col-sm-2">
+            <select class="selectpicker"  data-width="100%">
+                <option value="">--子类目--</option>
+            </select>
+
         </div>
 
-        <div class="sub-cat">
+        <div class=" set-cat col-sm-3">
+            <button class="btn" type="button">确定类目</button>
 
         </div>
 
     </div>
+
+
         <?php ActiveForm::end(); ?>
 </div><!-- /.row -->
 
@@ -227,7 +245,8 @@ $createJobUrl = URl::toRoute('create-job')
 <?php
 $exportLotsUrl = Url::toRoute(['export-lots']);
 $completeLotsUrl = Url::toRoute(['complete-lots']);
-
+$subCatUrl = Url::toRoute(['sub-cat']);
+$setPriceUrl = Url::toRoute(['set-price']);
 
 $js = <<< JS
 
@@ -281,6 +300,59 @@ $('.complete-lots-btn').on('click', function() {
     });
 })
 
+/*
+cat selection
+ */
+$('.cat select').on('change',function() {
+    var cat = $('.cat option:selected').val();
+    $('.sub-cat option').not(':first').remove();
+    $.get("$subCatUrl",{cat:cat},function(cats) {
+        var select = $('.sub-cat select');
+        $.each(JSON.parse(cats), function(index,value) {
+            var html = '<option value="'+ value +'">'+ value +'</option>';
+            select.append(html);
+        })
+        select.selectpicker('refresh');
+    });
+})
+
+
+/*
+set price
+ */
+
+//operator
+$('.operation').on('click',function() {
+    var op = $(this).text()
+    var button = $('.op-btn');
+    button.html(button.html().replace(button.html()[0],op));
+})
+
+$('#price-set').on('click',function() {
+    var price_replace = $('.price-replace').val()?parseFloat($('.price-replace').val()):0;
+    var op = $('.op-btn').html()[0]
+    var lots_mid = $('#mine-table').yiiGridView("getSelectedRows");
+    if(lots_mid.length === 0) {
+        alert('请选中产品！');
+        return false;   
+    }
+    $.ajax({
+        url: '{$setPriceUrl}',
+        type: 'post',
+        data:({'op':op,'lots_mid':lots_mid,'price_replace':price_replace}),
+        success:(function(ret) {
+            alert(ret);
+        })
+    });
+    
+    
+    
+})
+
+
 JS;
 $this->registerJs($js);
 ?>
+
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
+
