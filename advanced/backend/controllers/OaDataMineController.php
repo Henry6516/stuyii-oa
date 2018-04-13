@@ -320,13 +320,13 @@ class OaDataMineController extends Controller
     {
         $lots_mid = explode(',',$lots_mid);
         $db = Yii::$app->db;
-        $sql = 'select parentId,proName,description,tags,
+        $sql = "select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                mainImage,extra_image1,extra_image2,extra_image3,
+                extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
-                where mid=:mid';
+                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
+                where mid=:mid";
 
 
         $heard_name = [
