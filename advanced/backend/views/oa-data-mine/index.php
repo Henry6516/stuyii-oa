@@ -126,7 +126,21 @@ $createJobUrl = URl::toRoute('create-job')
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
                 ['class' => 'yii\grid\CheckboxColumn'],
-                ['class' => 'yii\grid\ActionColumn'],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'buttons' => [
+                        'view' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-eye-open" title="View Details"></span>', $url, ['data-pjax' => 0, 'target' => "_blank"]);
+                        },
+                        'update' => function ($url, $model) {
+
+                            return Html::a('<span class="glyphicon glyphicon-pencil" title="Update"></span>',$url, ['data-pjax' => 0, 'target' => "_blank"]);
+                        },
+                        'delete' => function ($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-trash" title= "Delete"></span>', $url, ['data-pjax' => 0,]);
+                        },
+                    ],
+                ],
                 [   'attribute' => 'varMainImage',
                     'format' => 'raw',
                     'contentOptions' => ['style' => 'width:80px; white-space: normal;'],
