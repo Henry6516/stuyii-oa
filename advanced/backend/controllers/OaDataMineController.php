@@ -462,6 +462,42 @@ class OaDataMineController extends Controller
 
     }
 
+
+    /**
+     * @brief set cat
+     */
+    public  function  actionSetCat()
+    {
+        $post = Yii::$app->request->post();
+        $cat = $post['cat'];
+        $lots_mid = $post['lots_mid'];
+        $sub_cat = $post['sub_cat'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $detail = OaDataMine::findAll(['id' => $mid]);
+                foreach ($detail as $row) {
+                    $row->setAttribute('cat', $cat);
+                    $row->setAttribute('subCat', $sub_cat);
+                    if(!$row->update()){
+                        throw new Exception('fail to update!');
+                    }
+                }
+            }
+            $trans->commit();
+            $msg = '类目设置成功！';
+
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '类目设置失败！';
+        }
+        return $msg;
+
+    }
+
+
+
     /**
      * @brief save basic data
      */

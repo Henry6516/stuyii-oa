@@ -104,8 +104,8 @@ $createJobUrl = URl::toRoute('create-job')
 
         </div>
 
-        <div class=" set-cat col-sm-3">
-            <button class="btn" type="button">确定类目</button>
+        <div class="col-sm-3">
+            <button class="set-cat btn" type="button">确定类目</button>
 
         </div>
 
@@ -247,6 +247,7 @@ $exportLotsUrl = Url::toRoute(['export-lots']);
 $completeLotsUrl = Url::toRoute(['complete-lots']);
 $subCatUrl = Url::toRoute(['sub-cat']);
 $setPriceUrl = Url::toRoute(['set-price']);
+$setCatUrl = Url::toRoute(['set-cat']);
 
 $js = <<< JS
 
@@ -349,7 +350,31 @@ $('#price-set').on('click',function() {
     
 })
 
-
+/*
+set cat
+ */
+$('.set-cat').on('click',function() {
+    var cat = $('.cat select option:selected').val();
+    var sub_cat = $('.sub-cat select option:selected').val();
+    if(cat.length === 0 ||sub_cat.length === 0){
+        alert('请选择类目！');
+        return false;
+    }
+    var lots_mid = $('#mine-table').yiiGridView("getSelectedRows");
+    if(lots_mid.length === 0) {
+        alert('请选中产品！');
+        return false;   
+    }
+    $.ajax({
+        url:'{$setCatUrl}',
+        type:'post',
+        data:({'cat':cat,'sub_cat':sub_cat,'lots_mid':lots_mid}),
+        success:(function(ret) {
+            alert(ret);
+        })
+    })
+    
+})
 JS;
 $this->registerJs($js);
 ?>
