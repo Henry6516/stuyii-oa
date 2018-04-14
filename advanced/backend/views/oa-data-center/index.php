@@ -5,13 +5,10 @@ use kartik\grid\GridView;
 /* @var $searchModel backend\models\ChannelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', '平台信息');
+$this->title = Yii::t('app', 'Wish待刊登');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="channel-index">
-    <p>
-        <?= Html::a(Yii::t('app', '标记已完善'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     </div>
 
     <?= GridView::widget([
@@ -26,8 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'hover'=>true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            ['class' => 'yii\grid\CheckboxColumn'],
-            ['class' => 'yii\grid\ActionColumn'],
+            //['class' => 'yii\grid\CheckboxColumn'],
+            //['class' => 'yii\grid\ActionColumn'],
 
             [
                 'attribute' => 'mainImage',
@@ -55,13 +52,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'stockUp',
+                'attribute' => 'wishpublish',
+                //'value'=>'oa_goods.cate',
                 'width' => '150px',
-                'format' => 'raw',
-                'value' => function ($data) {
-                    $value = $data->stockUp?'是':'否';
-                    return "<span class='cell'>" . $value . "</span>";
-                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['Y' => 'Y', 'N' => 'N'],
+                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
             ],
              'GoodsName',
             [
@@ -72,13 +73,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=> 'subCate',
                 'value'=>'oa_goods.subCate'
             ],
-
-             'SupplierName',
-             'StoreName',
-            [
-                'attribute'=> 'introducer',
-                'value'=>'oa_goods.introducer'
-            ],
              'developer',
              'Purchaser',
              'possessMan1',
@@ -88,10 +82,22 @@ $this->params['breadcrumbs'][] = $this->title;
                     return substr(strval($model->devDatetime),0,20);
                 },
             ],
-            'completeStatus',
             'DictionaryName',
             'isVar',
-
+            [
+                'attribute' => 'goodsstatus',
+                //'value'=>'oa_goods.cate',
+                'width' => '150px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $goodsStatusList,
+                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
+            ],
+            'stockdays'
         ],
         'pager' =>[
             'class' => \common\widgets\MLinkPager::className(),

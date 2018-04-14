@@ -56,6 +56,26 @@ class OaDataCenterController extends BaseController
             'goodsStatusList' => $list
         ]);
 
+    }/**
+     * List of products that need to be published on the wish platform
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new ChannelSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,'oa-data-center','Wish待刊登');
+
+        //获取商品状态列表
+        $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'goodsStatusList' => $list
+        ]);
+
     }
 
     /**

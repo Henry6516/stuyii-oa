@@ -65,6 +65,11 @@ class ChannelSearch extends Channel
             $query->where(['<>', 'completeStatus', '']);
         }
 
+        //如果是数据中中心的Wish待刊登模块则只返回wish平台未完善数据
+        if ($model_name == 'oa-data-center' && $unit == 'Wish待刊登') {
+            $query->where(['wishpublish' => 'Y']);
+        }
+
         //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
         if ($model_name == 'channel') {
             //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
