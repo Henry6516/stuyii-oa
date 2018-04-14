@@ -321,13 +321,13 @@ class OaDataMineController extends BaseController
     {
         $lots_mid = explode(',',$lots_mid);
         $db = Yii::$app->db;
-        $sql = 'select parentId,proName,description,tags,
+        $sql = "select parentId,proName,description,tags,
                 childId,color,proSize,quantity,price,msrPrice,
                 shipping,shippingWeight,shippingTime,MainImage,varMainImage,
-                mainImage,extra_image1,extra_image2,extra_image3,
+                extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10 from oa_data_mine_detail
-                where mid=:mid';
+                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
+                where mid=:mid";
 
 
         $heard_name = [
@@ -427,6 +427,76 @@ class OaDataMineController extends BaseController
         }
         return $msg;
     }
+
+
+    /**
+     * @brief set price
+     */
+    public  function  actionSetPrice()
+    {
+        $post = Yii::$app->request->post();
+        $op = $post['op'];
+        $lots_mid = $post['lots_mid'];
+        $price_replace = $post['price_replace'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $detail = OaDataMineDetail::findAll(['mid' => $mid]);
+                foreach ($detail as $row) {
+                    $current_price = $row->price;
+                    $new_price = round($this->calculate($op, $current_price, $price_replace),2);
+                    $row->setAttribute('price', $new_price);
+                    if(!$row->update()){
+                        throw new Exception('fail to update!');
+                    }
+                }
+            }
+            $trans->commit();
+            $msg = '价格设置成功！';
+
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '价格设置失败';
+        }
+        return $msg;
+
+    }
+
+
+    /**
+     * @brief set cat
+     */
+    public  function  actionSetCat()
+    {
+        $post = Yii::$app->request->post();
+        $cat = $post['cat'];
+        $lots_mid = $post['lots_mid'];
+        $sub_cat = $post['sub_cat'];
+        $trans = Yii::$app->db->beginTransaction();
+        try{
+            foreach ($lots_mid as $mid) {
+                $detail = OaDataMine::findAll(['id' => $mid]);
+                foreach ($detail as $row) {
+                    $row->setAttribute('cat', $cat);
+                    $row->setAttribute('subCat', $sub_cat);
+                    if(!$row->update()){
+                        throw new Exception('fail to update!');
+                    }
+                }
+            }
+            $trans->commit();
+            $msg = '类目设置成功！';
+
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg = '类目设置失败！';
+        }
+        return $msg;
+
+    }
+
 
 
     /**
@@ -589,5 +659,46 @@ class OaDataMineController extends BaseController
         return  json_encode(\array_map(function ($ele) { return $ele['categoryName'];},$result));
     }
 
+
+    /**
+     * @brief calculate
+     * @param operator string
+     * @param price float
+     * @param price_replace float
+     *
+     * @return float
+     */
+    private function calculate($operator, $price, $price_replace){
+        if(!is_numeric($price) || !is_numeric($price_replace)){
+            return '';
+        }
+
+        $price = (float)$price;
+        $price_replace = (float)$price_replace;
+
+        if($operator === '='){
+           $ret = $price_replace;
+        }
+
+        if($operator === '+'){
+            $ret = $price + $price_replace;
+
+        }
+
+        if($operator === '-'){
+            $ret = $price - $price_replace;
+
+        }
+
+        if($operator === '*'){
+            $ret = $price * $price_replace;
+
+        }
+        if($operator === '/'){
+            $ret = $price / $price_replace;
+
+        }
+        return $ret;
+    }
 
 }
