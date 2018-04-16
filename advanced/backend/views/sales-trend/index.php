@@ -198,8 +198,7 @@ $this->title = '销售走势';
     }
 </script>
 <link rel="stylesheet" href="../css/bootstrap-select.min.css">
-<script src="../plugins/jquery/1.12.3/jquery.js"></script>
-<script src="../plugins/bootstrap-select/bootstrap-select.min.js"></script>
+
 
 
 
