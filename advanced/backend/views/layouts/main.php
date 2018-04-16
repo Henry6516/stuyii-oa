@@ -23,8 +23,8 @@ if (Yii::$app->controller->action->id === 'login') {
         app\assets\AppAsset::register($this);
     }
     //加载临时添加的JS和CSS
-    AppAsset::addJs($this,$this->context->data['js']);
-    AppAsset::addCss($this,$this->context->data['css']);
+    //AppAsset::addJs($this,$this->context->data['js']);
+    //AppAsset::addCss($this,$this->context->data['css']);
 
     dmstr\web\AdminLteAsset::register($this);
 
