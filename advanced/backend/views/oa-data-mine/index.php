@@ -166,7 +166,6 @@ $createJobUrl = URl::toRoute('create-job')
                     'filterType' => GridView::FILTER_DATE_RANGE,
                     'filterWidgetOptions' => [
                         'pluginOptions' => [
-//                            'value' => Yii::$app->request->get('OaDataMineSearch')['createTime'],
                             'convertFormat' => true,
                             'useWithAddon' => true,
                             'format' => 'php:Y-m-d',
@@ -179,6 +178,18 @@ $createJobUrl = URl::toRoute('create-job')
                                 'daysOfWeek'=>false,
                             ],
                             'opens'=>'left',
+                        ],
+//                        'presetDropdown' => true,
+                        'pluginEvents' => [
+                            'apply.daterangepicker' => 'function(ev, picker) {
+                             var val = picker.startDate.format(picker.locale.format) + picker.locale.separator + picker.endDate.format(picker.locale.format);
+                             $(picker.element[0]).val(val);
+                             $(picker.element[0]).trigger("change");
+                             }',
+                            'cancel.daterangepicker' => 'function(ev,picker){
+                             $(picker.element[0]).val("");
+                             $(picker.element[0]).trigger("change");
+                                }'
                         ],
                         'model' =>$searchModel,
                         'attribute' => 'createTime',
@@ -198,6 +209,7 @@ $createJobUrl = URl::toRoute('create-job')
                         'pluginOptions' => [
 //                            'value' => Yii::$app->request->get('OaDataMineSearch')['updateTime'],
                             'convertFormat' => true,
+//                            'defaultPresetValueOptions' => ['style'=>'display:none'],
                             'useWithAddon' => true,
                             'format' => 'php:Y-m-d',
                             'todayHighlight' => true,
@@ -209,6 +221,17 @@ $createJobUrl = URl::toRoute('create-job')
                                 'daysOfWeek'=>false,
                             ],
                             'opens'=>'left',
+                        ],
+                        'pluginEvents' => [
+                            'apply.daterangepicker' => 'function(ev, picker) {
+                             var val = picker.startDate.format(picker.locale.format) + picker.locale.separator + picker.endDate.format(picker.locale.format);
+                             $(picker.element[0]).val(val);
+                             $(picker.element[0]).trigger("change");
+                             }',
+                            'cancel.daterangepicker' => 'function(ev,picker){
+                             $(picker.element[0]).val("");
+                             $(picker.element[0]).trigger("change");
+                                }'
                         ],
                         'model' =>$searchModel,
                         'attribute' => 'createTime',
