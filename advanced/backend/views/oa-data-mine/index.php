@@ -14,7 +14,7 @@ $this->title = '数据采集';
 $this->params['breadcrumbs'][] = $this->title;
 $createJobUrl = URl::toRoute('create-job')
 ?>
-
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
 <div class="oa-data-mine-index">
 
     <?= Tabs::widget([
@@ -249,6 +249,16 @@ $createJobUrl = URl::toRoute('create-job')
                     'filterInputOptions' => ['placeholder' => '-请选择-'],
 
                 ],
+                ['attribute' => 'devStatus',
+                    'format' => 'raw',
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ['未开发' =>'未开发','开发中' => '开发中', '已开发' => '已开发'],
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => '-请选择-'],
+
+                ],
                 ['attribute' => 'cat',
                     'format' => 'raw',
                     'filterType' => GridView::FILTER_SELECT2,
@@ -425,8 +435,9 @@ $('.set-cat').on('click',function() {
     
 })
 JS;
+
 $this->registerJs($js);
 ?>
 
-<link rel="stylesheet" href="../css/bootstrap-select.min.css">
+
 

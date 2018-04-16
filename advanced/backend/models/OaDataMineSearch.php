@@ -52,6 +52,7 @@ class OaDataMineSearch extends OaDataMine
         $query->joinWith(['oa_data_mine_detail']);
         $query->groupBy(['oa_data_mine.id','proId','platForm','progress',
             'creator','createTime','updateTime','detailStatus','cat','subCat','goodsCode',
+            'devStatus',
             ]);
         $query->orderBy(['oa_data_mine.id' => SORT_DESC]);
 
