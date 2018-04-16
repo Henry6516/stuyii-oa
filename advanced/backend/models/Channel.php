@@ -56,7 +56,7 @@ class Channel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'stockdays'], 'integer'],
+            [['IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'stockdays','number'], 'integer'],
             [['isVar','description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName', 'Season', 'DictionaryName',
                 'SupplierName', 'StoreName', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus',
                 'developer', 'picStatus', 'AttributeName','completeStatus', 'goodsstatus', 'wishpublish'], 'string'],
@@ -110,6 +110,7 @@ class Channel extends \yii\db\ActiveRecord
             'wishpublish' => Yii::t('app', 'Wish待刊登'),
             'goodsstatus' => Yii::t('app', '商品状态'),
             'stockdays' => Yii::t('app', '采购到货天数'),
+            'number' => Yii::t('app', '库存'),
         ];
     }
 
