@@ -60,7 +60,7 @@ class OaDataMineSearch extends OaDataMine
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
-                'pageSize' => 10,
+                'pageSize' => isset($params['pageSize']) && $params['pageSize'] ? $params['pageSize'] : 10,
             ],
         ]);
 
