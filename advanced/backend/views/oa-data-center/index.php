@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ChannelSearch */
@@ -23,9 +24,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'hover'=>true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            //['class' => 'yii\grid\CheckboxColumn'],
-            //['class' => 'yii\grid\ActionColumn'],
-
+            [ 'class' => 'kartik\grid\ActionColumn',
+                'template' =>' {update} ',
+                'buttons' => [
+                    'update' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => '更新',
+                            'aria-label' => '更新',
+                            'data-id' => $key,
+                            'class' => 'forward-update',
+                        ];
+                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>', Url::toRoute(['channel/update','id' => $key]), $options);
+                    },
+                ],
+            ],
             [
                 'attribute' => 'mainImage',
                 'value' =>function($model,$key, $index, $widget) {
