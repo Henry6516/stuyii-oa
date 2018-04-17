@@ -190,7 +190,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width' => '500px',
                 //'filterType' => GridView::FILTER_SELECT2,
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善', 'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善'],
+                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+                ],
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],

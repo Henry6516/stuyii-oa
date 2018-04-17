@@ -37,7 +37,7 @@ class ChannelSearch extends Channel
             [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
-                'subCat','wishpublish', 'goodsstatus', 'stockdays'], 'safe'],
+                'subCat', 'wishpublish', 'goodsstatus', 'stockdays'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -76,7 +76,7 @@ class ChannelSearch extends Channel
         if ($model_name == 'channel') {
             //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
             if (!isset($params['ChannelSearch'])) {
-                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善' , 'Wish已完善'];
+                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善'];
             }
         }
         $query->joinWith(['oa_goods']);
@@ -111,7 +111,7 @@ class ChannelSearch extends Channel
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
-    //var_dump($query->asArray()->all());exit;
+        //var_dump($query->asArray()->all());exit;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -215,18 +215,77 @@ class ChannelSearch extends Channel
         if ($this->completeStatus && is_array($this->completeStatus)) {
             //var_dump($this->completeStatus);exit;
             $completeStatus = ['or'];
-            foreach ($this->completeStatus as $k => $v){
+            foreach ($this->completeStatus as $k => $v) {
                 if ($v == '未设置') {
-                    $completeStatus[$k+1] = ['or', ['completeStatus' => null],['completeStatus' => '']];
+                    $completeStatus[$k + 1] = ['or', ['completeStatus' => null], ['completeStatus' => '']];
                 }
                 if ($v == 'eBay已完善') {
-                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'eBay已完善'], ['not like', 'completeStatus', 'Wish已完善']];
+                    $completeStatus[$k + 1] =
+                        [
+                            'and',
+                            ['like', 'completeStatus', 'eBay已完善'],
+                            [
+                                'and',
+                                ['not like', 'completeStatus', 'Wish已完善'],
+                                ['not like', 'completeStatus', 'Joom已完善'],
+                            ]
+                        ];
                 }
                 if ($v == 'Wish已完善') {
-                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'Wish已完善'], ['not like', 'completeStatus', 'eBay已完善']];
+                    $completeStatus[$k + 1] =
+                        [
+                            'and',
+                            ['like', 'completeStatus', 'Wish已完善'],
+                            [
+                                'and',
+                                ['not like', 'completeStatus', 'eBay已完善'],
+                                ['not like', 'completeStatus', 'Joom已完善'],
+                            ]
+                        ];
+                }
+                if ($v == 'Joom已完善') {
+                    $completeStatus[$k + 1] =
+                        [
+                            'and',
+                            ['like', 'completeStatus', 'Joom已完善'],
+                            [
+                                'and',
+                                ['not like', 'completeStatus', 'eBay已完善'],
+                                ['not like', 'completeStatus', 'Wish已完善'],
+                            ]
+                        ];
                 }
                 if ($v == 'Wish已完善|eBay已完善') {
-                    $completeStatus[$k+1] = ['and', ['like', 'completeStatus', 'eBay已完善'], ['like', 'completeStatus', 'Wish已完善']];
+                    $completeStatus[$k + 1] = [
+                        'and',
+                        ['like', 'completeStatus', 'eBay已完善'],
+                        ['like', 'completeStatus', 'Wish已完善'],
+                        ['not like', 'completeStatus', 'Joom已完善'],
+                    ];
+                }
+                if ($v == 'Wish已完善|Joom已完善') {
+                    $completeStatus[$k + 1] = [
+                        'and',
+                        ['like', 'completeStatus', 'Joom已完善'],
+                        ['like', 'completeStatus', 'Wish已完善'],
+                        ['not like', 'completeStatus', 'eBay已完善'],
+                    ];
+                }
+                if ($v == 'Joom已完善|eBay已完善') {
+                    $completeStatus[$k + 1] = [
+                        'and',
+                        ['like', 'completeStatus', 'Joom已完善'],
+                        ['like', 'completeStatus', 'eBay已完善'],
+                        ['not like', 'completeStatus', 'Wish已完善'],
+                    ];
+                }
+                if ($v == 'Wish已完善|eBay已完善|Joom已完善') {
+                    $completeStatus[$k + 1] = [
+                        'and',
+                        ['like', 'completeStatus', 'Joom已完善'],
+                        ['like', 'completeStatus', 'eBay已完善'],
+                        ['like', 'completeStatus', 'Wish已完善'],
+                    ];
                 }
 
             }

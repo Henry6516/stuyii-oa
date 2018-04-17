@@ -871,6 +871,27 @@ class ChannelController extends BaseController
         return "标记失败!";
     }
 
+    /*
+     *编辑完成状态
+     */
+    public function actionJoomSign($id)
+    {
+
+        $info = OaGoodsinfo::find()->where(['pid' => $id])->one();
+        //动态计算产品的状态
+
+        $old_status = $info->completeStatus?$info->completeStatus:'';
+        $status = str_replace('|Joom已完善', '', $old_status);
+        $complete_status = $status.'|Joom已完善';
+        $info->completeStatus = $complete_status;
+        $ret = $info->save(false);
+        if($ret){
+            $this->actionUpdate($id);
+            return "标记成功!";
+        }
+        return "标记失败!";
+    }
+
     /**
      * 导出CSV文件
      * @param array $data 数据

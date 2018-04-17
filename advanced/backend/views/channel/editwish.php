@@ -80,10 +80,11 @@ if (empty($sku->randomKeywords)) {
     ?>
     <div class="form-group blockTitle">
         <button class="btn btn-info update-info" type="button">更新</button>
-        <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
+        <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
         <button class="btn btn-success export" type="button">导出ibay模版</button>
-        <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
-        <button class="btn btn-danger joom-2-csv" type="button">导出joom-2(csv)</button>
+        <button class="btn btn-warning joom-csv" type="button">导出Joom(csv)</button>
+        <button class="btn btn-danger joom-2-csv" type="button">导出Joom-2(csv)</button>
+        <button class="btn btn-info joom-sign" type="button">Joom保存并完善</button>
 <!--        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
     </div>
     <div class="blockTitle">
@@ -242,10 +243,11 @@ if (empty($sku->randomKeywords)) {
 </div>
 <div class="form-group blockTitle">
     <button class="btn btn-info update-info" type="button">更新</button>
-    <button class="btn btn-primary wish-sign" type="button">保存并完善</button>
+    <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
     <button class="btn btn-success export" type="button">导出ibay模版</button>
     <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
     <button class="btn btn-danger joom-2-csv" type="button">导出joom-2(csv)</button>
+    <button class="btn btn-info joom-sign" type="button">Joom保存并完善</button>
 <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
@@ -331,6 +333,7 @@ $joomUrl = Url::to(['export-joom', 'id' => $sku->infoid]);
 $joomSecUrl = Url::to(['export-sec-joom', 'id' => $sku->infoid]);
 $wishUrl = Url::toRoute(['wish-sign', 'id' => $sku->infoid]);
 $shopeeUrl = Url::toRoute(['export-shopee', 'id' => $sku->infoid]);
+$joomSignUrl = Url::toRoute(['joom-sign', 'id' => $sku->infoid]);
 $js = <<< JS
 //主图赋值
 $('.main-image').val($('.tem-page').val());
@@ -460,11 +463,19 @@ $('body').on('click','.down-btn',function() {
             data:$('#all-info').serialize(),
             success:function(res) {
                 alert(res);
-              
             }
         });
-      
-    
+    });
+    //标记joom已完成
+    $('.joom-sign').on('click',function(){
+        $.ajax({
+            type:"POST",
+            url:'{$joomSignUrl}',
+            data:$('#all-info').serialize(),
+            success:function(res) {
+                alert(res);
+            }
+        });
     });
 
 
