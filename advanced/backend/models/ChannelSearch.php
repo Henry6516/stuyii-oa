@@ -76,7 +76,8 @@ class ChannelSearch extends Channel
         if ($model_name == 'channel') {
             //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
             if (!isset($params['ChannelSearch'])) {
-                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善'];
+                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善',
+                    'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
             }
         }
         $query->joinWith(['oa_goods']);
