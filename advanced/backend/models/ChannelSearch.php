@@ -15,6 +15,8 @@ class ChannelSearch extends Channel
     public $subCate;
     public $introducer;
     public $mainImage;
+    //public $number;
+
 
     /**
      * @return string
@@ -31,7 +33,7 @@ class ChannelSearch extends Channel
     public function rules()
     {
         return [
-            [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid'], 'integer'],
+            [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'number'], 'integer'],
             [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
@@ -109,7 +111,7 @@ class ChannelSearch extends Channel
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
-
+    //var_dump($query->asArray()->all());exit;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -158,7 +160,8 @@ class ChannelSearch extends Channel
                 'stockUp',
                 'wishpublish',
                 'goodsstatus',
-                'stockdays'
+                'stockdays',
+                'number',
             ]
         ]);
 
@@ -186,6 +189,7 @@ class ChannelSearch extends Channel
             'wishpublish' => $this->wishpublish,
             'goodsstatus' => $this->goodsstatus,
             'stockdays' => $this->stockdays,
+            'number' => $this->number,
         ]);
 
         if ($this->devDatetime) {

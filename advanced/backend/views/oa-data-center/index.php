@@ -65,14 +65,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'group'=>true,  // enable grouping
             ],
              'GoodsName',
-            [
-                'attribute'=> 'cate',
-                'value'=>'oa_goods.cate'
-            ],
-            [
-                'attribute'=> 'subCate',
-                'value'=>'oa_goods.subCate'
-            ],
              'developer',
              'Purchaser',
              'possessMan1',
@@ -84,6 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'DictionaryName',
             'isVar',
+            'number',
             [
                 'attribute' => 'goodsstatus',
                 //'value'=>'oa_goods.cate',
