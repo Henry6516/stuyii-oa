@@ -26,7 +26,7 @@ class OaDataMineSearch extends OaDataMine
         return [
             [['id'], 'integer'],
             [['proId', 'platForm', 'progress', 'creator', 'createTime', 'updateTime'], 'safe'],
-            [['detailStatus','cat','subCat','goodsCode','MainImage'], 'safe']
+            [['infoId','pyGoodsCode','devStatus','detailStatus','cat','subCat','goodsCode','MainImage'], 'safe']
         ];
     }
 
@@ -96,9 +96,11 @@ class OaDataMineSearch extends OaDataMine
             ->andFilterWhere(['like', 'platForm', $this->platForm])
             ->andFilterWhere(['like', 'progress', $this->progress])
             ->andFilterWhere(['like', 'detailStatus', $this->detailStatus])
+            ->andFilterWhere(['like', 'devStatus', $this->devStatus])
             ->andFilterWhere(['like', 'cat', $this->cat])
             ->andFilterWhere(['like', 'subCat', $this->subCat])
             ->andFilterWhere(['like', 'goodsCode', $this->goodsCode])
+            ->andFilterWhere(['like', 'pyGoodsCode', $this->pyGoodsCode])
             ->andFilterWhere(['like', 'creator', $this->creator]);
         return $dataProvider;
     }

@@ -128,6 +128,7 @@ $createJobUrl = URl::toRoute('create-job')
                 ['class' => 'yii\grid\CheckboxColumn'],
                 [
                     'class' => 'yii\grid\ActionColumn',
+                    'template' => '{view} {update} {send} {delete}',
                     'buttons' => [
                         'view' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-eye-open" title="View Details"></span>', $url, ['data-pjax' => 0, 'target' => "_blank"]);
@@ -138,6 +139,9 @@ $createJobUrl = URl::toRoute('create-job')
                         },
                         'delete' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-trash" title= "Delete"></span>', $url, ['data-pjax' => 0,]);
+                        },
+                        'send' => function ($url, $model) {
+                            return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "Send"></span>', $url, []);
                         },
                     ],
                 ],
@@ -279,7 +283,8 @@ $createJobUrl = URl::toRoute('create-job')
                     'filterInputOptions' => ['placeholder' => '-请选择-'],
 
                 ],
-                'goodsCode'
+                'goodsCode',
+                'pyGoodsCode'
             ],
             'pager' =>[
                 'class' => \common\widgets\MLinkPager::className(),
@@ -307,6 +312,7 @@ $completeLotsUrl = Url::toRoute(['complete-lots']);
 $subCatUrl = Url::toRoute(['sub-cat']);
 $setPriceUrl = Url::toRoute(['set-price']);
 $setCatUrl = Url::toRoute(['set-cat']);
+$sendUrl = Url::toRoute(['send']);
 
 $js = <<< JS
 
@@ -433,6 +439,25 @@ $('.set-cat').on('click',function() {
         })
     })
     
+})
+
+
+
+// send it to developer
+
+$('.send').on('click', function() {
+    var mid = $(this).closest('tr').attr('data-key');
+    console.log(mid);
+    $.ajax({
+        url:'{$sendUrl}',
+        type: 'post',
+        data:({mid:mid}),
+        success:(function(ret) {
+            alert(ret);
+        })
+        
+    });
+  
 })
 JS;
 

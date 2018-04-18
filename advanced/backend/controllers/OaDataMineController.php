@@ -602,6 +602,23 @@ class OaDataMineController extends BaseController
     }
 
     /**
+     * @brief send OaDataMine record to goods-info
+     * @return mixed
+     */
+    public function actionSend()
+    {
+        $post = Yii::$app->request->post();
+        $db = Yii::$app->db;
+        $mid = $post['mid'];
+        $mine = OaDataMine::findOne(['mid'=>$mid]);
+
+        if($mine->devStatus !== '未开发'){
+            return '不能重复转开发！';
+        }
+
+    }
+
+    /**
      * Finds the OaDataMine model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
