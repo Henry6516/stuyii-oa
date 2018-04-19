@@ -400,6 +400,7 @@ save detail
  */
 $('#save-detail').on('click',function() {
     var btn = $(this);
+    $('.dismiss').click();
     btn.attr('disabled',true);
     var detail = $("#detail").serialize();
     $.ajax({

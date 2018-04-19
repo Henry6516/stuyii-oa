@@ -10,7 +10,7 @@ $default_sub_cat = $mine->subCat?:'none';
 
 Modal::begin([
     'id' => 'detail-modal',
-    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+    'footer' => '<a href="#" class="dismiss btn btn-primary" data-dismiss="modal">关闭</a>',
     'size' => "modal-xl"
 ]);
 //echo
