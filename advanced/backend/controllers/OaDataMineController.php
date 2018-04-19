@@ -165,6 +165,7 @@ class OaDataMineController extends BaseController
      * @param integer $id
      * @return mixed
      */
+
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -609,12 +610,21 @@ class OaDataMineController extends BaseController
     {
         $post = Yii::$app->request->post();
         $db = Yii::$app->db;
-        $mid = $post['mid'];
-        $mine = OaDataMine::findOne(['mid'=>$mid]);
+        $mid = (int)$post['mid'];
+
+        $mine = OaDataMine::findOne(['id' => $mid]);
+        $user = Yii::$app->user->identity->username;
 
         if($mine->devStatus !== '未开发'){
             return '不能重复转开发！';
         }
+
+        $send_sql  = "p_oa_JoomToGoodsInfo {$mid}, '{$user}'";
+        $query = $db->createCommand($send_sql);
+        if($query->execute($send_sql)){
+            return '已成功转至开发';
+        }
+        return '转至失败！';
 
     }
 
