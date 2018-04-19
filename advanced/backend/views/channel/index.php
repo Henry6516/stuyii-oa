@@ -88,6 +88,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => '-请选择-'],
                 //'group'=>true,  // enable grouping
             ],
+            [
+                'attribute' => 'completeStatus',
+                //'label' => '完成状况        ',
+                'width' => '500px',
+                //'filterType' => GridView::FILTER_SELECT2,
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+                ],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['class' => 'col-lg-8','style' => "width:500px", 'multiple' => true, 'placeholder' => '-请选择-'],
+                'headerOptions' => ['width' => '20%'],
+            ],
              'GoodsName',
             [
                 'attribute' => 'cate',
@@ -183,24 +201,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ]*/
                     ]
                 ]
-            ],
-            [
-                'attribute' => 'completeStatus',
-                //'label' => '完成状况        ',
-                'width' => '500px',
-                //'filterType' => GridView::FILTER_SELECT2,
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-                ],
-                'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
-                ],
-                'filterInputOptions' => ['class' => 'col-lg-8','style' => "width:500px", 'multiple' => true, 'placeholder' => '-请选择-'],
-                'headerOptions' => ['width' => '20%'],
             ],
             'DictionaryName',
             'isVar',

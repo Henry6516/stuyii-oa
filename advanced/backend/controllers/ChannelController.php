@@ -863,6 +863,8 @@ class ChannelController extends BaseController
         $status = str_replace('Wish已完善', '', $old_status);
         $complete_status = 'Wish已完善'.$status;
         $info->completeStatus = $complete_status;
+
+        $info->wishpublish = 'N';
         $ret = $info->save(false);
         if($ret){
             $this->actionUpdate($id);
