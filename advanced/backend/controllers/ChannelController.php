@@ -938,7 +938,7 @@ class ChannelController extends BaseController
                 $model = $this->findModel($id);
                 $old_status = $model->completeStatus?$model->completeStatus:'';
                 $status = str_replace('|Joom已完善', '', $old_status);
-                $complete_status = '|Joom已完善'.$status;
+                $complete_status = $status.'|Joom已完善';
                 $model->completeStatus = $complete_status;
                 if(!$model->save(false)){
                     throw new Exception('fail to update completeStatus!');
@@ -967,7 +967,7 @@ class ChannelController extends BaseController
                 $model = $this->findModel($id);
                 $old_status = $model->completeStatus?$model->completeStatus:'';
                 $status = str_replace('|eBay已完善', '', $old_status);
-                $complete_status = '|eBay已完善'.$status;
+                $complete_status = $status . '|eBay已完善';
                 $model->completeStatus = $complete_status;
                 if(!$model->save(false)){
                     throw new Exception('fail to update completeStatus!');
