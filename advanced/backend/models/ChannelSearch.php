@@ -80,6 +80,7 @@ class ChannelSearch extends Channel
                 $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善',
                     'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
             }
+            $params['pageSize'] = isset($params['pageSize']) && $params['pageSize'] ? $params['pageSize'] : 6;
         }
         $query->joinWith(['oa_goods']);
         $query->joinWith(['oa_templates']);

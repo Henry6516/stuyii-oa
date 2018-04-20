@@ -872,6 +872,36 @@ class ChannelController extends BaseController
         }
         return "标记失败!";
     }
+    /**
+     * 批量标记Wish已完善
+     * @return mixed
+     */
+    public function actionWishSignLots()
+    {
+        $ids = yii::$app->request->post()["id"];
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try{
+            foreach ($ids as $id)
+            {
+                $model = $this->findModel($id);
+                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $status = str_replace('Wish已完善', '', $old_status);
+                $complete_status = 'Wish已完善'.$status;
+                $model->completeStatus = $complete_status;
+                $model->wishpublish = 'N';
+                if(!$model->save(false)){
+                    throw new Exception('fail to update completeStatus!');
+                }
+            }
+            $trans->commit();
+            $msg = "批量标记Wish已完善成功";
+        } catch (Exception $e){
+            $trans->rollBack();
+            $msg = "批量标记Wish已完善失败！";
+        }
+        return $msg;
+    }
 
     /*
      *编辑完成状态
@@ -892,6 +922,92 @@ class ChannelController extends BaseController
             return "标记成功!";
         }
         return "标记失败!";
+    }
+    /**
+     * 批量标记Joom已完善
+     * @return mixed
+     */
+    public function actionJoomSignLots()
+    {
+        $ids = yii::$app->request->post()["id"];
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try{
+            foreach ($ids as $id)
+            {
+                $model = $this->findModel($id);
+                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $status = str_replace('|Joom已完善', '', $old_status);
+                $complete_status = '|Joom已完善'.$status;
+                $model->completeStatus = $complete_status;
+                if(!$model->save(false)){
+                    throw new Exception('fail to update completeStatus!');
+                }
+            }
+            $trans->commit();
+            $msg = "批量标记Joom已完善成功";
+        } catch (Exception $e){
+            $trans->rollBack();
+            $msg = "批量标记Joom已完善失败！";
+        }
+        return $msg;
+    }
+    /**
+     * 批量标记eBay已完善
+     * @return mixed
+     */
+    public function actionEbaySignLots()
+    {
+        $ids = yii::$app->request->post()["id"];
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try{
+            foreach ($ids as $id)
+            {
+                $model = $this->findModel($id);
+                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $status = str_replace('|eBay已完善', '', $old_status);
+                $complete_status = '|eBay已完善'.$status;
+                $model->completeStatus = $complete_status;
+                if(!$model->save(false)){
+                    throw new Exception('fail to update completeStatus!');
+                }
+            }
+            $trans->commit();
+            $msg = "批量标记eBay已完善成功";
+        } catch (Exception $e){
+            $trans->rollBack();
+            $msg = "批量标记eBay已完善失败！";
+        }
+        return $msg;
+    }
+    /**
+     * 批量标记全部已完善
+     * @return mixed
+     */
+    public function actionAllSignLots()
+    {
+        $ids = yii::$app->request->post()["id"];
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try{
+            foreach ($ids as $id)
+            {
+                $model = $this->findModel($id);
+                $complete_status = 'Wish已完善|eBay已完善|Joom已完善';
+                $model->completeStatus = $complete_status;
+                $model->wishpublish = 'N';
+                if(!$model->save(false)){
+                    throw new Exception('fail to update completeStatus!');
+                }
+            }
+            $trans->commit();
+            $msg = "批量标记全部已完善成功";
+        } catch (Exception $e){
+            $trans->rollBack();
+            $msg = "批量标记全部已完善失败！";
+        }
+        return $msg;
     }
 
     /**

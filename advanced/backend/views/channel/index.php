@@ -10,14 +10,20 @@ use yii\helpers\Url;
 $this->title = Yii::t('app', '平台信息');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="channel-index" style="width: 8000px">
+<div class="channel-index" style="">
     <p>
-        <?= Html::a(Yii::t('app', '标记已完善'), ['create'], ['class' => 'btn btn-info']) ?>
         <?= Html::button(Yii::t('app', '批量导出Joom'), ['class' => 'btn joom-btn btn-warning']) ?>
         <?= Html::button(Yii::t('app', '批量导出Joom2'), ['class' => 'btn joom-sec-btn btn-danger']) ?>
+        <?= Html::button(Yii::t('app', '标记Wish已完善'),
+            ['class' => 'wish-sign-lots btn btn-info', 'data-href' => Url::toRoute(['wish-sign-lots'])]) ?>
+        <?= Html::button(Yii::t('app', '标记eBay已完善'),
+            ['class' => 'ebay-sign-lots btn btn-primary', 'data-href' => Url::toRoute(['ebay-sign-lots'])]) ?>
+        <?= Html::button(Yii::t('app', '标记Joom已完善'),
+            ['class' => 'joom-sign-lots btn btn-success', 'data-href' => Url::toRoute(['joom-sign-lots'])]) ?>
+        <?= Html::button(Yii::t('app', '标记全部已完善'),
+            ['class' => 'all-sign-lots btn btn-warning', 'data-href' => Url::toRoute(['all-sign-lots'])]) ?>
     </p>
-
-    </div>
+</div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -90,9 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'completeStatus',
-                //'label' => '完成状况        ',
                 'width' => '500px',
-                //'filterType' => GridView::FILTER_SELECT2,
                 'filterType' => GridView::FILTER_SELECT2,
                 'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
                     'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
@@ -101,9 +105,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
                 ],
                 'filterWidgetOptions' => [
-                    'pluginOptions' => ['allowClear' => true],
+                    'pluginOptions' =>
+                        [
+                            'allowClear' => true,
+                            //'tags' => true,
+                            'maximumInputLength' => 2
+                        ],
                 ],
-                'filterInputOptions' => ['class' => 'col-lg-8','style' => "width:500px", 'multiple' => true, 'placeholder' => '-请选择-'],
+                'filterInputOptions' => ['style' => "width:500px", 'multiple' => true, 'placeholder' => '-请选择-'],
                 'headerOptions' => ['width' => '20%'],
             ],
              'GoodsName',
@@ -140,6 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
              'developer',
              'Purchaser',
              'possessMan1',
+            'DictionaryName',
             [
                 'attribute' => 'devDatetime',
                 'format' => 'raw',
@@ -202,7 +212,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]
                 ]
             ],
-            'DictionaryName',
             'isVar',
             //'goodsstatus',
             [
@@ -232,8 +241,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'goButtonLable' => '确定',
             'maxButtonCount' => 10
         ],
-    ]); ?>
-</div>
+    ]);
+
+    ?>
+
 
 <?php
 $joomUrl = Url::toRoute(['export-lots-joom']);
@@ -261,6 +272,93 @@ $('.joom-sec-btn').on('click', function() {
     var flag = 'second';
     window.location.href = '{$joomUrl}' + '?pids=' + pids + '&flag=' + flag;
 })
+//批量标记Wish已完善
+$('.wish-sign-lots').on('click', function() {
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    if(pids.length == 0){
+        krajeeDialog.alert("请选择要标记的选项！")
+        return false;
+    }
+    krajeeDialog.confirm('确定批量标记Wish已完善?',function(res) {
+        if(res){
+            $.ajax({
+                type:"POST",
+                url:$('.wish-sign-lots').data('href'),
+                data:{id:pids},
+                success:function(data) {
+                    alert(data);
+                    location.reload()
+                }
+            });
+        }
+    })
+})
+//批量标记eBay已完善
+$('.ebay-sign-lots').on('click', function() {
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    if(pids.length == 0){
+        krajeeDialog.alert("请选择要标记的选项！")
+        return false;
+    }
+    krajeeDialog.confirm('确定批量标记eBay已完善?',function(res) {
+        if(res){
+            $.ajax({
+                type:"POST",
+                url:$('.ebay-sign-lots').data('href'),
+                data:{id:pids},
+                success:function(data) {
+                    alert(data);
+                    location.reload()
+                }
+            });
+        }
+    })
+})
+//批量标记Joom已完善
+$('.joom-sign-lots').on('click', function() {
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    if(pids.length == 0){
+        krajeeDialog.alert("请选择要标记的选项！")
+        return false;
+    }
+    krajeeDialog.confirm('确定批量标记Joom已完善?',function(res) {
+        if(res){
+            $.ajax({
+                type:"POST",
+                url:$('.joom-sign-lots').data('href'),
+                data:{id:pids},
+                success:function(data) {
+                    alert(data);
+                    location.reload()
+                }
+            });
+        }
+    })
+})
+
+//批量标记Joom已完善
+$('.all-sign-lots').on('click', function() {
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    if(pids.length == 0){
+        krajeeDialog.alert("请选择要标记的选项！")
+        return false;
+    }
+    krajeeDialog.confirm('确定批量标记全部已完善?',function(res) {
+        if(res){
+            $.ajax({
+                type:"POST",
+                url:$('.all-sign-lots').data('href'),
+                data:{id:pids},
+                success:function(data) {
+                    alert(data);
+                    location.reload()
+                }
+            });
+        }
+    })
+})
+
+
 
 JS;
 
