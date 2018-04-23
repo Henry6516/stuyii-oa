@@ -404,7 +404,7 @@ save-complete
 $('.save-complete-btn').on('click',function() {
     var images = {};
     $('.extra-img').each(function(index) {
-        images['extra_image' + index] = $(this).val();
+        images['extra_image' + (index + 1)] = $(this).val();
     });
     var form_data = $('form#detail-form').serializeObject();
     // var image_data = JOSN.stringify(images);
