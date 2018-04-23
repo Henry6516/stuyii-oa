@@ -4,8 +4,67 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa052de50387cffee2801ef2a65f460e",
+    "content-hash": "fc5781a6381c0a1dec6e4f89e6be5c00",
     "packages": [
+        {
+            "name": "2amigos/yii2-multi-select-widget",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/2amigos/yii2-multi-select-widget.git",
+                "reference": "e9ae0b23aa5a96230f26a37b121efc726b635ed1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/2amigos/yii2-multi-select-widget/e9ae0b23aa5a96230f26a37b121efc726b635ed1.zip",
+                "reference": "e9ae0b23aa5a96230f26a37b121efc726b635ed1",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap-multiselect": "0.9.*",
+                "bower-asset/multiselect": "0.9.*",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-bootstrap": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.0",
+                "phpmd/phpmd": "@stable",
+                "phpunit/phpunit": "~6.0",
+                "squizlabs/php_codesniffer": "*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "dosamigos\\multiselect\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "2amigOS! Consulting Group",
+                    "email": "hola@2amigos.us",
+                    "homepage": "http://2amigos.us",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Multiselect Bootstrap widget for Yii2.",
+            "homepage": "https://github.com/2amigos/yii2-multi-select-widget",
+            "keywords": [
+                "extension",
+                "multiselect",
+                "widget",
+                "yii"
+            ],
+            "time": "2017-12-10T12:35:01+00:00"
+        },
         {
             "name": "almasaeed2010/adminlte",
             "version": "v2.4.2",
@@ -93,6 +152,51 @@
                 "mobile-first",
                 "responsive",
                 "web"
+            ]
+        },
+        {
+            "name": "bower-asset/bootstrap-multiselect",
+            "version": "v0.9.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidstutz/bootstrap-multiselect.git",
+                "reference": "4749da211e6d39644ef164cd709cfeae5ccba579"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davidstutz/bootstrap-multiselect/zipball/4749da211e6d39644ef164cd709cfeae5ccba579",
+                "reference": "4749da211e6d39644ef164cd709cfeae5ccba579",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/bootstrap": ">=2.3.2",
+                "bower-asset/jquery": ">=1.11.0"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "./dist/js/bootstrap-multiselect.js",
+                    "./dist/css/bootstrap-multiselect.css",
+                    "./dist/less/bootstrap-multiselect.less"
+                ],
+                "bower-asset-ignore": [
+                    "docs/.*",
+                    "tests/.*",
+                    "*.html",
+                    "*.git*",
+                    "*.md",
+                    "*.png",
+                    "*.php"
+                ]
+            },
+            "description": "Twitter Bootstrap plugin to make selects user friendly.",
+            "keywords": [
+                "bootstrap",
+                "css",
+                "jquery",
+                "js",
+                "less",
+                "multiselect"
             ]
         },
         {
@@ -237,6 +341,36 @@
                 "jquery",
                 "library"
             ]
+        },
+        {
+            "name": "bower-asset/multiselect",
+            "version": "0.9.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lou/multi-select.git",
+                "reference": "344dc6cfe0f9c3b3ee66e88bed7bfc7cc1adbb3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lou/multi-select/zipball/344dc6cfe0f9c3b3ee66e88bed7bfc7cc1adbb3a",
+                "reference": "344dc6cfe0f9c3b3ee66e88bed7bfc7cc1adbb3a",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7.1"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "./css/multi-select.css",
+                    "./img/switch.png",
+                    "./js/jquery.multi-select.js"
+                ]
+            },
+            "license": [
+                "WTFPL"
+            ],
+            "description": "A user-friendlier drop-in replacement for the standard select with multiple attribute activated."
         },
         {
             "name": "bower-asset/punycode",
@@ -2359,6 +2493,7 @@
                 "xls",
                 "xlsx"
             ],
+            "abandoned": "phpoffice/phpspreadsheet",
             "time": "2016-09-29T20:13:14+00:00"
         },
         {

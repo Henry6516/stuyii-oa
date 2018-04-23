@@ -68,8 +68,8 @@ for($i=1;$i<=10;$i++){
     $extra_image = 'extra_image'.(string)$i;
     $label_name = '附加图#'.(string)($i);
     echo '
-    <div class="form-group field-oadataminedetail-extra_image0 has-success">
-    <label class="control-label col-md-2" for="oadataminedetail-extra_image0">'.$label_name.'</label>
+    <div class="form-group field-oadataminedetail-extra_image'. $i . 'has-success">
+    <label class="control-label col-md-2" for="oadataminedetail-extra_image'. $i .'">'.$label_name.'</label>
     <div class="col-lg-8">
         <div class="col-md-4"><input type="text"  class="extra-img form-control"  value="'.$mine->$extra_image.'" style="margin-top:2%;" aria-invalid="false"></div>
          <div class="col-md-4">
@@ -382,7 +382,7 @@ save data
 $('.save-btn').on('click',function() {
     var images = {};
     $('.extra-img').each(function(index) {
-        images['extra_image' + index] = $(this).val();
+        images['extra_image' + (index + 1)] = $(this).val();
     });
     var form_data = $('form#detail-form').serializeObject();
     // var image_data = JOSN.stringify(images);
