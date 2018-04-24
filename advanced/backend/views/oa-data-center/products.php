@@ -151,15 +151,24 @@ $this->params['breadcrumbs'][] = $this->title;
         //'completeStatus',
         [
             'attribute' => 'completeStatus',
-            //'value'=>'oa_goods.completeStatus',
-            'width' => '150px',
-            'filterType' => GridView::FILTER_SELECT2,
-            'filter' => ['eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善', 'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善'],
+            'width' => '500px',
+            'filterType' => '\dosamigos\multiselect\MultiSelect',
             'filterWidgetOptions' => [
-                'pluginOptions' => ['allowClear' => true],
+                'data' => ['eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+                ],
+                "options" => ['multiple'=>"multiple"],
+
+                "clientOptions" =>
+                    [
+                        'numberDisplayed' => 1,
+                        'nonSelectedText' => '--请选择--',
+
+                    ],
             ],
-            'filterInputOptions' => ['multiple' => true, 'placeholder' => '-请选择-'],
-            //'group'=>true,  // enable grouping
         ],
         'DictionaryName',
         'isVar',

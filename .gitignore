@@ -44,3 +44,5 @@ phpunit.phar
 /advanced/console/yii
 /advanced/console/controllers/Test.php
 /advanced/console/controllers/TestController.php
+/composer.json
+/composer.lock

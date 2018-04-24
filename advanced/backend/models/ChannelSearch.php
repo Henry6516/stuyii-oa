@@ -62,6 +62,14 @@ class ChannelSearch extends Channel
     {
         $query = ChannelSearch::find()->orderBy('devDatetime desc');
 
+        if (!isset($params['ChannelSearch'])) {
+            $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善',
+                'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
+        }
+
+        if(\is_array($params['ChannelSearch']['completeStatus'])){
+            $params['ChannelSearch']['completeStatus'] = implode(',',$params['ChannelSearch']['completeStatus']);
+        }
         //如果是数据中中心模块则只返回已完善数据
         if ($model_name == 'oa-data-center') {
             $query->where(['<>', 'completeStatus', '']);
@@ -75,11 +83,7 @@ class ChannelSearch extends Channel
 
         //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
         if ($model_name == 'channel') {
-            //有搜索条件，但没有完成状态条件，或没有搜索条件，则添加默认显示完成状态条件
-            if (!isset($params['ChannelSearch'])) {
-                $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善',
-                    'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
-            }
+
             $params['pageSize'] = isset($params['pageSize']) && $params['pageSize'] ? $params['pageSize'] : 6;
         }
         $query->joinWith(['oa_goods']);
@@ -103,14 +107,14 @@ class ChannelSearch extends Channel
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
-        if ($unit == '平台信息') {
-            if ($role[0]['item_name'] == '部门主管') {
+        if ($unit === '平台信息') {
+            if ($role[0]['item_name'] === '部门主管') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] == '产品开发') {
+            } elseif ($role[0]['item_name'] === '产品开发') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] == '产品开发2') {
+            } elseif ($role[0]['item_name'] === '产品开发2') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] == '美工') {
+            } elseif ($role[0]['item_name'] === '美工') {
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
@@ -215,10 +219,12 @@ class ChannelSearch extends Channel
 
         //完成状态
 
-        if ($this->completeStatus && is_array($this->completeStatus)) {
+        if (!empty($this->completeStatus)) {
+            $complete_status_condition = explode(',', $this->completeStatus);
+
             //var_dump($this->completeStatus);exit;
             $completeStatus = ['or'];
-            foreach ($this->completeStatus as $k => $v) {
+            foreach ($complete_status_condition as $k => $v) {
                 if ($v == '未设置') {
                     $completeStatus[$k + 1] = ['or', ['completeStatus' => null], ['completeStatus' => '']];
                 }

@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
-
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ChannelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -97,23 +96,23 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'completeStatus',
                 'width' => '500px',
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-                ],
+                'filterType' => '\dosamigos\multiselect\MultiSelect',
                 'filterWidgetOptions' => [
-                    'pluginOptions' =>
+                    'data' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                        'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                        'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                        'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                        'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+                    ],
+                    "options" => ['multiple'=>"multiple"],
+
+                    "clientOptions" =>
                         [
-                            'allowClear' => true,
-                            //'tags' => true,
-                            'maximumInputLength' => 2
+                            'numberDisplayed' => 1,
+                            'nonSelectedText' => '--请选择--',
+
                         ],
                 ],
-                'filterInputOptions' => ['style' => "width:500px", 'multiple' => true, 'placeholder' => '-请选择-'],
-                'headerOptions' => ['width' => '20%'],
             ],
              'GoodsName',
             [
@@ -363,4 +362,7 @@ $('.all-sign-lots').on('click', function() {
 JS;
 
 $this->registerJs($js);
+
 ?>
+
+
