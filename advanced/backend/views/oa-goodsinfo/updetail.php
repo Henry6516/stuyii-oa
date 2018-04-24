@@ -796,9 +796,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
     
 // 保存数据的提交按钮
     $('#save-only').on('click',function() {
-        /*var form = $('#sku-info');
-        form.attr('action', $('#save-only').data('href'));
-        form.submit();*/
+        $(this).attr('disabled',true);//禁用按钮
         var flag = 0;
         $.each($('#sku-table .sku'),function(i,item) {
             if(item.value.length == 0){
@@ -826,6 +824,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 
 // 保存并完善改为Ajax方式
     $('#save-complete').on('click', function() {
+        $(this).attr('disabled',true);//禁用按钮
         var flag = 0;
         $.each($('#sku-table .sku'),function(i,item) {
             if(item.value.length == 0){
