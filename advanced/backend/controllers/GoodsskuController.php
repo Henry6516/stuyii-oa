@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\OaDataMine;
 use backend\models\OaTaskAttributeLog;
 use common\components\BaseController;
 use PHPUnit\Framework\Exception;
@@ -182,6 +183,18 @@ class GoodsskuController extends BaseController
                         $info->isVar = '否';
                     }
                     $info->save(false);
+
+                    //where the data from
+                    $mid = $info->mid;
+                    if(!empty($mid)){
+                        $mine = OaDataMine::findOne(['id'=>$mid]);
+                        $goods_code = $info->GoodsCode;
+                        if(!empty($mine)){
+                            $mine->setAttribute('pyGoodsCode', $goods_code);
+                            $mine->setAttribute('devStatus', '已开发');
+                            $mine->save();
+                        }
+                    }
 
                     //判断属新信息修改(商品编码或描述)
                     $content .= Goodssku::getGoodsAttrLog($pid);

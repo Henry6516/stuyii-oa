@@ -141,7 +141,7 @@ $createJobUrl = URl::toRoute('create-job')
                             return Html::a('<span class="glyphicon glyphicon-trash" title= "Delete"></span>', $url, ['data-pjax' => 0,]);
                         },
                         'send' => function () {
-                            return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "Send"></span>', 'javascript:void(0);', []);
+                            return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "转至开发"></span>', 'javascript:void(0);', []);
                         },
                     ],
                 ],
