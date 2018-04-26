@@ -51,7 +51,30 @@ class OaDataMineSearch extends OaDataMine
         $query = OaDataMine::find();
         $query->orderBy(['oa_data_mine.id' => SORT_DESC]);
 
-        // add conditions that should always apply here
+
+        $connection = Yii::$app->db;
+        $user = yii::$app->user->identity->username;
+        $developer_sql = "SELECT users.userName FROM [user] users ,auth_assignment roles WHERE  users.id=roles.user_id and item_name like '%开发%'";
+        $developer_ret = $connection->createCommand($developer_sql)->queryAll();
+        $developers = [];
+        foreach ($developer_ret as $key=>$value){
+            $developers[] = $value['userName'];
+        }
+
+
+        if (!\in_array($user, $developers,true)){
+            // 返回当前用户管辖下的用户
+            $sql = "oa_P_users '{$user}'";
+
+            $command = $connection->createCommand($sql);
+            $result = $command->queryAll();
+            $users = [];
+            foreach ($result as $user) {
+                $users[] = $user['userName'];
+            }
+            $query->andWhere(['in', 'creator', $users]);
+        }
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
