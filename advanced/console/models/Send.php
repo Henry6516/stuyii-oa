@@ -18,11 +18,11 @@ class Send
      * 发送邮件
      * @return string
      */
-    public static function sendEmail($name, $email, $content)
+    public static function sendEmail($name, $email, $title, $content)
     {
         $mail= Yii::$app->mailer->compose();
         $mail->setTo($email);
-        $mail->setSubject("产品中心产品待审核");
+        $mail->setSubject($title);
         //$mail->setTextBody('zheshisha ');   //发布纯文字文本
         $mail->setHtmlBody($content);    //发布可以带html标签的文本
         if($mail->send())
