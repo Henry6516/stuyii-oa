@@ -148,13 +148,13 @@ for($i=1;$i<=10;$i++){
         text-align: center;
         line-height: 30px;
         background: #f5f5f5;
-        color: #444;
+        color: #0593d3;
         cursor: pointer;
-        border: 0;
         border-radius: 5px;
         text-decoration: none;
         transition: opacity 0.2s ease-out;
         opacity: 0;
+        border: 1px solid #0593d3;
     }
     #back-to-top:hover {
         background: #e9ebec;
@@ -223,7 +223,6 @@ save data
  */
 $('#save-btn').on('click',function() {
     var tableData = $('#table-data').text();
-    console.log(tableData);
     var formData = $('form#detail-form').serializeObject();
     $.ajax({
         url:'$saveUrl',

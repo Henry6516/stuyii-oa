@@ -163,13 +163,13 @@ class OaDataMineController extends BaseController
 
     /**
      * @brief detail to bind
-     * @param $mid int
+     * @param $id int
      * @return mixed
      */
-    public function actionBind($mid)
+    public function actionBind($id)
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => OaDataMineDetail::find()->where(['mid' => $mid])->orderBy('id'),
+            'query' => OaDataMineDetail::find()->where(['mid' => $id])->orderBy('id'),
             'pagination' => [
                 'pageSize' => 200,
 
@@ -177,10 +177,55 @@ class OaDataMineController extends BaseController
         ]);
         return $this->renderAjax('bind-detail',[
             'dataProvider' => $dataProvider,
-            'mid' => $mid
+            'mid' => $id
 
         ]);
     }
+
+    /**
+     * @brief save bind detail
+     * @param  $mid int
+     * @param  $code string
+     * @return mixed
+     *
+     */
+    public function actionSaveBindDetail($mid,$code)
+    {
+        $post = Yii::$app->request->post();
+        $details = $post['OaDataMineDetail'];
+        $min = OaDataMine::findOne(['id'=>$mid]);
+        $status = $min->devStatus;
+        if($status === '已关联')
+        {
+            $msg='不能重复关联!';
+            return $msg;
+
+        }
+        $con = Yii::$app->db;
+        $mine_sql = 'update Oa_data_Mine set pyGoodsCode=:code,devStatus=:sta where id=:id';
+        $detail_sql = 'update Oa_Data_Mine_Detail set pySku=:sku where id=:id';
+        $bind_sql = 'insert Into B_goodsSKULinkShop (sku,ShopSKU) VALUES (:sku,:childId)';
+        $trans = $con->beginTransaction();
+        try{
+            $con->createCommand($mine_sql,[':code' =>$code,':sta'=>'已关联',':id'=>$mid])->execute();
+
+            foreach ($details as $key=>$row)
+            {
+                $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
+
+                $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
+
+            }
+            $trans->commit();
+            $msg='关联成功！';
+        }
+        catch (\Exception $why){
+            $trans->rollBack();
+            $msg='关联失败！';
+        }
+        return $msg;
+    }
+
     /**
      * Deletes an existing OaDataMine model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
