@@ -90,6 +90,7 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
             'MainImage' => '主图',
             'cat' => '主类目',
             'subCat' => '子类目',
+            'pySku' => '普源SKU',
             'extra_image0' => '附加图#1',
             'extra_image1' => '附加图#2',
             'extra_image2' => '附加图#3',

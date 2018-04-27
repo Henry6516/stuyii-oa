@@ -141,7 +141,9 @@ class OaDataMineController extends BaseController
 
 
     /**
-     * @brief detail for modal
+     * @brief detail to edit
+     * @param $mid int
+     * @return mixed
      */
     public function actionDetail($mid)
     {
@@ -159,6 +161,26 @@ class OaDataMineController extends BaseController
         ]);
     }
 
+    /**
+     * @brief detail to bind
+     * @param $mid int
+     * @return mixed
+     */
+    public function actionBind($mid)
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => OaDataMineDetail::find()->where(['mid' => $mid])->orderBy('id'),
+            'pagination' => [
+                'pageSize' => 200,
+
+            ],
+        ]);
+        return $this->renderAjax('bind-detail',[
+            'dataProvider' => $dataProvider,
+            'mid' => $mid
+
+        ]);
+    }
     /**
      * Deletes an existing OaDataMine model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

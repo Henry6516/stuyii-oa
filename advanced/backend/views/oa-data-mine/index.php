@@ -6,13 +6,24 @@ use yii\helpers\Url;
 use \kartik\form\ActiveForm;
 use yii\widgets\Pjax;
 use \yii\bootstrap\Tabs;
+use yii\bootstrap\Modal;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OaDataMineSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = '数据采集';
 $this->params['breadcrumbs'][] = $this->title;
-$createJobUrl = URl::toRoute('create-job')
+$createJobUrl = URl::toRoute('create-job');
+
+Modal::begin([
+    'id' => 'detail-modal',
+    'footer' => '<a href="#" class=" btn btn-success">保存</a>
+                 <a href="#" class="dismiss btn btn-primary" data-dismiss="modal">关闭</a>
+                ',
+    'size' => "modal-xl"
+]);
+Modal::end();
 ?>
 <link rel="stylesheet" href="../css/bootstrap-select.min.css">
 <div class="oa-data-mine-index">
@@ -128,7 +139,7 @@ $createJobUrl = URl::toRoute('create-job')
                 ['class' => 'yii\grid\CheckboxColumn'],
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'template' => '{view} {update} {send} {delete}',
+                    'template' => '{view} {update} {send} {bind} {delete}',
                     'buttons' => [
                         'view' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-eye-open" title="View Details"></span>', $url, ['data-pjax' => 0, 'target' => "_blank"]);
@@ -142,6 +153,9 @@ $createJobUrl = URl::toRoute('create-job')
                         },
                         'send' => function () {
                             return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "转至开发"></span>', 'javascript:void(0);', []);
+                        },
+                        'bind' => function () {
+                            return Html::a('<span class=" bind glyphicon glyphicon-random" title= "关联产品"></span>', '', ['class'=>'bind-btn','data-target'=>'#detail-modal','data-toggle' => 'modal']);
                         },
                     ],
                 ],
@@ -313,6 +327,7 @@ $subCatUrl = Url::toRoute(['sub-cat']);
 $setPriceUrl = Url::toRoute(['set-price']);
 $setCatUrl = Url::toRoute(['set-cat']);
 $sendUrl = Url::toRoute(['send']);
+$bindUrl = Url::toRoute(['bind']);
 
 $js = <<< JS
 
@@ -447,7 +462,6 @@ $('.set-cat').on('click',function() {
 
 $('.send').on('click', function() {
     var mid = $(this).closest('tr').attr('data-key');
-    console.log(mid);
     $.ajax({
         url:'{$sendUrl}',
         type: 'post',
@@ -457,11 +471,33 @@ $('.send').on('click', function() {
         })
         
     });
-  
 })
+
+// bind modal
+$(".bind-btn").click(function() {
+    var mid = $(this).closest('tr').attr('data-key');
+    $('.modal-body').children('*').remove(); //清空数据
+    $.get('$bindUrl' + '?mid=' + mid,
+        function(data) {
+            $('.modal-body').html(data);
+        }
+    );
+});
+
 JS;
 
 $this->registerJs($js);
 ?>
+
+<style>
+
+    @media (min-width: 1000px) {
+        .modal-xl {
+            width: 80%;
+            height: 80%
+            /*max-width:1200px;*/
+        }
+    }
+</style>
 
 
