@@ -107,8 +107,8 @@ class ChannelSearch extends Channel
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
-        if ($unit === '平台信息') {
-            if ($role[0]['item_name'] === '部门主管') {
+        if ($unit == '平台信息') {
+            if ($role[0]['item_name'] == '部门主管'  || $unit == 'Wish待刊登') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             } elseif ($role[0]['item_name'] === '产品开发') {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
