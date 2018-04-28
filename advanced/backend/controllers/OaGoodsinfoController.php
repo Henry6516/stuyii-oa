@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\OaDataMine;
 use backend\models\OaGoods;
 use backend\models\OaSysRules;
 use backend\models\OaTaskAttributeLog;
@@ -296,6 +297,11 @@ class OaGoodsinfoController extends BaseController
                 OaTemplatesVar::deleteAll(['pid' => $id]);//eBay平台SKU信息删除
                 OaWishgoods::deleteAll(['infoid' => $id]);//Wish平台信息删除
                 OaWishgoodssku::deleteAll(['pid' => $id]);//Wish平台SKU信息删除
+            }
+            if(!empty($model->mid)){
+                $mine = OaDataMine::findOne(['id'=>$model->mid]);
+                $mine->devStatus = '未开发';
+                $mine->save();
             }
         }
         catch (Exception $e){
