@@ -860,19 +860,23 @@ echo FormGrid::widget([ // continuation fields to row above without labels
    
 // 导入普源事件
     $('#data-input').on('click', function() {
+        var btn = $(this);
+        btn.attr('disabled', true);
         var isStop = 0;
         $('.RetailPrice').each(function(){
-            if($(this).val().length == 0) {
+            if($(this).val().length === 0) {
                 isStop = 1;
                 alert('零售价不能为空!');
                 return false;//终止循环
-            };
+            }
        });
         if(isStop){
             return false;//终止导入到普元
         }
         $.get('{$inputUrl}',{id:'{$pid}'},function(data){
+            btn.removeAttr('disabled');
             alert(data);
+            return false;
         });
     });
 
