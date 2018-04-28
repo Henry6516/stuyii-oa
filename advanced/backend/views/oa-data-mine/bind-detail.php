@@ -61,9 +61,12 @@ try{
                 'before' => '
                 <div class="row">
                     <div class="col-sm-4">
+                     <input type="text" value="'.$code.'"class="mine-code form-control" readonly="true">
+                    </div>
+                    <div class="col-sm-4">
                      <input type="text" class="py-code form-control" placeholder="--普源商品编码--">
                     </div>
-                    <div class="col-sm-4 col-sm-push-4">
+                    <div class="col-sm-4">
                         <button id="save-detail" class="btn btn-success">保存</button>
                     </div>
                 </div>

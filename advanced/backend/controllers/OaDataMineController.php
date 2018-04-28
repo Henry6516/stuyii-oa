@@ -175,9 +175,11 @@ class OaDataMineController extends BaseController
 
             ],
         ]);
+        $code = OaDataMine::findOne(['id'=>$id])->goodsCode;
         return $this->renderAjax('bind-detail',[
             'dataProvider' => $dataProvider,
-            'mid' => $id
+            'mid' => $id,
+            'code' => $code
 
         ]);
     }
