@@ -61,10 +61,10 @@ try{
                 'before' => '
                 <div class="row">
                     <div class="col-sm-4">
-                     <input type="text" value="'.$code.'"class="mine-code form-control" readonly="true">
+                     <input type="text" value="'.$goods_code.'"class="mine-code form-control" readonly="true">
                     </div>
                     <div class="col-sm-4">
-                     <input type="text" class="py-code form-control" placeholder="--普源商品编码--">
+                     <input type="text" value="'.$py_code.'" class="py-code form-control" placeholder="--普源商品编码--">
                     </div>
                     <div class="col-sm-4">
                         <button id="save-detail" class="btn btn-success">保存</button>
@@ -124,7 +124,16 @@ $('#save-detail').on('click',function() {
     var code_input = $('.py-code');
     var code = code_input.val();
     if(code.length === 0){
-        alert('请填写普源商品编码');
+        alert('请填写普源商品编码！');
+        return false;
+    }
+    var sku_len = 0;
+    $('.pySku').each(function() {
+        var val = $.trim($(this).val())
+        sku_len += val.length;
+    })
+    if(sku_len === 0){
+        alert('请填写关联SKU！');
         return false;
     }
     var formData = $('form#detail').serialize();

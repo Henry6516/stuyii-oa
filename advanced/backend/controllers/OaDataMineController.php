@@ -175,11 +175,14 @@ class OaDataMineController extends BaseController
 
             ],
         ]);
-        $code = OaDataMine::findOne(['id'=>$id])->goodsCode;
+        $mine = OaDataMine::findOne(['id'=>$id]);
+        $py_code = $mine->pyGoodsCode;
+        $goods_code = $mine->goodsCode;
         return $this->renderAjax('bind-detail',[
             'dataProvider' => $dataProvider,
             'mid' => $id,
-            'code' => $code
+            'goods_code' => $goods_code,
+            'py_code' =>$py_code
 
         ]);
     }
@@ -195,27 +198,23 @@ class OaDataMineController extends BaseController
     {
         $post = Yii::$app->request->post();
         $details = $post['OaDataMineDetail'];
-        $min = OaDataMine::findOne(['id'=>$mid]);
-        $status = $min->devStatus;
-        if($status === '已关联')
-        {
-            $msg='不能重复关联!';
-            return $msg;
-
-        }
         $con = Yii::$app->db;
         $mine_sql = 'update Oa_data_Mine set pyGoodsCode=:code,devStatus=:sta where id=:id';
         $detail_sql = 'update Oa_Data_Mine_Detail set pySku=:sku where id=:id';
         $bind_sql = 'insert Into B_goodsSKULinkShop (sku,ShopSKU) VALUES (:sku,:childId)';
+        $update_sql = 'update B_goodsSKULinkShop set sku=:sku where ShopSKU=:childId';
         $trans = $con->beginTransaction();
         try{
             $con->createCommand($mine_sql,[':code' =>$code,':sta'=>'已关联',':id'=>$mid])->execute();
 
             foreach ($details as $key=>$row)
             {
+                $mine_detail = OaDataMineDetail::findOne(['id'=>$key]);
+                if(empty($mine_detail->pySku)){
+                    $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
+                }
+                $con->createCommand($update_sql,[':sku' => $row['pySku'],':childId' => $row['childId']])->execute();
                 $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
-
-                $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
 
             }
             $trans->commit();
