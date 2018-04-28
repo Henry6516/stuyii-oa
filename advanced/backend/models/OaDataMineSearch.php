@@ -15,7 +15,6 @@ class OaDataMineSearch extends OaDataMine
     /**
      *  varMainImage
      */
-    public $MainImage;
 
 
     /**

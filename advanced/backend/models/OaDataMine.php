@@ -33,7 +33,7 @@ class OaDataMine extends \yii\db\ActiveRecord
         return [
             [['proId', 'platForm', 'progress', 'creator'], 'string'],
             [['createTime', 'updateTime'], 'safe'],
-            [['infoId','pyGoodsCode','devStatus','detailStatus','cat','subCat','goodsCode','varMainImage'], 'safe']
+            [['mainImage','infoId','pyGoodsCode','devStatus','detailStatus','cat','subCat','goodsCode','varMainImage'], 'safe']
         ];
     }
 
@@ -60,11 +60,4 @@ class OaDataMine extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * @brief join with details
-     */
-    public function getoa_data_mine_detail()
-    {
-        return $this->hasOne(OaDataMineDetail::className(), ['mid' => 'id']);
-    }
 }

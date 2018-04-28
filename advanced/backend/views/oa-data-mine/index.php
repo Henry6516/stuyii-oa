@@ -156,7 +156,7 @@ $createJobUrl = URl::toRoute('create-job');
                     'contentOptions' => ['style' => 'width:80px; white-space: normal;'],
                     'value' => function($model,$key)
                     {
-                        $image = $model->oa_data_mine_detail?$model->oa_data_mine_detail->MainImage:'';
+                        $image = $model->mainImage?:'';
                         $anchor = 'https://joom.com/en/products/'.$model->proId ;
                         return "<div align='center'><a target='_blank' href='{$anchor}'> <img  src='{$image}' width='60' height='60'></a></div>";
                     },
