@@ -573,6 +573,10 @@ class OaDataMineController extends BaseController
     {
         $post = Yii::$app->request->post();
         $images = $post['images'];
+        $images_num = \count($images);
+        for($i=$images_num +1;$i<=10;$i++){
+            $images['extra_image'.$i] = '';
+        }
         $form = $post['form'];
         $detail_models = OaDataMineDetail::findAll(['mid'=>$mid]);
         $trans = Yii::$app->db->beginTransaction();

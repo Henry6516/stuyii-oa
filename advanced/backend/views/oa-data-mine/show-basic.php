@@ -265,7 +265,7 @@ operate images
  */
 
 //del
-$('.del-img').on('click', function() {
+$('body').on('click','.del-img', function() {
     $(this).closest('div .form-group').remove();
 });
 
@@ -384,7 +384,6 @@ $('.save-btn').on('click',function() {
         images['extra_image' + (index + 1)] = $(this).val();
     });
     var form_data = $('form#detail-form').serializeObject();
-    // var image_data = JOSN.stringify(images);
     $.ajax({
         url:'$saveUrl',
         type:'post',
