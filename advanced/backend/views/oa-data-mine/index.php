@@ -454,20 +454,21 @@ $('.set-cat').on('click',function() {
 
 $('.send').on('click', function() {
     var mid = $(this).closest('tr').attr('data-key');
-    var stock = 0;
-    krajeeDialog.confirm("此款产品确定备货?", function (result) {
-        if (result) {
-            stock = 1;
-        } 
-        $.ajax({
-        url:'{$sendUrl}' + '?stock=' + stock,
-        type: 'post',
-        data:({mid:mid}),
-        success:(function(ret) {
-            alert(ret);
-        })  
+    krajeeDialog.prompt({label:'是否备货', type:'checkbox',class:'check'}, function (result) {
+        if(result){
+           var ret = $('.check').is(':checked')?1:0;
+           $.ajax({
+            url:'{$sendUrl}' + '?stock=' + ret,
+            type: 'post',
+            data:({mid:mid}),
+            success:(function(ret) {
+                alert(ret);
+                })
+            });
+        }
+        
     });
-    });
+    
 })
 
 
@@ -485,6 +486,29 @@ $this->registerJs($js);
             /*max-width:1200px;*/
         }
     }
+
+    .check ::before {
+        background-color: white;
+        border-radius: 5px;
+        border:1px solid #d3d3d3;
+        width:80px;
+        height:80px;
+        margin-left: 10px;
+
+    }
+    .check:checked+label::before {
+        background-color: white;
+        border-radius: 5px;
+        border:1px solid #d3d3d3;
+        width:20px;
+        height:20px;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 20px;
+    }
+
+
 </style>
 
 
