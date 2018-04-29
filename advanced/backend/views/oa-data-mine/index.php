@@ -6,7 +6,7 @@ use yii\helpers\Url;
 use \kartik\form\ActiveForm;
 use yii\widgets\Pjax;
 use \yii\bootstrap\Tabs;
-use yii\bootstrap\Modal;
+use kartik\dialog\Dialog;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\OaDataMineSearch */
@@ -454,14 +454,19 @@ $('.set-cat').on('click',function() {
 
 $('.send').on('click', function() {
     var mid = $(this).closest('tr').attr('data-key');
-    $.ajax({
-        url:'{$sendUrl}',
+    var stock = 0;
+    krajeeDialog.confirm("此款产品确定备货?", function (result) {
+        if (result) {
+            stock = 1;
+        } 
+        $.ajax({
+        url:'{$sendUrl}' + '?stock=' + stock,
         type: 'post',
         data:({mid:mid}),
         success:(function(ret) {
             alert(ret);
-        })
-        
+        })  
+    });
     });
 })
 

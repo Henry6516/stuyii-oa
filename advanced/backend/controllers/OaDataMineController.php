@@ -672,13 +672,15 @@ class OaDataMineController extends BaseController
 
     /**
      * @brief send OaDataMine record to goods-info
+     * @param  $stock int
      * @return mixed
      */
-    public function actionSend()
+    public function actionSend($stock=0)
     {
         $post = Yii::$app->request->post();
         $db = Yii::$app->db;
         $mid = (int)$post['mid'];
+        $stock = (int)$stock;
 
         $mine = OaDataMine::findOne(['id' => $mid]);
         $user = Yii::$app->user->identity->username;
@@ -687,8 +689,8 @@ class OaDataMineController extends BaseController
             return '不能重复转开发！';
         }
 
-        $send_sql  = "p_oa_JoomToGoodsInfo {$mid}, '{$user}'";
-        $query = $db->createCommand($send_sql);
+        $send_sql  = 'p_oa_JoomToGoodsInfo @mid=:mid,@dev=:dev,@stock=:stock';
+        $query = $db->createCommand($send_sql,[':mid'=>$mid,':dev'=>$user,':stock'=>$stock]);
         if($query->execute($send_sql)){
             return '已成功转至开发';
         }
