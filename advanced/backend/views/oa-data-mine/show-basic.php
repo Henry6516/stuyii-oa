@@ -273,7 +273,7 @@ $('body').on('click','.del-img', function() {
 $('body').on('click','.add-img',function() {
     //be able to add?
     var image_num = $('.extra-img').length;
-    if(image_num>=11){
+    if(image_num>=10){
         alert("已经达到图片个数上限！");
         return false ;
     }
