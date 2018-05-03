@@ -46,3 +46,4 @@ phpunit.phar
 /advanced/console/controllers/TestController.php
 /composer.json
 /composer.lock
+/advanced/console/controllers/TestRedisController.php

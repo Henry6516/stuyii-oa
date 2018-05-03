@@ -38,3 +38,4 @@ phpunit.phar
 /.vagrant
 /composer.json
 /composer.lock
+/console/controllers/TestRedisController.php
