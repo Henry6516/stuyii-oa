@@ -14,8 +14,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'joomName')->textInput() ?>
 
-    <?= $form->field($model, 'joomSuffix')->textInput() ?>
-
     <?= $form->field($model, 'imgCode')->textInput() ?>
 
     <?= $form->field($model, 'mainImg')->textInput() ?>
