@@ -99,8 +99,7 @@ Tabs::widget([
 ]); ?>
 
 </br>
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
 <div class="st">
     <div class="row top">
         <div class="col-sm-3">

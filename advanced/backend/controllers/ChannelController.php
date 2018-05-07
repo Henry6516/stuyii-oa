@@ -1023,7 +1023,7 @@ class ChannelController extends BaseController
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename=' . $file_name . '.csv');
         header('Cache-Control: max-age=0');
-        $fp = fopen('php://output', 'a');
+        $fp = fopen('php://output', 'ab');
         if (!empty($header_data)) {
             foreach ($header_data as $key => $value) {
                 $header_data[$key] = iconv('utf-8', 'gbk', $value);
@@ -1132,30 +1132,24 @@ class ChannelController extends BaseController
     /**
      * 批量导出Joom
      * @param string $pids
-     * @param string $flag
+     * @param string $suffxi
      *
      */
-    public function actionExportLotsJoom($pids, $flag)
+    public function actionExportLotsJoom($pids, $suffix)
     {
-
         if(empty($pids)){
             $this->actionExportCsv([], [], 'none');
             return;
         }
         $pids = explode(',', $pids);
-        if($flag === 'first'){
-            $procedur = 'P_oa_toJoom ';
-        }
-        if($flag === 'second'){
-            $procedur = 'P_oa_toSecJoom ';
-        }
+        $procedur = 'P_oa_toVarJoom ';
         $filter_ret = [];
         $header = [];
         foreach ($pids as $pid) {
             $da = $this->actionNameTags($pid,'oa_wishgoods');
             $name = $this->actionNonOrder($da,'Joom');
             $name = str_replace("'","''",$name);
-            $sql = $procedur.'@pid=' . $pid.",@name='".$name."'";
+            $sql = $procedur.'@pid=' . $pid.",@name='".$name."',@joom=".$suffix;
             $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
             $db = yii::$app->db;
             $query = $db->createCommand($sql);

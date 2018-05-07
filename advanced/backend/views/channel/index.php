@@ -9,19 +9,43 @@ use yii\helpers\Url;
 $this->title = Yii::t('app', '平台信息');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
 <div class="channel-index" style="">
-    <p>
-        <?= Html::button(Yii::t('app', '批量导出Joom'), ['class' => 'btn joom-btn btn-warning']) ?>
-        <?= Html::button(Yii::t('app', '批量导出Joom2'), ['class' => 'btn joom-sec-btn btn-danger']) ?>
+    <div class="row">
+        <div class="col-sm-2">
+         <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
+            <?php
+            $joomAccount = ['Joom'=>'Joom','JoomA'=>'JoomA','JoomG'=>'JoomG'];
+            foreach ($joomAccount as $account => $suffix) {
+                echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
+            }
+            ?>
+            </select>
+        </div>
+        <div class="col-sm-1">
+            <?= Html::button(Yii::t('app', '导出Joom模板'),
+                ['class' => 'export-joom btn']) ?>
+        </div>
+        <div class="col-sm-1">
         <?= Html::button(Yii::t('app', '标记Wish已完善'),
             ['class' => 'wish-sign-lots btn btn-info', 'data-href' => Url::toRoute(['wish-sign-lots'])]) ?>
+        </div>
+        <div class="col-sm-1">
         <?= Html::button(Yii::t('app', '标记eBay已完善'),
             ['class' => 'ebay-sign-lots btn btn-primary', 'data-href' => Url::toRoute(['ebay-sign-lots'])]) ?>
+        </div>
+        <div class="col-sm-1">
+
         <?= Html::button(Yii::t('app', '标记Joom已完善'),
             ['class' => 'joom-sign-lots btn btn-success', 'data-href' => Url::toRoute(['joom-sign-lots'])]) ?>
+        </div>
+
+        <div class="col-sm-1">
         <?= Html::button(Yii::t('app', '标记全部已完善'),
             ['class' => 'all-sign-lots btn btn-warning', 'data-href' => Url::toRoute(['all-sign-lots'])]) ?>
-    </p>
+        </div>
+
+    </div>
 </div>
 
     <?= GridView::widget([
@@ -269,7 +293,22 @@ $('.joom-sec-btn').on('click', function() {
     alert('确定导出Joom模板?');
     var pids = $('#chanel-table').yiiGridView("getSelectedRows");
     var flag = 'second';
-    window.location.href = '{$joomUrl}' + '?pids=' + pids + '&flag=' + flag;
+    window.location.href = '{$joomUrl}' + '?pids=' + pids + '&joom=' + joom;
+})
+
+//选择账号后导出Joom模板
+$('.export-joom').on('click',function() {
+    var joom = $('.joom-chosen select option:selected').val();
+    if( joom===null ||joom===undefined ||joom==='') {
+        alert("请选择Joom账号！");
+        return false;
+    }
+    var pids = $('#chanel-table').yiiGridView("getSelectedRows");
+    if( pids===null ||pids===undefined ||pids.length===0) {
+        alert("请选中产品！");
+        return false;
+    }
+    window.location.href = '{$joomUrl}' + '?pids=' + pids + '&suffix=' + joom;
 })
 //批量标记Wish已完善
 $('.wish-sign-lots').on('click', function() {
@@ -357,6 +396,7 @@ $('.all-sign-lots').on('click', function() {
     })
 })
 
+ 
 
 
 JS;
