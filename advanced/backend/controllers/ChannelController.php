@@ -1058,13 +1058,14 @@ class ChannelController extends BaseController
     /**
      * 导出Joom
      * @param int $id 商品id
+     * @param string $suffix
      */
-    public function actionExportJoom($id)
+    public function actionExportJoom($id, $suffix)
     {
         $da = $this->actionNameTags($id,'oa_wishgoods');
         $pro_name = $this->actionNonOrder($da,'Joom');
         $name = str_replace("'","''",$pro_name);
-        $sql = 'P_oa_toJoom @pid=' . $id.",@name='".$name."'";
+        $sql = 'P_oa_toSecJoom @pid=' . $id.",@name='".$name."',@joom=".$suffix;
         $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
         $db = yii::$app->db;
         $query = $db->createCommand($sql);

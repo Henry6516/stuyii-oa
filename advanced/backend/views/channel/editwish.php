@@ -78,13 +78,22 @@ if (empty($sku->randomKeywords)) {
     ]);
 
     ?>
-    <div class="form-group blockTitle">
+    <div class="wish-btn">
         <button class="btn btn-info update-info" type="button">更新</button>
         <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
         <button class="btn btn-success export" type="button">导出ibay模版</button>
         <button class="btn btn-warning joom-csv" type="button">导出Joom(csv)</button>
         <button class="btn btn-danger joom-2-csv" type="button">导出Joom-2(csv)</button>
         <button class="btn btn-info joom-sign" type="button">Joom保存并完善</button>
+        <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
+            <?php
+            $joomAccount = ['Joom'=>'Joom','JoomA'=>'JoomA','JoomG'=>'JoomG'];
+            foreach ($joomAccount as $account => $suffix) {
+                echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
+            }
+            ?>
+        </select>
+        <button class="btn export-joom" type="button">导出Joom模板</button>
 <!--        <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
     </div>
     <div class="blockTitle">
@@ -449,6 +458,15 @@ $('body').on('click','.down-btn',function() {
          window.location.href = '{$joomSecUrl}'
     });
     
+    //选择导出Joom模板
+    $('.export-joom').on('click',function() {
+        var joom = $('.wish-btn select option:selected').val();
+        if( joom===null ||joom===undefined ||joom==='') {
+        alert("请选择Joom账号！");
+        return false;
+        }
+        window.location.href = '{$joomUrl}' + '&suffix=' + joom;
+    })
     //导出数据shopee
     $('.shopee-csv').on('click',function(){
         alert('确定导出Shopee模板?');
@@ -674,5 +692,9 @@ $this->registerJs($js);
         border-bottom-right-radius: 3px;
         border-bottom-left-radius: 3px;
     }
+    .wish-btn {
+        margin-bottom: ;
+    }
 </style>
 
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
