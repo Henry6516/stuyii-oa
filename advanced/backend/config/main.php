@@ -1,9 +1,9 @@
 <?php
 $params = array_merge(
-    require(__DIR__ . '/../../common/config/params.php'),
-    require(__DIR__ . '/../../common/config/params-local.php'),
-    require(__DIR__ . '/params.php'),
-    require(__DIR__ . '/params-local.php')
+    require __DIR__ . '/../../common/config/params.php',
+    require __DIR__ . '/../../common/config/params-local.php',
+    require __DIR__ . '/params.php',
+    require __DIR__ . '/params-local.php'
 );
 
 return [
@@ -14,13 +14,9 @@ return [
     'modules' => [
         'gridview' =>[
             'class' => '\kartik\grid\Module',
-//            'class' => 'yii\i18n\PhpMessageSource',
-//            'basePath' => '@kvgrid/messages',
-//            'forceTranslation' => true
         ],
         'admin' => [
             'class' => 'mdm\admin\Module',
-//            'layout' => 'left-menu',//yii2-admin的导航菜单
         ],
 
 
@@ -28,6 +24,8 @@ return [
     'aliases' => [
         '@mdm/admin' => '@vendor/mdmsoft/yii2-admin',
         '@unitools' => '@app/unitools',
+//        '@bower' => '@vendor/bower-asset',
+//        '@npm'   => '@vendor/npm-asset',
     ],
     'language' => 'zh-CN',
     'components' => [
