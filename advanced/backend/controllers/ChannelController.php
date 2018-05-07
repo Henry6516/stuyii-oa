@@ -50,18 +50,22 @@ class ChannelController extends BaseController
     {
         $searchModel = new ChannelSearch();
         $params = Yii::$app->request->queryParams;
-        //var_dump($params);exit;
         $dataProvider = $searchModel->search($params,'channel','平台信息');
+        $connection = Yii::$app->db;
+        $jooms = $connection->createCommand('select joomName from oa_joom_suffix')->queryAll();
+        $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
+
 
         //获取商品状态列表
         $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
-        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        $res = $connection->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'goodsStatusList' => $list
+            'goodsStatusList' => $list,
+            'joomAccount' => $joomAccount
         ]);
     }
 
@@ -131,9 +135,13 @@ class ChannelController extends BaseController
 
             $extra_images_All = explode("\n", $sku[0]['extra_images']);
             $extra_images = array_filter($extra_images_All);
+            $connection = Yii::$app->db;
+            $jooms = $connection->createCommand('select joomName from oa_joom_suffix')->queryAll();
+            $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
             return $this->render('editwish', [
                 'extra_images' => $extra_images,
                 'sku' => $sku[0],
+                'joomAccount' => $joomAccount
 
             ]);
         }

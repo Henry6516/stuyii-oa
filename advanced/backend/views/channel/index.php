@@ -15,9 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-sm-2">
          <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
             <?php
-            $joomAccount = ['Joom'=>'Joom','JoomA'=>'JoomA','JoomG'=>'JoomG'];
-            foreach ($joomAccount as $account => $suffix) {
-                echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
+            foreach ($joomAccount as $account) {
+                echo '<option class="ebay-select" value="' . $account . '">' . $account . '</option>';
             }
             ?>
             </select>

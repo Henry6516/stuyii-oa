@@ -82,15 +82,13 @@ if (empty($sku->randomKeywords)) {
         <button class="btn btn-info update-info" type="button">更新</button>
         <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
         <button class="btn btn-success export" type="button">导出ibay模版</button>
-        <button class="btn btn-warning joom-csv" type="button">导出Joom(csv)</button>
-        <button class="btn btn-danger joom-2-csv" type="button">导出Joom-2(csv)</button>
         <button class="btn btn-info joom-sign" type="button">Joom保存并完善</button>
         <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
             <?php
-            $joomAccount = ['Joom'=>'Joom','JoomA'=>'JoomA','JoomG'=>'JoomG'];
-            foreach ($joomAccount as $account => $suffix) {
-                echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
+            foreach ($joomAccount as $account) {
+                echo '<option class="ebay-select" value="' . $account . '">' . $account . '</option>';
             }
+            ?>
             ?>
         </select>
         <button class="btn export-joom" type="button">导出Joom模板</button>
@@ -250,13 +248,20 @@ if (empty($sku->randomKeywords)) {
 
 
 </div>
-<div class="form-group blockTitle">
+<div class="wish-btn">
     <button class="btn btn-info update-info" type="button">更新</button>
     <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
     <button class="btn btn-success export" type="button">导出ibay模版</button>
-    <button class="btn btn-warning joom-csv" type="button">导出joom(csv)</button>
-    <button class="btn btn-danger joom-2-csv" type="button">导出joom-2(csv)</button>
     <button class="btn btn-info joom-sign" type="button">Joom保存并完善</button>
+    <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
+        <?php
+        foreach ($joomAccount as $account) {
+            echo '<option class="ebay-select" value="' . $account . '">' . $account . '</option>';
+        }
+        ?>
+        ?>
+    </select>
+    <button class="btn export-joom" type="button">导出Joom模板</button>
 <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
@@ -693,7 +698,8 @@ $this->registerJs($js);
         border-bottom-left-radius: 3px;
     }
     .wish-btn {
-        margin-bottom: ;
+        margin-bottom:2% ;
+        margin-top:2% ;
     }
 </style>
 
