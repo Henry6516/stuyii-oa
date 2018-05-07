@@ -19,7 +19,6 @@ use yii\widgets\DetailView;
         'model' => $model,
         'attributes' => [
             'joomName',
-            'joomSuffix',
             'imgCode',
             'mainImg',
             'skuCode',
