@@ -67,7 +67,7 @@ class ChannelSearch extends Channel
                 'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
         }
 
-        if(\is_array($params['ChannelSearch']['completeStatus'])){
+        if(isset($params['ChannelSearch']['completeStatus']) && is_array($params['ChannelSearch']['completeStatus'])){
             $params['ChannelSearch']['completeStatus'] = implode(',',$params['ChannelSearch']['completeStatus']);
         }
         //如果是数据中中心模块则只返回已完善数据
