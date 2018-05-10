@@ -53,7 +53,7 @@ $this->registerJs($JS);
 <aside class="main-sidebar">
     <section class="sidebar">
         <?= dmstr\widgets\Menu::widget([
-            'options' => ['class' => 'sidebar-menu','data-widget' => 'tree'],
+            'options' => ['class' => 'sidebar-menu'],
             'items' => MenuHelper::getAssignedMenu(Yii::$app->user->id, null, $callback),
         ]) ?>
     </section>

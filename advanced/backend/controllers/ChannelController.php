@@ -52,7 +52,7 @@ class ChannelController extends BaseController
         $params = Yii::$app->request->queryParams;
         $dataProvider = $searchModel->search($params,'channel','平台信息');
         $connection = Yii::$app->db;
-        $jooms = $connection->createCommand('select joomName from oa_joom_suffix')->queryAll();
+        $jooms = $connection->createCommand('select joomName from oa_joom_suffix ORDER BY joomName')->queryAll();
         $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
 
 
@@ -136,7 +136,7 @@ class ChannelController extends BaseController
             $extra_images_All = explode("\n", $sku[0]['extra_images']);
             $extra_images = array_filter($extra_images_All);
             $connection = Yii::$app->db;
-            $jooms = $connection->createCommand('select joomName from oa_joom_suffix')->queryAll();
+            $jooms = $connection->createCommand('select joomName from oa_joom_suffix ORDER BY joomName')->queryAll();
             $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
             return $this->render('editwish', [
                 'extra_images' => $extra_images,
