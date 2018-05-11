@@ -138,10 +138,10 @@ $createJobUrl = URl::toRoute('create-job');
                         },
                         'update' => function ($url, $model) {
 
-                            return Html::a('<span class="glyphicon glyphicon-pencil" title="Update"></span>',$url, ['data-pjax' => 0, 'target' => '_blank']);
+                            return Html::a('<span class="glyphicon glyphicon-pencil" title="编辑"></span>',$url, ['data-pjax' => 0, 'target' => '_blank']);
                         },
-                        'delete' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-trash" title= "Delete"></span>', $url, ['data-pjax' => 0,]);
+                        'delete' => function () {
+                            return Html::a('<span class="delete-row glyphicon glyphicon-trash" title= "删除"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
                         },
                         'send' => function () {
                             return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "转至开发"></span>', 'javascript:void(0);', []);
@@ -320,8 +320,10 @@ $setPriceUrl = Url::toRoute(['set-price']);
 $setCatUrl = Url::toRoute(['set-cat']);
 $sendUrl = Url::toRoute(['send']);
 $bindUrl = Url::toRoute(['bind']);
+$deleteUrl = Url::toRoute(['delete']);
 
 $js = <<< JS
+
 
 /*
 create job
@@ -348,6 +350,22 @@ $('form#create-job').on('beforeSubmit', function() {
     e.preventDefault();
 });
 
+/*
+delete row
+ */
+$('.delete-row').on('click',function() {
+    var mid = $(this).closest('tr').attr('data-key');
+    krajeeDialog.confirm("确定删除此条数据吗?", function (result) {
+    if (result) { // ok button was pressed
+        $.get('{$deleteUrl}' + '?id=' + mid);
+        
+        
+    } else { // confirmation was cancelled
+        // execute your code for cancellation
+    }
+});
+    
+})
 /*
 export lots
  */
