@@ -12,9 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 \backend\assets\AppAsset::addCss($this,'plugins/bootstrap-select/bootstrap-select.min.css');
 ?>
 <!--<link rel="stylesheet" href="../css/bootstrap-select.min.css">-->
-<script>
 
-</script>
 <div class="channel-index" style="">
     <div class="row">
         <div class="col-sm-2">

@@ -85,7 +85,7 @@ class SalesTrendController extends BaseController
         ];
 
         //获取帐号列表
-        $sql = 'SELECT suffix From Y_suffixPingtai ORDER BY suffix';
+        $sql = "SELECT suffix From Y_suffixPingtai WHERE pingtai IN ('eBay','Wish','Amazon','Joom','SMT') ORDER BY suffix";
         $res = Yii::$app->db->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res,'suffix','suffix');
         $accountList = array_unique($list);
