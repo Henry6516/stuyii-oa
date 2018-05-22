@@ -119,6 +119,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
             }elseif($role[0]['item_name']=='产品开发2'){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }elseif ($role[0]['item_name']=='美工'){
+                $users = \array_merge($users,\array_map(function ($user) {return $user.'-2';}, $users));
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
