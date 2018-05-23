@@ -141,6 +141,7 @@ $js2 = <<<JS
                 $.ajax({
                     url:'{$uploadUrl}',
                     type:'get',
+                    async: false,
                     success:function(ret) {
                         alert(ret);
                     }
