@@ -10,6 +10,7 @@ use backend\models\OaGoodsinfoSearch;
 use backend\models\Goodssku;
 use backend\models\OaGoods;
 use backend\models\OaGoodsSearch;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -237,10 +238,36 @@ class OaPicinfoController extends BaseController
         {
             echo "标记失败";
         }
-
-
-
     }
 
 
+    /*
+     * upload image to ftp server
+     * @param $pid string
+     */
+    public function actionUploadImage($pid)
+    {
+        $sku_details = Goodssku::findAll(['pid'=>$pid]);
+        $my_save_dir = '../runtime/image/';
+        $mode = FTP_BINARY;
+        $asynchronous = false;
+        try{
+            foreach ($sku_details as $sku){
+                $url = $sku->linkurl;
+                $filename = explode('_',$sku->sku)[0]. '.jpg';
+                $remote_file = '/'.$filename;
+                $local_file = $my_save_dir . $filename ;
+                copy($url,$local_file);
+                Yii::$app->ftp->put($local_file,$remote_file,$mode,$asynchronous);
+                if(!unlink($local_file)){
+                    throw new \Exception('上传失败！');
+                }
+            }
+            $msg = '上传成功！';
+        }
+        catch (\Exception $why){
+            $msg = '上传失败！';
+        }
+        return $msg;
+    }
 }
