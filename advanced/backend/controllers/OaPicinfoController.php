@@ -254,13 +254,15 @@ class OaPicinfoController extends BaseController
         try{
             foreach ($sku_details as $sku){
                 $url = $sku->linkurl;
-                $filename = explode('_',$sku->sku)[0]. '.jpg';
-                $remote_file = '/'.$filename;
-                $local_file = $my_save_dir . $filename ;
-                copy($url,$local_file);
-                Yii::$app->ftp->put($local_file,$remote_file,$mode,$asynchronous);
-                if(!unlink($local_file)){
-                    throw new \Exception('上传失败！');
+                if(!empty($url)){
+                    $filename = 'test-'.explode('_',$sku->sku)[0]. '.jpg';
+                    $remote_file = '/'.$filename;
+                    $local_file = $my_save_dir . $filename ;
+                    copy($url,$local_file);
+                    Yii::$app->ftp->put($local_file,$remote_file,$mode,$asynchronous);
+                    if(!unlink($local_file)){
+                        throw new \Exception('上传失败！');
+                    }
                 }
             }
             $msg = '上传成功！';
