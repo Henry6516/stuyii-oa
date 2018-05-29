@@ -37,7 +37,7 @@ class ChannelSearch extends Channel
             [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
-                'subCat', 'wishpublish', 'goodsstatus', 'stockdays'], 'safe'],
+                'subCat', 'wishpublish', 'goodsstatus', 'stockdays','mid'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -146,6 +146,7 @@ class ChannelSearch extends Channel
                 'achieveStatus',
                 'DictionaryName',
                 'completeStatus',
+                'mid',
                 /* 下面这段是加入的 */
                 /*=============*/
                 'cate' => [
@@ -197,7 +198,6 @@ class ChannelSearch extends Channel
             'goodsstatus' => $this->goodsstatus,
             'stockdays' => $this->stockdays,
             'number' => $this->number,
-            'possessMan1' => $this->possessMan1,
         ]);
 
         if ($this->devDatetime) {
@@ -215,6 +215,12 @@ class ChannelSearch extends Channel
                 ['>=', 'convert(varchar(10),updateTime,121)', $updateDate[0]],
                 ['<=', 'convert(varchar(10),updateTime,121)', $updateDate[1]],
             ]);
+        }
+        if ($this->mid == 'Y') {
+            $query->andFilterWhere(['>', 'mid', 0]);
+        }
+        if ($this->mid == 'N') {
+            $query->andWhere(['mid' => null]);
         }
 
 
@@ -313,6 +319,7 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'SupplierName', $this->SupplierName])
             ->andFilterWhere(['like', 'StoreName', $this->StoreName])
             ->andFilterWhere(['like', 'Purchaser', $this->Purchaser])
+            ->andFilterWhere(['like', 'possessMan1', $this->possessMan1])
             ->andFilterWhere(['like', 'possessMan2', $this->possessMan2])
             ->andFilterWhere(['like', 'picUrl', $this->picUrl])
             ->andFilterWhere(['like', 'GoodsCode', $this->GoodsCode])

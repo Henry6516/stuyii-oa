@@ -111,6 +111,7 @@ class Channel extends \yii\db\ActiveRecord
             'goodsstatus' => Yii::t('app', '商品状态'),
             'stockdays' => Yii::t('app', '采购到货天数'),
             'number' => Yii::t('app', '库存'),
+            'mid' => Yii::t('app', '是否是采集数据'),
         ];
     }
 
