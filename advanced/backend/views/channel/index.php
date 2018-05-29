@@ -174,6 +174,21 @@ $this->params['breadcrumbs'][] = $this->title;
              'developer',
              'Purchaser',
              'possessMan1',
+            [
+                'attribute' => 'mid',
+                'width' => '150px',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    $value = $data->mid?'是':'否';
+                    return "<span class='cell'>" . $value . "</span>";
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['N' =>'否', 'Y' => '是'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+            ],
             'DictionaryName',
             [
                 'attribute' => 'devDatetime',
