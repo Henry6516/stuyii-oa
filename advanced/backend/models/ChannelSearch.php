@@ -197,6 +197,7 @@ class ChannelSearch extends Channel
             'goodsstatus' => $this->goodsstatus,
             'stockdays' => $this->stockdays,
             'number' => $this->number,
+            'possessMan1' => $this->possessMan1,
         ]);
 
         if ($this->devDatetime) {
@@ -312,7 +313,6 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'SupplierName', $this->SupplierName])
             ->andFilterWhere(['like', 'StoreName', $this->StoreName])
             ->andFilterWhere(['like', 'Purchaser', $this->Purchaser])
-            ->andFilterWhere(['like', 'possessMan1', $this->possessMan1])
             ->andFilterWhere(['like', 'possessMan2', $this->possessMan2])
             ->andFilterWhere(['like', 'picUrl', $this->picUrl])
             ->andFilterWhere(['like', 'GoodsCode', $this->GoodsCode])
