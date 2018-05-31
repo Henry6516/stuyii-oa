@@ -25,10 +25,11 @@ class Send
         $mail->setSubject($title);
         //$mail->setTextBody('zheshisha ');   //发布纯文字文本
         $mail->setHtmlBody($content);    //发布可以带html标签的文本
+
         if($mail->send())
-            echo "Mail send success to ".$name."\r\n";
+            echo date('Y-m-d H:i:s')." Mail send success to ".$name."\r\n";
         else
-            echo "Mail send failed to ".$name."\r\n";
+            echo date('Y-m-d H:i:s')." Mail send failed to ".$name."\r\n";
     }
 
     /**
