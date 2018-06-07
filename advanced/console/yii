@@ -1,4 +1,4 @@
-;#!/usr/bin/env php
+#!/usr/bin/env php
 <?php
 
                /**
@@ -26,4 +26,4 @@
                );
                $application = new yii\console\Application($config);
                $exitCode = $application->run();
-               exit($exitCode)
+               exit($exitCode);
