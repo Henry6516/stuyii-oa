@@ -128,7 +128,7 @@ class SiteController extends BaseController
         $result['artDate'] = $artPerDayNum['picCompleteTime'];
         $result['art'] = $artPerDayNum['possessMan1'];
         $result['artValue'] = $artPerDayNum['value'];
-        echo json_encode($result);
+        return json_encode($result);
     }
 
     /**

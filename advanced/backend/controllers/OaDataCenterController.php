@@ -622,10 +622,15 @@ class OaDataCenterController extends BaseController
         $objPHPExcel->setActiveSheetIndex($sheet);
         $foos[0] = OaWishgoods::find()->where(['infoid'=>$id])->all();
         $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid='.$id.')';
+        $back_sql = ' select categoryParentName as cate from b_goods as bgs LEFT  JOIN b_goodsCats as bc on bgs.goodscategoryId = bc.nid where bgs.nid=(SELECT Bgoodsid FROM oa_goodsinfo WHERE pid='.$id.')';
 
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $cate = $query->queryAll();
+        if(empty($cate)){
+            $query = $db->createCommand($back_sql);
+            $cate = $query->queryAll();
+        }
         $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid='.$id;
         $dataGoodsCode = $db->createCommand($sql_GoodsCode)
             ->queryAll();

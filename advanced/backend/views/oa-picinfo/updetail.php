@@ -12,7 +12,7 @@ use kartik\builder\Form;
 use kartik\builder\FormGrid;
 use kartik\grid\GridView;
 use kartik\widgets\Select2;
-
+use kartik\dialog\Dialog;
 use kartik\builder\TabularForm;
 
 use yii\bootstrap\Modal;
@@ -90,7 +90,8 @@ echo TabularForm::widget([
 //            'footer'=>false,
             'after'=>
                 Html::button('保存当前数据', ['id'=>'save-only','type'=>'button','class'=>'btn btn-info']).' '.
-                Html::button('保存并完善', ['id'=>'save-complete','type'=>'button','class'=>'btn btn-primary']).' '
+                Html::button('保存并完善', ['id'=>'save-complete','type'=>'button','class'=>'btn btn-primary']).' '.
+                Html::button('上传到FTP', ['id'=>'upload-image','type'=>'button','class'=>'btn btn-warning']).' '
         ]
     ]
 
@@ -106,9 +107,9 @@ $requestUrl = Url::toRoute(['/goodssku/create','id'=>$info->pid]);//弹窗的htm
 $requestUrl2 = Url::toRoute(['/goodssku/update']);//弹窗的html内容，下面的js会调用获得该页面的Html内容，直接填充在弹框中
 $saveUrl = Url::toRoute(['/goodssku/save-only', 'pid' => $pid, 'type' => 'pic-info']);//保存数据
 $completeUrl = Url::toRoute(['/goodssku/save-complete', 'pid' => $pid, 'type' => 'pic-info']);//保存数据
-$js2 = <<<JS
+$uploadUrl = Url::toRoute(['upload-image', 'pid' => $pid]);
 
-    
+$js2 = <<<JS
 // 保存数据的提交按钮
     $('#save-only').on('click',function() {
         $.ajax({
@@ -132,6 +133,24 @@ $js2 = <<<JS
             }
         });
     }); 
+    
+// 上传图片到服务器
+    $('#upload-image').on('click',function() {
+        krajeeDialog.confirm("确定上传图片吗?", function (result) {
+            if (result) { // ok button was pressed
+                $.ajax({
+                    url:'{$uploadUrl}',
+                    type:'get',
+                    async: false,
+                    success:function(ret) {
+                        alert(ret);
+                    }
+                });
+                } 
+    });
+    })
 JS;
+
+
 $this->registerJs($js2);
 ?>

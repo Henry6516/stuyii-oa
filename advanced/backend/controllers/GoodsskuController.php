@@ -139,16 +139,13 @@ class GoodsskuController extends BaseController
                         $update_model = Goodssku::find()->where(['sid' => $sid])->one();
                         $update_model->linkurl = $row_value['linkurl'];
                         $update_model->save(false);
-
                     }
                     $this->redirect(['oa-picinfo/update', 'id' => $pid]);
                 }
 
-
             } catch (Exception  $e) {
                 echo $e;
             }
-
         }
     }
 
@@ -170,20 +167,16 @@ class GoodsskuController extends BaseController
             try {
                 if ($type == 'goods-info') {
                     $sendee = Goodssku::getTaskSendee($pid, '属性信息修改');//判断产品完成状态并返回任务发送人
-
                     $skuRows = $request->post()['Goodssku'];
                     $count = count($skuRows);
                     $info = OaGoodsinfo::find()->where(['pid' => $pid])->one();
-
                     $title = $info['GoodsCode'].'-属性信息修改';//任务发标题
-
                     if ($count > 1) {
                         $info->isVar = '是';
                     } else {
                         $info->isVar = '否';
                     }
                     $info->save(false);
-
                     //where the data from
                     $mid = $info->mid;
                     if(!empty($mid)){
@@ -300,32 +293,27 @@ class GoodsskuController extends BaseController
                         }
                     }
                     //图片验空
-                    $pic_url = array_column($Rows, 'linkurl');
-                    $val_count = array_count_values($pic_url);
-                    $res = array_key_exists('', $val_count);
                     //图片全不为空时，开产品导入ebay和wish模板
-                    if (!$res) {
-                        $sql_wish = "exec P_oaGoods_TowishGoods $pid";
-                        $sql_ebay = "exec P_oaGoods_ToEbayGoods $pid";
-                        $connection = Yii::$app->db;
-                        $import_trans = $connection->beginTransaction();
-                        try {
-                            $connection->createCommand($sql_wish)->execute();
-                            $connection->createCommand($sql_ebay)->execute();
-                            //更新商品状态
-                            $goods_model->picStatus = '已完善';
-                            $goods_model->picCompleteTime = date('Y-m-d H:i:s', time());
-                            $goods_model->updateTime = strftime('%F %T');
-                            if (!$goods_model->update()) {
-                                throw new Exception("fail to update picStatus");
-                            }
-                            //提交事务
-                            $import_trans->commit();
-                            echo '保存成功';
-                        } catch (\Exception $er) {
-                            $import_trans->rollBack();
-                            echo '保存失败';
+                    $sql_wish = "exec P_oaGoods_TowishGoods $pid";
+                    $sql_ebay = "exec P_oaGoods_ToEbayGoods $pid";
+                    $connection = Yii::$app->db;
+                    $import_trans = $connection->beginTransaction();
+                    try {
+                        $connection->createCommand($sql_wish)->execute();
+                        $connection->createCommand($sql_ebay)->execute();
+                        //更新商品状态
+                        $goods_model->picStatus = '已完善';
+                        $goods_model->picCompleteTime = date('Y-m-d H:i:s', time());
+                        $goods_model->updateTime = strftime('%F %T');
+                        if (!$goods_model->update()) {
+                            throw new Exception("fail to update picStatus");
                         }
+                        //提交事务
+                        $import_trans->commit();
+                        echo '保存成功';
+                    } catch (\Exception $er) {
+                        $import_trans->rollBack();
+                        echo '保存失败';
                     }
                 }
                 $content .= '</table>';
@@ -487,6 +475,5 @@ class GoodsskuController extends BaseController
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
 
 }

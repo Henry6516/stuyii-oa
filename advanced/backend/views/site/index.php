@@ -15,7 +15,7 @@ $('h1').remove();
                 $.ajax({
                     url:'{$todevdata}', 
                     success:function (data) {
-                       // var da = JSON.parse(data);  //推荐方法
+                       // var data = JSON.parse(data);  //推荐方法
                       init_chart('salername',data);
                       init_chart('num-salername',data);
                       init_chart('introducer',data);
