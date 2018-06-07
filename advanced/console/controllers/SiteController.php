@@ -44,9 +44,9 @@ class SiteController extends Controller
         $sql = "P_oa_updateGoodsStatusToTableOaGoodsInfo";
         $res = Yii::$app->db->createCommand($sql)->execute();
         if($res){
-            echo date('Y-m-d H:i:s')." 更新成功！\r\n";
+            echo date('Y-m-d H:i:s')." 更新成功！\n";
         }else{
-            echo date('Y-m-d H:i:s')."更新失败！\r\n";
+            echo date('Y-m-d H:i:s')."更新失败！\n";
         }
     }
 

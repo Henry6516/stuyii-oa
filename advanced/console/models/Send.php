@@ -27,9 +27,9 @@ class Send
         $mail->setHtmlBody($content);    //发布可以带html标签的文本
 
         if($mail->send())
-            echo date('Y-m-d H:i:s')." Mail send success to ".$name."\r\n";
+            echo date('Y-m-d H:i:s'). $title ." Mail send success to ".$name."\n";
         else
-            echo date('Y-m-d H:i:s')." Mail send failed to ".$name."\r\n";
+            echo date('Y-m-d H:i:s'). $title . " Mail send failed to ".$name."\n";
     }
 
     /**
