@@ -5,7 +5,7 @@ use \kartik\form\ActiveForm;
 use  \kartik\grid\GridView;
 use kartik\daterange\DateRangePicker;
 
-$this->title = '备货产品表现';
+$this->title = '备货产品库存';
 ?>
 <?php //echo $this->render('_search'); ?>
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -61,7 +61,7 @@ $this->title = '备货产品表现';
         'pjax' => true,
         'striped' => true,
         'hover' => true,
-        'panel' => ['type' => 'primary', 'heading' => '类目表现'],
+        'panel' => ['type' => 'primary', 'heading' => '备货产品库存'],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [

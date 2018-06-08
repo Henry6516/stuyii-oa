@@ -10,7 +10,7 @@ use yii\data\ArrayDataProvider;
 class StockPerformController extends BaseController
 {
     /**
-     * 订货产品表现
+     * 库存数量
      * @return string
      * @throws \yii\db\Exception
      */
@@ -65,7 +65,7 @@ class StockPerformController extends BaseController
     }
 
     /**
-     * 库存数量
+     * 订货产品表现
      * @return string
      * @throws \yii\db\Exception
      */
@@ -96,12 +96,13 @@ class StockPerformController extends BaseController
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
-        if($ret !== false){
-            $result = $ret;
-        } else {
+        //if($ret !== false){
+          //  $result = $ret;
+        //} else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,2592000);
-        }
+            $cache->set($sql,false);
+            //$cache->set($sql,$result,3600*24);
+        //}
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [

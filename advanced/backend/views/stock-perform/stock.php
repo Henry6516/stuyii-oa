@@ -55,7 +55,7 @@ $this->title = '备货产品表现';
         'pjax' => true,
         'striped' => true,
         'hover' => true,
-        'panel' => ['type' => 'primary', 'heading' => '类目表现'],
+        'panel' => ['type' => 'primary', 'heading' => '备货产品表现'],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
