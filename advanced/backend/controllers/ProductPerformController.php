@@ -52,7 +52,7 @@ class ProductPerformController extends BaseController
             $result = $ret;
         } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,2592000);
+            $cache->set($sql,$result,3600*24);
         }
         //$result = Yii::$app->db->createCommand($sql)->queryAll();
         //var_dump($result);exit;

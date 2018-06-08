@@ -45,7 +45,7 @@ class StockPerformController extends BaseController
             $result = $ret;
         } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,2592000);
+            $cache->set($sql,$result,3600*24);
         }
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
@@ -76,7 +76,6 @@ class StockPerformController extends BaseController
         $devList = $this->getDevList();
         //获取搜索条件
         $get = Yii::$app->request->get();
-        //var_dump($get);exit;
         if(isset($get['EntryForm'])){
             $create_range = $get['EntryForm']['create_range'];
             $create = explode(' - ', $create_range);
@@ -86,23 +85,24 @@ class StockPerformController extends BaseController
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
-            $data['create_start'] = '';
-            $data['create_end'] = '';
+            $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
+            $data['create_end'] = date('Y-m-d');
+            $create_range = $data['create_start'] . ' - ' . $data['create_end'];
+            $model->cat = $data['cat'];
+            $model->create_range = $create_range;
         }
-        //var_dump($data);exit;
         //获取数据
         $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
 
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
-        //if($ret !== false){
-          //  $result = $ret;
-        //} else {
+        if($ret !== false){
+            $result = $ret;
+        } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,false);
-            //$cache->set($sql,$result,3600*24);
-        //}
+            $cache->set($sql,$result,3600*24);
+        }
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
