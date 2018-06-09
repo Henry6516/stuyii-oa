@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'nid',
             'ebayName',
             'ebaySuffix',
+            'storeCountry',
             'nameCode',
             'mainImg',
             'ibayTemplate',

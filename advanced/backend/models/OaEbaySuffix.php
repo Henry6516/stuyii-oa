@@ -34,7 +34,7 @@ class OaEbaySuffix extends \yii\db\ActiveRecord
         return [
             [['ebayName'], 'required'],
             [['ebayName'], 'unique'],
-            [['ebayName', 'ebaySuffix', 'nameCode', 'mainImg', 'ibayTemplate'], 'string'],
+            [['ebayName','storeCountry', 'ebaySuffix', 'nameCode', 'mainImg', 'ibayTemplate'], 'string'],
         ];
     }
 
@@ -52,6 +52,7 @@ class OaEbaySuffix extends \yii\db\ActiveRecord
             'ibayTemplate' => '刊登风格',
             'highEbayPaypal' => '大额PayPal',
             'lowEbayPaypal' => '小额PayPal',
+            'storeCountry' => '仓储国家',
         ];
     }
 

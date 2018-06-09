@@ -22,6 +22,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'ebaySuffix')->textInput() ?>
 
+    <?= $form->field($model, 'storeCountry')->textInput() ?>
+
     <?= $form->field($model, 'nameCode')->textInput() ?>
 
     <?= $form->field($model, 'mainImg')->textInput() ?>
