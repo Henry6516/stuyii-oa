@@ -108,11 +108,22 @@ Tabs::widget([
             <?= Html::button('保存并完善', ['class' => 'save-complete btn btn-default']) ?>
 
         </div>
-        <div class="col-sm-2">
+        <div class="store-country col-sm-2">
+            <select class="selectpicker">
+                <?php
+                echo '<option value="">--所有仓储--</option>';
+                foreach ($ebayStores as $store) {
+
+                    echo '<option value="' . $store . '">' . $store . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+
+        <div class="account col-sm-2">
             <select class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
                 <?php
                 foreach ($ebayAccount as $account => $suffix) {
-
                     echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
                 }
                 ?>
@@ -369,11 +380,21 @@ echo '</div>';
                 <?= Html::button('保存并完善', ['class' => 'save-complete btn btn-default']) ?>
 
             </div>
-            <div class="col-sm-2">
-                <select class="selectpicker ebay-chosen-down" multiple data-actions-box="true" title="--所有账号--">
+            <div class="store-country col-sm-2">
+                <select class="selectpicker">
+                    <?php
+                    echo '<option value="">--所有仓储--</option>';
+                    foreach ($ebayStores as $store) {
+
+                        echo '<option value="' . $store . '">' . $store . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="account col-sm-2">
+                <select class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
                     <?php
                     foreach ($ebayAccount as $account => $suffix) {
-
                         echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
                     }
                     ?>
@@ -411,8 +432,31 @@ $exportUlr = URL::toRoute(['export-ebay', 'id' => $templates->nid]);
 $shippingUrl = URL::toRoute(['shipping']);
 $saveUrl = Url::to(['ebay-save', 'id' => $templates->nid]);
 $completeUrl = Url::to(['ebay-complete', 'id' => $templates->nid]);
+$storeCountryUrl = Url::to(['store-country']);
 
 $js = <<< JS
+
+/*
+cat selection
+ */
+$('.store-country select').on('change',function() {
+    $('.account option').remove();
+    var store = $('.top').find('.store-country option:selected').val();
+    if (store.length === 0) {
+        var store = $('.bottom').find('.store-country option:selected').val();
+    }
+    $.get("$storeCountryUrl",{store:store},function(sts) {
+        var select = $('.account select');
+        $.each(JSON.parse(sts), function(index,value) {
+            var html = '<option value="'+ value +'">'+ value +'</option>';
+            select.append(html);
+        })
+        select.selectpicker('refresh');
+    });
+})
+
+
+
 //批量设置关键词
     $(".random-paste").on('click',function() {
             if($("#all-kws").length==0){
@@ -737,18 +781,26 @@ $('.save-complete').on('click',function() {
 
 //顶部导出所选账号模板
 $('.top-export-ebay-given').on('click',function() {
-    names = $('.top').find('.selectpicker').val();
-    if(!names){
+    var select = $('.top').find('.ebay-chosen-up .selectpicker');
+    var names = select.val();
+    if(names.length === 0){
         names = '';
+        select.find('option').each(function(ele) {
+          names = names + ',' + $(this).val();
+        }) 
     }
     window.location.href='{$exportUlr}'+ '&accounts='+names;
 });
 
 //底部导出所选账号模板
 $('.bottom-export-ebay-given').on('click',function() {
-    names = $('.bottom').find('.selectpicker').val();
-    if(!names){
+    var select = $('.bottom').find('.ebay-chosen-up .selectpicker');
+    var names = select.val();
+    if(names.length === 0){
         names = '';
+        select.find('option').each(function(ele) {
+          names = names + ',' + $(this).val();
+        }) 
     }
     window.location.href='{$exportUlr}'+ '&accounts='+names;
 });

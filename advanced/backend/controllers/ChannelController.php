@@ -181,7 +181,10 @@ class ChannelController extends BaseController
         } else {
             $connection = yii::$app->db;
             $ebay_sql = 'select ebayName,ebaySuffix from oa_ebay_suffix  ';
+            $store_sql = 'select DISTINCT(storeCountry) as storeCountry from oa_ebay_suffix  ';
             $ebay_account = $connection->createCommand($ebay_sql)->queryAll();
+            $stores = $connection->createCommand($store_sql)->queryAll();
+            $ebay_stores = ArrayHelper::getColumn($stores, 'storeCountry');
             //封装成key-value
             $ebay_map = [];
             foreach ($ebay_account as $row) {
@@ -204,6 +207,7 @@ class ChannelController extends BaseController
                 'inShippingService2' => $inShippingService2,
                 'outShippingService' => $OutShippingService,
                 'ebayAccount' => $ebay_map,
+                'ebayStores' => $ebay_stores,
                 'currencyCode' =>$currency_ret['currencyCode'],
             ]);
         }
@@ -1192,7 +1196,23 @@ class ChannelController extends BaseController
 
 
     }
+    /**
+     * @brief ebay简称,仓储国家二级联动
+     * @param string $store
+     * @return mixed
+     */
+    public  function  actionStoreCountry($store)
+    {
+        $sql = 'select  ebaySuffix from oa_ebay_suffix where storeCountry=:store';
+        $query = Yii::$app->db->createCommand($sql,[':store'=>$store]);
+        if (empty($store)) {
+            $sql = 'select  ebaySuffix from oa_ebay_suffix';
+            $query = Yii::$app->db->createCommand($sql);
+        }
+        $ret = ArrayHelper::getColumn($query->queryAll(),'ebaySuffix');
+        return json_encode($ret);
 
+    }
     /**
      * 导出Shopee
      * @param int $id 商品id

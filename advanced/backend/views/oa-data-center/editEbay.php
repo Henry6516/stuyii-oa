@@ -17,6 +17,7 @@ $shipping_templates = [
     "template" => "<div > {label} </div><div class='col-lg-6'>{input}</div>{hint}{error}",
     'labelOptions' => ['class' => 'col-lg-2 control-label']
 ];
+$stock_value = $templates->stockUp?'是':'否';
 if (empty($templates->requiredKeywords)) {
     $required_kws = [];
     for ($i = 0; $i <= 5; $i++) {
@@ -43,31 +44,35 @@ use yii\bootstrap\Modal;
 Modal::begin([
     'id' => 'templates-modal',
     'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
-    'size' => "modal-xl"
+    'size' => "modal-xl",
+    'options'=>[
+        'data-backdrop'=>'static',//点击空白处不关闭弹窗
+        'data-keyboard'=>false,
+    ],
 ]);
 //echo
 Modal::end();
-    Modal::begin([
-        'id' => 'random-modal',
-        'header' => '<h4 class="modal-title">批量增加关键词</h4>',
-        'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
-        'options' => [
-            'data-backdrop' => 'static',//点击空白处不关闭弹窗
-            'data-keyboard' => false,
-        ],
-    ]);
-    Modal::end();
+Modal::begin([
+    'id' => 'random-modal',
+    'header' => '<h4 class="modal-title">批量增加关键词</h4>',
+    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+    'options' => [
+        'data-backdrop' => 'static',//点击空白处不关闭弹窗
+        'data-keyboard' => false,
+    ],
+]);
+Modal::end();
 
-    Modal::begin([
-        'id' => 'required-modal',
-        'header' => '<h4 class="modal-title">批量增加关键词</h4>',
-        'footer' => '<a href="#" class="required-close btn btn-primary" data-dismiss="modal">关闭</a>',
-        'options' => [
-            'data-backdrop' => 'static',//点击空白处不关闭弹窗
-            'data-keyboard' => false,
-        ],
-    ]);
-    Modal::end();
+Modal::begin([
+    'id' => 'required-modal',
+    'header' => '<h4 class="modal-title">批量增加关键词</h4>',
+    'footer' => '<a href="#" class="required-close btn btn-primary" data-dismiss="modal">关闭</a>',
+    'options' => [
+        'data-backdrop' => 'static',//点击空白处不关闭弹窗
+        'data-keyboard' => false,
+    ],
+]);
+Modal::end();
 ?>
 <?=
 Tabs::widget([
@@ -94,8 +99,7 @@ Tabs::widget([
 ]); ?>
 
 </br>
-<link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
 <div class="st">
     <div class="row top">
         <div class="col-sm-3">
@@ -104,11 +108,22 @@ Tabs::widget([
             <?= Html::button('保存并完善', ['class' => 'save-complete btn btn-default']) ?>
 
         </div>
-        <div class="col-sm-2">
+        <div class="store-country col-sm-2">
+            <select class="selectpicker">
+                <?php
+                echo '<option value="">--所有仓储--</option>';
+                foreach ($ebayStores as $store) {
+
+                    echo '<option value="' . $store . '">' . $store . '</option>';
+                }
+                ?>
+            </select>
+        </div>
+
+        <div class="account col-sm-2">
             <select class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
                 <?php
                 foreach ($ebayAccount as $account => $suffix) {
-
                     echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
                 }
                 ?>
@@ -138,6 +153,7 @@ Tabs::widget([
 </div>
 </br>
 <?= $form->field($templates, 'sku', ['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput() ?>
+<?= $form->field($templates, 'stockUp', ['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(['readonly' => true, 'value' => $stock_value]) ?>
 <?php
 echo $form->field($templates, 'mainPage', ['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(['class' => 'main-page', 'style' => 'display:none']);
 echo '<div class="form-group field-oatemplates-mainpage">
@@ -207,7 +223,6 @@ echo '</div>';
         <div class="col-sm-1" style='margin-left:3%'>
             <strong>标题关键词：</strong>
         </div>
-        <div class='all-required' style="display: none;float:right;margin-right:10%"><textarea id="all-required" style="width:200px;height:300px;">这里写内容</textarea></div>
         <br>
         <?= $form->field($templates, 'headKeywords', ['labelOptions' => ['style' => 'margin-left:6%']])->textInput(['style' => "width:200px;margin-left:40%;", 'placeholder' => '--一个关键词--'])->label('最前关键词<span style = "color:red">*</span>'); ?>
         <br>
@@ -233,14 +248,12 @@ echo '</div>';
         <td><input value="' . $required_kws[3] . '" class="required-kw-in" type="text" class=""></td>
         <td><input value="' . $required_kws[4] . '" class="required-kw-in" type="text" class=""></td>
         <td><input value="' . $required_kws[5] . '" class="required-kw-in" type="text" class=""></td>
-        <td><button type="button" class="required-paste">批量设置</button></td>
+        <td><button type="button" class = "required-paste btn btn-success" data-toggle="modal" data-target = "#required-modal">批量设置</button></td>
     </tr>'
                 ?>
                 </tbody>
             </table>
         </div>
-        <div class='all-random' style="display: none;float:right;margin-right: 10%"><textarea id="all-random" style="width:200px;height:300px;">这里写关键词</textarea></div>
-
         <div style="margin-left:5%;margin-right: 20%">
             <label class="control-label">随机关键词<span style="color:red">*</span></label><span style="margin-left:1%"
                                                                                             class="random-kw"></span>
@@ -267,7 +280,7 @@ echo '</div>';
                 <td><input value="' . $random_kws[7] . '" class="random-kw-in" type="text" class=""></td>
                 <td><input value="' . $random_kws[8] . '"  class="random-kw-in" type="text" class=""></td>
                 <td><input value="' . $random_kws[9] . '" class="random-kw-in" type="text" class=""></td>
-                <td><button type="button" class="random-paste">批量设置</button></td>
+                <td><button type="button" class = "random-paste btn btn-success" data-toggle="modal" data-target = "#random-modal">批量设置</button></td>
             </tr>'
                 ?>
                 </tbody>
@@ -277,7 +290,7 @@ echo '</div>';
     <br>
     <?= $form->field($templates, 'tailKeywords', ['labelOptions' => ['style' => 'margin-left:6%']])->textInput(['style' => "width:200px;margin-left:40%;", 'placeholder' => '--最多一个关键词--']); ?>
     <?= $form->field($templates, 'description', [
-            'template' => "{label}\n<div class=\"col-lg-5\">{input}</div>\n<div class=\"col-lg-9\">{error}</div>",
+        'template' => "{label}\n<div class=\"col-lg-5\">{input}</div>\n<div class=\"col-lg-9\">{error}</div>",
         'labelOptions' => ['class' => 'col-lg-1 control-label'],
     ])->textarea(['rows' => 12]); ?>
     <?= $form->field($templates, 'quantity',['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(); ?>
@@ -326,7 +339,7 @@ echo '</div>';
             <span>境内运输方式</span>
             <?=
             $form->field($templates, 'InshippingMethod1', $shipping_templates)->dropDownList(
-                    ArrayHelper::map($inShippingService1,'nid', 'servicesName'),
+                ArrayHelper::map($inShippingService1,'nid', 'servicesName'),
                 ['class' => 'col-lg-6', 'prompt' => '--境内物流选择--',]); ?>
             <?= $form->field($templates, 'InFirstCost1', $shipping_templates)->textInput(['class'=>'cur-code','placeholder' => '--'.$currencyCode.'--']); ?>
             <?= $form->field($templates, 'InSuccessorCost1', $shipping_templates)->textInput(['class'=>'cur-code','placeholder' => '--'.$currencyCode.'--']); ?>
@@ -341,7 +354,7 @@ echo '</div>';
             <span>境外运输方式</span>
             <?=
             $form->field($templates, 'OutshippingMethod1', $shipping_templates)->dropDownList(
-                    ArrayHelper::map($outShippingService,'nid', 'servicesName'),
+                ArrayHelper::map($outShippingService,'nid', 'servicesName'),
                 ['class' => 'col-lg-6', 'prompt' => '--境外物流选择--',]); ?>
             <?= $form->field($templates, 'OutFirstCost1', $shipping_templates)->textInput(['class'=>'cur-code','placeholder' => '--'.$currencyCode.'--']); ?>
             <?= $form->field($templates, 'OutSuccessorCost1', $shipping_templates)->textInput(['class'=>'cur-code','placeholder' => '--'.$currencyCode.'--']); ?>
@@ -367,11 +380,21 @@ echo '</div>';
                 <?= Html::button('保存并完善', ['class' => 'save-complete btn btn-default']) ?>
 
             </div>
-            <div class="col-sm-2">
-                <select class="selectpicker ebay-chosen-down" multiple data-actions-box="true" title="--所有账号--">
+            <div class="store-country col-sm-2">
+                <select class="selectpicker">
+                    <?php
+                    echo '<option value="">--所有仓储--</option>';
+                    foreach ($ebayStores as $store) {
+
+                        echo '<option value="' . $store . '">' . $store . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="account col-sm-2">
+                <select class="selectpicker ebay-chosen-up" multiple data-actions-box="true" title="--所有账号--">
                     <?php
                     foreach ($ebayAccount as $account => $suffix) {
-
                         echo '<option class="ebay-select" value="' . $suffix . '">' . $suffix . '</option>';
                     }
                     ?>
@@ -409,23 +432,49 @@ $exportUlr = URL::toRoute(['export-ebay', 'id' => $templates->nid]);
 $shippingUrl = URL::toRoute(['shipping']);
 $saveUrl = Url::to(['ebay-save', 'id' => $templates->nid]);
 $completeUrl = Url::to(['ebay-complete', 'id' => $templates->nid]);
+$storeCountryUrl = Url::to(['store-country']);
 
 $js = <<< JS
-//批量设置关键词
 
-    $(".required-paste").on('click',function() {
-        // $('.all-required').css('display','');    
-        $('.all-required').toggle();   
+/*
+cat selection
+ */
+$('.store-country select').on('change',function() {
+    $('.account option').remove();
+    var store = $('.top').find('.store-country option:selected').val();
+    if (store.length === 0) {
+        var store = $('.bottom').find('.store-country option:selected').val();
+    }
+    $.get("$storeCountryUrl",{store:store},function(sts) {
+        var select = $('.account select');
+        $.each(JSON.parse(sts), function(index,value) {
+            var html = '<option value="'+ value +'">'+ value +'</option>';
+            select.append(html);
+        })
+        select.selectpicker('refresh');
     });
+})
+
+
+
+//批量设置关键词
     $(".random-paste").on('click',function() {
-        $('.all-random').toggle();     
+            if($("#all-kws").length==0){
+                $('#random-modal').find('.modal-body').html('<textarea placeholder="--多个随机关键词--" id="all-kws" style="margin-left:7%;border-style:none;width:500px;height:400px;"></textarea>');
+            }
+            //重新监听事件                                                                                        
+            var random_ele = $("#all-random");
+            listenOnTextInput(random_ele,'random');
+        });
+    $(".required-paste").on('click',function() {
+        if($("#required-kws").length==0){
+           $('#required-modal').find('.modal-body').html('<textarea placeholder="--多个必选关键词--" id="required-kws" style="margin-left:7%;border-style:none;width:500px;height:400px;"></textarea>'); 
+        }
+        requird_ele = $("#all-required");
+        listenOnTextInput(requird_ele,'required');
     });
-    requird_ele = $("#all-required");
-    random_ele = $("#all-random");
-    listenOnTextInput(requird_ele,'required');
-    requiredCount();
-    listenOnTextInput(random_ele,'random');
-    randomCount();
+ 
+   
    
 //样式处理开始
     $("label[for='oatemplates-headkeywords']").after('<span style="margin-left:1%"class="head-kw"></span><div style="font-size:6px;margin-left:6%">'+
@@ -732,18 +781,26 @@ $('.save-complete').on('click',function() {
 
 //顶部导出所选账号模板
 $('.top-export-ebay-given').on('click',function() {
-    names = $('.top').find('.selectpicker').val();
-    if(!names){
+    var select = $('.top').find('.ebay-chosen-up .selectpicker');
+    var names = select.val();
+    if(names.length === 0){
         names = '';
+        select.find('option').each(function(ele) {
+          names = names + ',' + $(this).val();
+        }) 
     }
     window.location.href='{$exportUlr}'+ '&accounts='+names;
 });
 
 //底部导出所选账号模板
 $('.bottom-export-ebay-given').on('click',function() {
-    names = $('.bottom').find('.selectpicker').val();
-    if(!names){
+    var select = $('.bottom').find('.ebay-chosen-up .selectpicker');
+    var names = select.val();
+    if(names.length === 0){
         names = '';
+        select.find('option').each(function(ele) {
+          names = names + ',' + $(this).val();
+        }) 
     }
     window.location.href='{$exportUlr}'+ '&accounts='+names;
 });
@@ -827,10 +884,12 @@ $this->registerJs($js);
     }
 
     function listenOnTextInput(ele, name) {
-        ele.on('change', function () {
-            kws = $(this).val();
-            kw_list = kws.split('\n');
+        $('body').on('change',ele,function () {
+
             if (name == 'required') {
+                var kws = $("#required-kws").val();
+                //alert(kws);return;
+                var  kw_list = kws.split('\n');
                 $.each(kw_list, function (index, value) {
                     $('.required-kw-in').each(function (pos) {
                         if (index == pos) {
@@ -839,9 +898,10 @@ $this->registerJs($js);
                     })
                 });
                 requiredCount();
-                $('.required-paste').trigger('click');
             }
             if (name == 'random') {
+                kws = $("#all-kws").val();
+                kw_list = kws.split('\n');
                 $.each(kw_list, function (index, value) {
                     $('.random-kw-in').each(function (pos) {
                         if (index == pos) {
@@ -850,7 +910,6 @@ $this->registerJs($js);
                     })
                 });
                 randomCount();
-                $('.random-paste').trigger('click');
             }
 
         });
@@ -866,4 +925,5 @@ $this->registerJs($js);
     }
 </style>
 <link rel="stylesheet" href="../css/bootstrap-select.min.css">
+
 
