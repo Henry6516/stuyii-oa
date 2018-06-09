@@ -783,7 +783,8 @@ $('.save-complete').on('click',function() {
 $('.top-export-ebay-given').on('click',function() {
     var select = $('.top').find('.ebay-chosen-up .selectpicker');
     var names = select.val();
-    if(names.length === 0){
+    alert(typeof names);
+    if(names === null || names.length === 0){
         names = '';
         select.find('option').each(function(ele) {
           names = names + ',' + $(this).val();
