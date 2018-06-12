@@ -4,6 +4,11 @@ return [
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',
+            'cachePath' => '@runtime/cache2',
+        ],
+        'local_cache' => [
+            'class' => 'yii\caching\ApcCache',
+            'useApcu' => true ,
         ],
         //authManager有PhpManager和DbManager两种方式,
         //PhpManager将权限关系保存在文件里,这里使用的是DbManager方式,将权限关系保存在数据库.
