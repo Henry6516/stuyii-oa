@@ -121,6 +121,21 @@ $this->title = '备货产品表现';
                 'label' => '旺款率(%)',
                 //'pageSummary' => true
             ],
+            [
+                'attribute' => 'stockNumThisMonth',
+                //'width' => '150px',
+                'hAlign' => 'right',
+                'format' => ['decimal', 0],
+                'label' => '本月可用备货款数',
+                //'pageSummary' => true
+            ],[
+                'attribute' => 'stockNumLastMonth',
+                //'width' => '150px',
+                'hAlign' => 'right',
+                'format' => ['decimal', 0],
+                'label' => '下月可用备货款数',
+                //'pageSummary' => true
+            ],
         ],
     ]); ?>
     <!--列表结束-->

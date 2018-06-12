@@ -109,7 +109,7 @@ class StockPerformController extends BaseController
                 'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate', 'exuStyleNum', 'exuStyleRate'],
+                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate', 'exuStyleNum', 'exuStyleRate','stockNumThisMonth','stockNumLastMonth'],
             ],
         ]);
 
