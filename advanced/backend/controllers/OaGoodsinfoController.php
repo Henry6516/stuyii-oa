@@ -371,7 +371,7 @@ class OaGoodsinfoController extends BaseController
         array_multisort($StoreName,SORT_ASC,$result);
         $res = array_column($result, 'StoreName', 'StoreName');
 
-        $comm = $connection->createCommand('select DictionaryName from B_Dictionary where CategoryID=9');
+        $comm = $connection->createCommand('select DictionaryName from B_Dictionary where CategoryID=8 AND used=0');
         $plat = $comm->queryAll();
         array_push($plat,['DictionaryName'=>'']);
         foreach ($plat as $key=>$value){
