@@ -13,21 +13,21 @@ class SiteController extends Controller
 {
 
     /**
-     * ²éÑ¯¹ÜÀíÔ±´ıÉóºËÉÌÆ·Êı²¢·¢ÓÊ¼ş
-     * ·ÃÎÊ·½·¨: php yii site/index parameter
+     * æŸ¥è¯¢ç®¡ç†å‘˜å¾…å®¡æ ¸å•†å“æ•°å¹¶å‘é‚®ä»¶
+     * è®¿é—®æ–¹æ³•: php yii site/index parameter
      * @return mixed
      */
     public function actionIndex()
     {
-        $title = "²úÆ·ÖĞĞÄ²úÆ·´ıÉóºË";
+        $title = "äº§å“ä¸­å¿ƒäº§å“å¾…å®¡æ ¸";
         $sql = "P_oa_checkNumbers";
         $leader = Yii::$app->db->createCommand($sql)->queryAll();
         foreach ($leader as $v){
             if($v['email'] && $v['num']){
                 $content = '<div>'.
-                    $v['username'].'<p style=" text-indent:2em;">ÄãºÃ:</p>
-                        <p style="text-indent:2em;">ÄúÓĞ<span style="font-size:150%;color: red;">'.$v['num']. '</span>¸öÉÌÆ·ĞèÒªÉóºË,ÇëÄú¾¡¿ì´¦Àí!
-                        ÏêÇéÇë²é¿´:<a href="http://58.246.226.254:8010/oa-check/to-check">http://58.246.226.254:8010/oa-check/to-check</a></p></div>';
+                    $v['username'].'<p style=" text-indent:2em;">ä½ å¥½:</p>
+                        <p style="text-indent:2em;">æ‚¨æœ‰<span style="font-size:150%;color: red;">'.$v['num']. '</span>ä¸ªå•†å“éœ€è¦å®¡æ ¸,è¯·æ‚¨å°½å¿«å¤„ç†!
+                        è¯¦æƒ…è¯·æŸ¥çœ‹:<a href="http://58.246.226.254:8010/oa-check/to-check">http://58.246.226.254:8010/oa-check/to-check</a></p></div>';
                 Send::sendEmail($v['username'],$v['email'],$title,$content);
             }
         }
@@ -35,8 +35,8 @@ class SiteController extends Controller
     }
 
     /**
-     * ²éÑ¯wishÆ½Ì¨ÉÌÆ·×´Ì¬¡¢²É¹ºµ½»õÌìÊı²¢¸üĞÂoa_goodsinfo±íÊı¾İ
-     * ·ÃÎÊ·½·¨: php yii site/wish parameter
+     * æŸ¥è¯¢wishå¹³å°å•†å“çŠ¶æ€ã€é‡‡è´­åˆ°è´§å¤©æ•°å¹¶æ›´æ–°oa_goodsinfoè¡¨æ•°æ®
+     * è®¿é—®æ–¹æ³•: php yii site/wish parameter
      * @return mixed
      */
     public function actionWish()
@@ -44,20 +44,20 @@ class SiteController extends Controller
         $sql = "P_oa_updateGoodsStatusToTableOaGoodsInfo";
         $res = Yii::$app->db->createCommand($sql)->execute();
         if($res){
-            echo date('Y-m-d H:i:s')." ¸üĞÂ³É¹¦£¡\n";
+            echo date('Y-m-d H:i:s')." æ›´æ–°æˆåŠŸï¼\n";
         }else{
-            echo date('Y-m-d H:i:s')."¸üĞÂÊ§°Ü£¡\n";
+            echo date('Y-m-d H:i:s')."æ›´æ–°å¤±è´¥ï¼\n";
         }
     }
 
     /**
-     * »ñÈ¡Wish´ı¿¯µÇ²úÆ·ÊıÁ¿²¢·¢ÓÊ¼ş¸ø¿ª·¢Ô±
-     * ·ÃÎÊ·½·¨: php yii site/publish parameter
+     * è·å–Wishå¾…åˆŠç™»äº§å“æ•°é‡å¹¶å‘é‚®ä»¶ç»™å¼€å‘å‘˜
+     * è®¿é—®æ–¹æ³•: php yii site/publish parameter
      * @return mixed
      */
     public function actionPublish()
     {
-        $title = "Êı¾İÖĞĞÄ²úÆ·Wish¿¯µÇ";
+        $title = "æ•°æ®ä¸­å¿ƒäº§å“WishåˆŠç™»";
         $sql = "SELECT developer,count(goodscode) AS num,email FROM oa_goodsinfo oa
                 LEFT JOIN [user] u ON u.username=oa.developer WHERE wishpublish='Y' GROUP BY developer,email";
         $leader = Yii::$app->db->createCommand($sql)->queryAll();
@@ -65,9 +65,9 @@ class SiteController extends Controller
         foreach ($leader as $v){
             if($v['email'] && $v['num']){
                 $content = '<div>'.
-                    $v['developer'].'<p style=" text-indent:2em;">ÄãºÃ:</p>
-                        <p style="text-indent:2em;">ÄúÓĞ<span style="font-size:150%;color: red;">'.$v['num']. '</span>¸öÉÌÆ·ĞèÒª½øĞĞWish¿¯µÇ,ÇëÄú¾¡¿ì´¦Àí!
-                        ÏêÇéÇë²é¿´:<a href="http://58.246.226.254:8010/oa-data-center/index">http://58.246.226.254:8010/oa-data-center/index</a></p></div>';
+                    $v['developer'].'<p style=" text-indent:2em;">ä½ å¥½:</p>
+                        <p style="text-indent:2em;">æ‚¨æœ‰<span style="font-size:150%;color: red;">'.$v['num']. '</span>ä¸ªå•†å“éœ€è¦è¿›è¡ŒWishåˆŠç™»,è¯·æ‚¨å°½å¿«å¤„ç†!
+                        è¯¦æƒ…è¯·æŸ¥çœ‹:<a href="http://58.246.226.254:8010/oa-data-center/index">http://58.246.226.254:8010/oa-data-center/index</a></p></div>';
                 Send::sendEmail($v['developer'],$v['email'],$title,$content);
             }
         }
@@ -75,25 +75,25 @@ class SiteController extends Controller
     }
 
     /**
-     * ±¸»õ²úÆ·±íÏÖ
-     * Ã¿ÔÂµÚÒ»Ìì£¨1ºÅ£©¸üĞÂ¿ª·¢Ô±ÔÚ±¾ÔÂµÄ¿ÉÓÃ±¸»õÊıÁ¿
-     * ·ÃÎÊ·½·¨: php yii site/stock
+     * å¤‡è´§äº§å“è¡¨ç°
+     * æ¯æœˆç¬¬ä¸€å¤©ï¼ˆ1å·ï¼‰æ›´æ–°å¼€å‘å‘˜åœ¨æœ¬æœˆçš„å¯ç”¨å¤‡è´§æ•°é‡
+     * è®¿é—®æ–¹æ³•: php yii site/stock
      * @return mixed
      */
     public function actionStock()
     {
         $end = date('Y-m-d');
         if(substr($end,8,2) !== '01'){
-            echo date('Y-m-d H:i:s')." µ±Ç°Ê±¼ä²»¿É¸üĞÂ¸ÃÏîÊı¾İ£¬ÇëÓÚ¹ÜÀíÔ±ÁªÏµÈ·ÈÏ£¡";exit();
+            echo date('Y-m-d H:i:s')." å½“å‰æ—¶é—´ä¸å¯æ›´æ–°è¯¥é¡¹æ•°æ®ï¼Œè¯·äºç®¡ç†å‘˜è”ç³»ç¡®è®¤ï¼";exit();
         }
         $start = date('Y-m-d',strtotime('-60 days', strtotime($end)));
 
-        //»ñÈ¡Êı¾İ¿âÊı¾İ£¬²é¿´ÊÇ·ñÒÑ´æÔÚÊı¾İ
+        //è·å–æ•°æ®åº“æ•°æ®ï¼ŒæŸ¥çœ‹æ˜¯å¦å·²å­˜åœ¨æ•°æ®
         $checkSql = "SELECT * FROM oa_stock_goods_number 
                     WHERE CONVERT(VARCHAR(10),createDate,121)=CONVERT(VARCHAR(10),CAST((CONVERT(VARCHAR(7),'{$end}',121)+'-01') AS DATETIME),121)";
         $check = Yii::$app->db->createCommand($checkSql)->queryAll();
         if($check){
-            echo date('Y-m-d H:i:s')." ±¾ÔÂ¿ÉÓÃ±¸»õÊıÁ¿ÒÑ¾­¸üĞÂ£¬ÇëÎğÖØ¸´²Ù×÷£¡\n";
+            echo date('Y-m-d H:i:s')." æœ¬æœˆå¯ç”¨å¤‡è´§æ•°é‡å·²ç»æ›´æ–°ï¼Œè¯·å‹¿é‡å¤æ“ä½œï¼\n";
         }else{
             $sql = "EXEC P_oa_StockPerformance '" . $start . "','" . $end . "','',1";
             $list = Yii::$app->db->createCommand($sql)->queryAll();
@@ -103,9 +103,9 @@ class SiteController extends Controller
                 $list
             )->execute();
             if($res){
-                echo date('Y-m-d H:i:s')." ¿ª·¢Ô±µÄ¿ÉÓÃ±¸»õÊıÁ¿¸üĞÂ³É¹¦£¡\n";
+                echo date('Y-m-d H:i:s')." å¼€å‘å‘˜çš„å¯ç”¨å¤‡è´§æ•°é‡æ›´æ–°æˆåŠŸï¼\n";
             }else{
-                echo date('Y-m-d H:i:s')." ¿ª·¢Ô±µÄ¿ÉÓÃ±¸»õÊıÁ¿¸üĞÂ³É¹¦£¡\n";
+                echo date('Y-m-d H:i:s')." å¼€å‘å‘˜çš„å¯ç”¨å¤‡è´§æ•°é‡æ›´æ–°æˆåŠŸï¼\n";
             }
         }
 
