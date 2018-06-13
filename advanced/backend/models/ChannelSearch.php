@@ -108,14 +108,16 @@ class ChannelSearch extends Channel
             array_push($users, $user['userName']);
         }
         if ($unit == '平台信息') {
-            if ($role[0]['item_name'] == '部门主管'  || $unit == 'Wish待刊登') {
-                $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] === '产品开发') {
-                $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] === '产品开发2') {
-                $query->andWhere(['in', 'oa_goods.developer', $users]);
-            } elseif ($role[0]['item_name'] === '美工') {
-                $query->andWhere(['in', 'possessMan1', $users]);
+            if(strpos($role[0]['item_name'],'销售') !==false) {
+                if ($role[0]['item_name'] == '部门主管'  || $unit == 'Wish待刊登') {
+                    $query->andWhere(['in', 'oa_goods.developer', $users]);
+                } elseif ($role[0]['item_name'] === '产品开发') {
+                    $query->andWhere(['in', 'oa_goods.developer', $users]);
+                } elseif ($role[0]['item_name'] === '产品开发2') {
+                    $query->andWhere(['in', 'oa_goods.developer', $users]);
+                } elseif ($role[0]['item_name'] === '美工') {
+                    $query->andWhere(['in', 'possessMan1', $users]);
+                }
             }
         }
         //var_dump($query->asArray()->all());exit;
