@@ -29,7 +29,7 @@ class AuthAdminRole extends \yii\db\ActiveRecord
     {
         return [
             [['id'], 'integer'],
-            [['store', 'plat','role'], 'string'],
+            [['store', 'plat','role'], 'safe'],
         ];
     }
 
@@ -40,9 +40,9 @@ class AuthAdminRole extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'role' => 'Role',
-            'store' => 'Store',
-            'plat' => 'Plat',
+            'role' => '角色',
+            'store' => '仓储',
+            'plat' => '平台',
         ];
     }
 }

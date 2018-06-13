@@ -15,11 +15,11 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="menu-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
     <?=
     $this->render('_form', [
         'model' => $model,
+        'plats' => $plats,
+        'stores' => $stores
     ])
     ?>
-
 </div>

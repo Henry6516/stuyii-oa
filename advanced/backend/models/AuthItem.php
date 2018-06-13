@@ -49,6 +49,8 @@ class AuthItem extends \yii\db\ActiveRecord
     {
         return [
             'name' => '角色名称',
+            'store' => '仓库',
+            'plat' => '平台',
             'type' => 'Type',
             'description' => 'Description',
             'rule_name' => 'Rule Name',

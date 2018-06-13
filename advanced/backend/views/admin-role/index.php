@@ -7,6 +7,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel mdm\admin\models\searchs\User */
@@ -27,6 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             [
                 'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'update' => function ($url, $model, $key) {
+                        $url = Url::toRoute(['update','role' => $model->name]);
+                        return Html::a('<span  class="glyphicon glyphicon-pencil"></span>',$url , []);
+                    },
+                ]
             ],
         ]
     ]);
