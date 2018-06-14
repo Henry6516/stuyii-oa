@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 
 /**
  * ChannelSearch represents the model behind the search form about `backend\models\Channel`.
@@ -91,12 +92,13 @@ class ChannelSearch extends Channel
         //返回当前登录用户
         $user = yii::$app->user->identity->username;
         //根据角色 过滤
-        $role_sql = yii::$app->db->createCommand("SELECT t2.item_name FROM [user] t1,[auth_assignment] t2 
+        $role_sql = yii::$app->db->createCommand("SELECT t2.item_name as role FROM [user] t1,[auth_assignment] t2 
                     WHERE  t1.id=t2.user_id and
                     username='$user'
                     ");
         $role = $role_sql
             ->queryAll();
+        $roles = implode(',',ArrayHelper::getColumn($role,'role'));
 
         // 返回当前用户管辖下的用户
         $sql = "oa_P_users '{$user}'";
@@ -108,14 +110,12 @@ class ChannelSearch extends Channel
             array_push($users, $user['userName']);
         }
         if ($unit == '平台信息') {
-            if(strpos($role[0]['item_name'],'销售') !==false) {
-                if ($role[0]['item_name'] == '部门主管'  || $unit == 'Wish待刊登') {
+            if(strpos($roles,'销售') ===false) {
+                if (strpos($roles,'部门主管') !== false  || $unit == 'Wish待刊登') {
                     $query->andWhere(['in', 'oa_goods.developer', $users]);
-                } elseif ($role[0]['item_name'] === '产品开发') {
+                } elseif (strpos($roles,'开发') !== false ) {
                     $query->andWhere(['in', 'oa_goods.developer', $users]);
-                } elseif ($role[0]['item_name'] === '产品开发2') {
-                    $query->andWhere(['in', 'oa_goods.developer', $users]);
-                } elseif ($role[0]['item_name'] === '美工') {
+                } elseif (strpos($roles,'美工') !== false ) {
                     $query->andWhere(['in', 'possessMan1', $users]);
                 }
             }
