@@ -89,7 +89,7 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
 
 
     <div class="form-group">
-        <?= Html::submitButton('创建', ['id' => 'create-btn','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::button('创建', ['id' => 'create-btn','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?= Html::button('创建并提交审批', ['id' => 'create-to-check', 'class' => 'btn btn-info']) ?>
     </div>
 
@@ -97,3 +97,22 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
 
 
 </div>
+
+<?php
+
+$js =<<< JS
+//监听备货按钮事件
+$('#oaforwardgoods-stockup').on('click',function(e) {
+     if($(this).is(":checked")){
+        if('$canStock' === 'no'){
+            alert('已经超过本月备货数量！不能继续备货！');
+            e.preventDefault();
+        }    
+     }
+})
+
+JS;
+
+$this->registerJs($js);
+
+?>

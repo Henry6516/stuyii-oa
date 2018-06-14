@@ -42,7 +42,9 @@ class OaForwardGoods extends GoodsCats
                 'developer','introducer','introReason','devStatus','checkStatus',
                 'salePrice','hopeWeight','hopeRate','hopeSale','hopeCost',
                 'hopeMonthProfit','createDate','updateDate','approvalNote'],'string'],
-            [['stockUp','cate', 'subCate','salePrice','hopeWeight','hopeRate','hopeSale',],'safe']
+            [['cate', 'subCate','salePrice','hopeWeight','hopeRate','hopeSale',],'safe'],
+            [['stockUp'],'validateStock','skipOnEmpty' => false, 'skipOnError' => false]
+
         ];
     }
 
@@ -77,6 +79,19 @@ class OaForwardGoods extends GoodsCats
             'updateDate' => '更新时间',
             'stockUp' => '是否备货',
         ];
+    }
+
+    public function validateStock($attribute, $params)
+    {
+        $user = Yii::$app->user->identity->username;
+        $stockUsed = 'select count(*) as usedStock from oa_goods where stockUp=1 and developer=:developer and DATEDIFF(mm, createDate, getdate()) = 0';
+        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
+        $connection = Yii::$app->db;
+        $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll()[0]['haveStock'];
+        if($used>$have) {
+            $this->addError($attribute, '超出本月备货数量！');
+        }
     }
 
 

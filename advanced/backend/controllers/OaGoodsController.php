@@ -199,15 +199,18 @@ class OaGoodsController extends BaseController
     public function actionForwardCreate($type = 'create')
     {
         $model = new OaForwardGoods();
-
+        $canStock = $this->validateStock();
         $status = ['create' => '待提交', 'check' => '待审批'];
         $request = Yii::$app->request;
         if ($request->isPost) {
-            if ($model->load($request->post()) && $model->save(false)) {
+            $stockUp = $request->post()['OaForwardGoods']['stockUp'];
+            $user = Yii::$app->user->identity->username;
+
+            if  ($model->load($request->post()) && $model->save()) {
                 //默认值更新到当前行中
                 $id = $model->nid;
                 $current_model = $this->findModel($id);
-                $user = yii::$app->user->identity->username;
+
 
                 //根据类目ID更新类目名称
                 $sub_cate = $model->subCate;
@@ -235,8 +238,7 @@ class OaGoodsController extends BaseController
                 $current_model->update(false);
                 return $this->redirect(['forward-products']);
             } else {
-
-                echo "something Wrong!";
+                return $this->redirect(['forward-products']);
             }
 
         }
@@ -252,6 +254,7 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('forwardCreate', [
                 'model' => $model,
+                'canStock' => $canStock
             ]);
         }
 
@@ -267,7 +270,7 @@ class OaGoodsController extends BaseController
     {
         $status = ['create' => '待提交', 'check' => '待审批'];
         $model = new OaBackwardGoods();
-
+        $canStock = $this->validateStock();
         $request = Yii::$app->request;
         if ($request->isPost) {
 
@@ -321,6 +324,7 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('backwardCreate', [
                 'model' => $model,
+                'canStock' => $canStock
             ]);
         }
 
@@ -336,6 +340,7 @@ class OaGoodsController extends BaseController
     public function actionForwardUpdate($id)
     {
         $model = OaForwardGoods::find()->where(['nid' => $id]) ->one();
+        $canStock = $this->validateStock();
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false) ) {
 
@@ -371,6 +376,7 @@ class OaGoodsController extends BaseController
             } else {
                 return $this->renderAjax('forwardUpdate', [
                     'model' => $model,
+                    'canStock' => $canStock
                 ]);
             }
 
@@ -440,6 +446,7 @@ class OaGoodsController extends BaseController
     public function actionBackwardUpdate($id)
     {
         $model = OaForwardGoods::find()->where(['nid' => $id]) ->one();
+        $canStock = $this->validateStock();
 
         if ($model->load(Yii::$app->request->post()) && $model->save(false)) {
             //默认值更新到当前行中
@@ -476,6 +483,7 @@ class OaGoodsController extends BaseController
             } else {
                 return $this->renderAjax('backwardUpdate', [
                     'model' => $model,
+                    'canStock' => $canStock
                 ]);
             }
 
@@ -662,6 +670,7 @@ class OaGoodsController extends BaseController
             catch (\Exception $e) {
                 $cateModel = GoodsCats::find()->where(['CategoryName' => $sub_cate])->one();
             }
+
 
             //根据类目ID更新类目名称
             $current_model = $this->findModel($id);
@@ -943,6 +952,22 @@ class OaGoodsController extends BaseController
         }
         return $this->redirect($type);
     }
+
+
+    private function validateStock()
+    {
+        $user = Yii::$app->user->identity->username;
+        $stockUsed = 'select count(*) as usedStock from oa_goods where stockUp=1 and developer=:developer and DATEDIFF(mm, createDate, getdate()) = 0';
+        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
+        $connection = Yii::$app->db;
+        $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll()[0]['haveStock'];
+        if($used>=$have) {
+           return 'no';
+        }
+        return 'yes';
+    }
+
 }
 
 

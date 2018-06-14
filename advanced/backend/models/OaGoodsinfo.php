@@ -99,6 +99,4 @@ class OaGoodsinfo extends GoodsCats
     public function getgoodssku(){
         return $this->hasMany(Goodssku::className(),['pid' => 'pid']);
     }
-
-
 }

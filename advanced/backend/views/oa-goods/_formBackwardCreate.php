@@ -89,5 +89,23 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
 
     <?php ActiveForm::end(); ?>
 
-
 </div>
+
+<?php
+
+$js =<<< JS
+//监听备货按钮事件
+$('#oabackwardgoods-stockup').on('click',function(e) {
+     if($(this).is(":checked")){
+        if('$canStock' === 'no'){
+            alert('已经超过本月备货数量！不能继续备货！');
+            e.preventDefault();
+        }    
+     }
+})
+
+JS;
+
+$this->registerJs($js);
+
+?>

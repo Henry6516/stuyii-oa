@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_formForwardCreate', [
         'model' => $model,
+        'canStock' => $canStock
     ]) ?>
 
 </div>
