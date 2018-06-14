@@ -144,7 +144,9 @@ class ChannelSearch extends Channel
                 $query->andWhere(['in', 'oa_goodsinfo.storeName', $storeList]);
             }
             if(!empty($platsList)){
-                $query->andWhere(['not in', 'oa_goodsinfo.dictionaryName', $platsList]);
+                foreach ($platsList as $plat) {
+                    $query->andWhere(['not like','oa_goodsinfo.dictionaryName',$plat]);
+                }
             }
 
         }
