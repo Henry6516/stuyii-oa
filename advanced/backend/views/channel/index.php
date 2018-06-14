@@ -92,6 +92,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'attribute' => 'StoreName',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => $stores,
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+            ],
+            [
                 'attribute' => 'stockUp',
                 'width' => '150px',
                 'format' => 'raw',

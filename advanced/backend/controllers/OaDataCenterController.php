@@ -49,11 +49,12 @@ class OaDataCenterController extends BaseController
         $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
         $res = Yii::$app->db->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
-
+        $stores = $this->getStore();
         return $this->render('products', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'goodsStatusList' => $list
+            'goodsStatusList' => $list,
+            'stores' => $stores
         ]);
 
     }/**
@@ -69,11 +70,12 @@ class OaDataCenterController extends BaseController
         $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
         $res = Yii::$app->db->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
-
+        $stores = $this->getStore();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'goodsStatusList' => $list
+            'goodsStatusList' => $list,
+            'stores' => $stores
         ]);
 
     }
@@ -972,5 +974,16 @@ class OaDataCenterController extends BaseController
         }
         $ret = ArrayHelper::getColumn($query->queryAll(),'ebaySuffix');
         return json_encode($ret);
+    }
+
+    private function getStore()
+    {
+        $db = Yii::$app->db;
+        $sql = 'SELECT StoreName as store from B_store';
+        $query = $db->createCommand($sql)->queryAll();
+        $ret = ArrayHelper::getColumn($query,'store');
+        return \array_combine($ret,$ret);
+
+
     }
 }

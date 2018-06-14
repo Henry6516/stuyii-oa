@@ -98,7 +98,8 @@ class ChannelSearch extends Channel
                     ");
         $role = $role_sql
             ->queryAll();
-        $roles = implode(',',ArrayHelper::getColumn($role,'role'));
+        $roleList = ArrayHelper::getColumn($role,'role');
+        $roles = implode(',',$roleList);
 
         // 返回当前用户管辖下的用户
         $sql = "oa_P_users '{$user}'";
@@ -106,6 +107,25 @@ class ChannelSearch extends Channel
         $command = $connection->createCommand($sql);
         $result = $command->queryAll();
         $users = [];
+
+
+        //计算当前角色拥有的平台和仓库权限
+        $constraintSql = 'SELECT t3.store,t3.plat  FROM [user] t1,[auth_assignment] t2 ,[auth_admin_role] t3
+                    WHERE  t1.id=t2.user_id and t2.item_name = t3.role and
+                    username=:username';
+
+        $constraintRet = $connection->createCommand($constraintSql,[':username'=>$user])->queryAll();
+        $stores = '';
+        $plats = '';
+        foreach ($constraintRet as $ret) {
+            $stores = empty($stores)?$stores: $stores .',';
+            $stores .=  $ret['store'];
+            $plats = empty($plats)? $plats: $plats .',';
+            $plats .= $ret['plat'];
+        }
+        $storeList = !empty($stores)?explode(',',$stores):[];
+        $platsList = !empty($plats)?explode(',',$plats):[];
+
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
@@ -119,8 +139,15 @@ class ChannelSearch extends Channel
                     $query->andWhere(['in', 'possessMan1', $users]);
                 }
             }
+            //根据仓库和平台过滤产品
+            if(!empty($storeList)){
+                $query->andWhere(['in', 'oa_goodsinfo.storeName', $storeList]);
+            }
+            if(!empty($platsList)){
+                $query->andWhere(['not in', 'oa_goodsinfo.dictionaryName', $platsList]);
+            }
+
         }
-        //var_dump($query->asArray()->all());exit;
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

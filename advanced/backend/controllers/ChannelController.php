@@ -60,12 +60,13 @@ class ChannelController extends BaseController
         $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
         $res = $connection->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
-
+        $stores = $this->getStore();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'goodsStatusList' => $list,
-            'joomAccount' => $joomAccount
+            'joomAccount' => $joomAccount,
+            'stores' => $stores
         ]);
     }
 
@@ -1318,5 +1319,16 @@ class ChannelController extends BaseController
         header('Cache-Control: max-age=0');
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
+    }
+
+    private function getStore()
+    {
+        $db = Yii::$app->db;
+        $sql = 'SELECT StoreName as store from B_store';
+        $query = $db->createCommand($sql)->queryAll();
+        $ret = ArrayHelper::getColumn($query,'store');
+        return \array_combine($ret,$ret);
+
+
     }
 }
