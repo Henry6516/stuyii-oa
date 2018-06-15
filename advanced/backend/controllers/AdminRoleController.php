@@ -28,9 +28,7 @@ class AdminRoleController extends Controller
         $model = AuthAdminRole::find()->where(['role' => $role])->one();
         if(Yii::$app->request->isPost){
             $roleInfo = Yii::$app->request->post()['AuthAdminRole'];
-            $stores = $roleInfo['store']?implode(',',$roleInfo['store']):'';
             $plats = $roleInfo['plat']?implode(',',$roleInfo['plat']):'';
-            $model->setAttribute('store',$stores);
             $model->setAttribute('plat',$plats);
             if($model->save()){
                 return $this->redirect('update?role='.$role);
@@ -38,13 +36,11 @@ class AdminRoleController extends Controller
         }
         else {
             $plats = $this->getPlat();
-            $stores = $this->getStore();
             $model->store = $model->store?explode(',',$model->store):[];
             $model->plat = $model->plat?explode(',',$model->plat):[];
             return $this->render('update',[
                 'model' => $model,
                 'plats' => $plats,
-                'stores' => $stores
             ]);
         }
     }
