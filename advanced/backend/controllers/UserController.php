@@ -9,6 +9,7 @@ use backend\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -108,12 +109,21 @@ class UserController extends BaseController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+        $model->store = $model->store?explode(',',$model->store):[];
+        $store = $this->getStore();
+        $request = Yii::$app->request;
+        if($request->isPost){
+            $post = $request->post();
+            $user = $post['User'];
+            $stores = $user['store']?implode(',',$user['store']):'';
+            $post['User']['store'] = $stores;
+            if ($model->load($post) && $model->save()) {
+                return $this->redirect(['index']);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'store' => $store
             ]);
         }
     }
@@ -148,5 +158,13 @@ class UserController extends BaseController
     }
 
 
+    private function getStore()
+    {
+        $db = Yii::$app->db;
+        $sql = 'SELECT StoreName as store from B_store';
+        $query = $db->createCommand($sql)->queryAll();
+        $ret = ArrayHelper::getColumn($query,'store');
+        return \array_combine($ret,$ret);
+    }
 
 }

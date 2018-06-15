@@ -73,7 +73,5 @@ class AdminRoleController extends Controller
         $query = $db->createCommand($sql)->queryAll();
         $ret = ArrayHelper::getColumn($query,'store');
         return \array_combine($ret,$ret);
-
-
     }
 }

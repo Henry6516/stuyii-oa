@@ -37,6 +37,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
             [['department','isLeader','leaderName','username', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'string'],
             [['status', 'created_at', 'updated_at'], 'integer'],
+            [['store'],'safe']
         ];
     }
 
@@ -51,6 +52,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'department' => '部门',
             'isLeader' => '主管吗',
             'leaderName' => '主管',
+            'store' => '仓库',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',

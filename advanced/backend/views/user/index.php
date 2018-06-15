@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'department',
             'isLeader',
             'leaderName',
+            'store',
 //            'auth_key',
 //            'password_hash',
 //            'password_reset_token',

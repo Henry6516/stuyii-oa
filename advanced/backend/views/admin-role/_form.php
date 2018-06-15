@@ -21,15 +21,6 @@ use yii\helpers\ArrayHelper;
     <div class="row">
         <div class="col-sm-6">
             <?= $form->field($model, 'role')->textInput(['readonly'=>true]) ?>
-            <?= $form->field($model, 'store')->widget(Select2::classname(), [
-                'data' => $stores,
-                'options' => ['placeholder' => '--请选择该角色对应的仓储--',
-                    'multiple' => true,
-                ],
-                'pluginOptions' => [
-                    'allowClear' => true
-                ],
-            ]) ?>
             <?= $form->field($model, 'plat')->widget(Select2::classname(), [
                 'data' => $plats,
                 'options' => ['placeholder' => '--请选择该角色对应的平台--',
