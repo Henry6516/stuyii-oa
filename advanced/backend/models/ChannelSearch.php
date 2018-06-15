@@ -110,7 +110,7 @@ class ChannelSearch extends Channel
 
 
         //计算当前角色拥有的平台和仓库权限
-        $constraintSql = 'SELECT t3.store,t3.plat  FROM [user] t1,[auth_assignment] t2 ,[auth_admin_role] t3
+        $constraintSql = 'SELECT t1.store,t3.plat  FROM [user] t1,[auth_assignment] t2 ,[auth_admin_role] t3
                     WHERE  t1.id=t2.user_id and t2.item_name = t3.role and
                     username=:username';
 
