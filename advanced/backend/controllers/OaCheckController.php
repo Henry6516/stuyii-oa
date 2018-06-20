@@ -91,8 +91,8 @@ class OaCheckController extends BaseController
             $_model->GoodsCode =$code;
             $_model->picUrl = $img;
             $_model->developer =$developer;
-            $_model->devDatetime =strftime('%F %T');;
-            $_model->updateTime =strftime('%F %T');;
+            $_model->devDatetime =strftime('%F %T');
+            $_model->updateTime =strftime('%F %T');
             $_model->achieveStatus='待处理';
             $_model->GoodsName='';
             $_model->stockUp=$model->stockUp;

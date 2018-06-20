@@ -39,6 +39,7 @@ if (empty($sku->randomKeywords)) {
     $random_kws = json_decode($sku->randomKeywords);
 }
 ?>
+
 <div class="channel-update-form">
 
     <?php

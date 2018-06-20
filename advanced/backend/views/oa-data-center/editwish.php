@@ -78,20 +78,20 @@ if (empty($sku->randomKeywords)) {
     ]);
 
     ?>
-    <div class="form-group blockTitle">
-
-        <botton class="btn btn-info update-info">
-            更新
-        </botton>
-        <botton class="btn btn-primary wish-sign">
-            保存并完善
-        </botton>
-        <botton class="btn btn-success export">
-            导出ibay模版
-        </botton>
-        <botton class="btn btn-warning joom-csv">
-            导出joom(csv)
-        </botton>
+    <div class="wish-btn">
+        <button class="btn btn-info update-info" type="button">更新</button>
+        <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
+        <button class="btn btn-success export" type="button">导出ibay模版</button>
+        <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
+            <?php
+            foreach ($joomAccount as $account) {
+                echo '<option class="ebay-select" value="' . $account . '">' . $account . '</option>';
+            }
+            ?>
+            ?>
+        </select>
+        <button class="btn export-joom" type="button">导出Joom模板</button>
+        <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
     </div>
     <div class="blockTitle">
         <span>基本信息</span>
@@ -251,20 +251,20 @@ if (empty($sku->randomKeywords)) {
 
 
 </div>
-<div class="form-group blockTitle">
-
-    <botton class="btn btn-info update-info">
-        更新
-    </botton>
-    <botton class="btn btn-primary wish-sign">
-        保存并完善
-    </botton>
-    <botton class="btn btn-success export">
-        导出ibay模版
-    </botton>
-    <botton class="btn btn-warning joom-csv">
-        导出joom(csv)
-    </botton>
+<div class="wish-btn">
+    <button class="btn btn-info update-info" type="button">更新</button>
+    <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
+    <button class="btn btn-success export" type="button">导出ibay模版</button>
+    <select class="selectpicker joom-chosen" data-actions-box="true"  title="--请选择账号--">
+        <?php
+        foreach ($joomAccount as $account) {
+            echo '<option class="ebay-select" value="' . $account . '">' . $account . '</option>';
+        }
+        ?>
+        ?>
+    </select>
+    <button class="btn export-joom" type="button">导出Joom模板</button>
+    <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
 
@@ -439,7 +439,15 @@ $('body').on('click','.down-btn',function() {
         alert('确定导出Joom模板?');
          window.location = '{$joomUrl}';
     });
-    
+   //选择导出Joom模板
+    $('.export-joom').on('click',function() {
+        var joom = $('.wish-btn select option:selected').val();
+        if( joom===null ||joom===undefined ||joom==='') {
+        alert("请选择Joom账号！");
+        return false;
+        }
+        window.location.href = '{$joomUrl}' + '&suffix=' + joom;
+    }) 
     //标记wish已完成
     $('.wish-sign').on('click',function(){
         $.ajax({
@@ -652,3 +660,4 @@ $this->registerJs($js);
     }
 </style>
 
+<link rel="stylesheet" href="../css/bootstrap-select.min.css">
