@@ -11,6 +11,48 @@ use yii\helpers\Url;
 
 $this->title = 'eBay账号字典';
 $this->params['breadcrumbs'][] = $this->title;
+
+use yii\bootstrap\Modal;
+
+Modal::begin([
+    'id' => 'index-modal',
+    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal" >关闭</a>',
+    'size' => "modal-lg",
+    'options' => [
+        'data-backdrop' => 'static',//点击空白处不关闭弹窗
+        'data-keyboard' => false,
+    ],
+]);
+//echo
+Modal::end();
+
+$js = <<<JS
+    $('.index-create').on('click', function () {
+        $('.modal-body').children('div').remove();
+            var url = $(this).data('href');
+            $.get(url, function (msg) {
+                console.log(msg)
+                 $('.modal-body').html(msg);
+            })
+        });
+        $('.index-update').on('click', function () {
+            $('.modal-body').children('div').remove();
+            var url = $(this).data('href');
+            $.get(url, function (msg) {
+                 $('.modal-body').html(msg);
+            })
+        });
+        $('.index-view').on('click', function () {
+            $('.modal-body').children('div').remove();
+            var url = $(this).data('href');
+            $.get(url, function (msg) {
+                 $('.modal-body').html(msg);
+            })
+        });    
+JS;
+
+$this->registerJs($js);
+
 ?>
 <div class="wish-suffix-dictionary-index">
 
@@ -18,16 +60,16 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <p>
         <?php //echo Html::a('添加ebay账号', ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a('添加eBay账号', "javascript:void(0);", ['title' => 'create', 'data-toggle' => 'modal', 'data-target' => '#index-modal',
+        <?= Html::a('添加eBay账号', "#", ['title' => 'create', 'data-toggle' => 'modal', 'data-target' => '#index-modal',
             'data-href' => Url::to(['create']), 'class' => 'index-create btn btn-primary']) ?>
     </p>
     <?php //Pjax::begin(); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'pjax'=>true,
-        'pjaxSettings'=>[
-            'neverTimeout'=>true,
+        'pjax' => true,
+        'pjaxSettings' => [
+            'neverTimeout' => true,
         ],
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn'],
@@ -40,11 +82,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
                         return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', 'javascript:void(0);',
-                            ['data-href' => Url::to(['view', 'id' => $model['nid']]), 'class' => 'index-view']);
+                            [
+                                'data-href' => Url::to(['view', 'id' => $model['nid']]),
+                                'title' => '查看',
+                                'aria-label' => '查看',
+                                'data-toggle' => 'modal',
+                                'data-target' => '#index-modal',
+                                'class' => 'index-view'
+                            ]
+                        );
                     },
                     'update' => function ($url, $model, $key) {
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', 'javascript:void(0);',
-                            ['data-href' => Url::to(['update', 'id' => $model['nid']]), 'class' => 'index-update']);
+                            [
+                                'data-href' => Url::to(['update', 'id' => $model['nid']]),
+                                'title' => '更新',
+                                'aria-label' => '更新',
+                                'data-toggle' => 'modal',
+                                'data-target' => '#index-modal',
+                                'class' => 'index-update'
+                            ]
+                        );
                     },
                 ]
             ],
@@ -56,11 +114,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'ibayTemplate',
             [
                 'attribute' => 'highEbayPaypal',
-                'value' => function($model){
+                'value' => function ($model) {
                     $id = $model->nid;
                     $arr = \backend\models\OaEbayPaypal::find()->joinWith('payPal')->andWhere(['ebayId' => $id, 'maptype' => 'high'])->asArray()->one();
                     //var_dump($arr);exit;
-                    if($arr){
+                    if ($arr) {
                         return $arr['payPal']['paypalName'];
                     }
                 },
@@ -68,11 +126,11 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'lowEbayPaypal',
-                'value' => function($model){
+                'value' => function ($model) {
                     $id = $model->nid;
                     $arr = \backend\models\OaEbayPaypal::find()->joinWith('payPal')->andWhere(['ebayId' => $id, 'maptype' => 'low'])->asArray()->one();
                     //var_dump($arr);exit;
-                    if($arr){
+                    if ($arr) {
                         return $arr['payPal']['paypalName'];
                     }
                 },
@@ -81,53 +139,5 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php //Pjax::end(); ?>
 </div>
-<script>
-    window.onload = function (ev) {
-        $('.index-create').on('click', function () {
-            var url = $(this).data('href');
-            $.get(url, function (msg) {
-                bootbox.dialog({
-                    message: msg,
-                    title: "添加eBay账号",
-                    buttons: {
-                        cancel: {
-                            label: "取消",
-                            className: 'btn-default',
-                        },
-                    }
-                });
-            })
-        });
-        $('.index-update').on('click', function () {
-            var url = $(this).data('href');
-            $.get(url, function (msg) {
-                bootbox.dialog({
-                    message: msg,
-                    title: "编辑eBay账号",
-                    buttons: {
-                        cancel: {
-                            label: "取消",
-                            className: 'btn-default',
-                        },
-                    }
-                });
-            })
-        });
-        $('.index-view').on('click', function () {
-            var url = $(this).data('href');
-            $.get(url, function (msg) {
-                bootbox.dialog({
-                    message: msg,
-                    title: "eBay账号详情",
-                    buttons: {
-                        cancel: {
-                            label: "取消",
-                            className: 'btn-default',
-                        },
-                    }
-                });
-            })
-        });
-    }
-</script>
+
 
