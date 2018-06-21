@@ -27,11 +27,10 @@ Modal::begin([
 Modal::end();
 
 $js = <<<JS
-    $('.index-create').on('click', function () {
-        $('.modal-body').children('div').remove();
+        $('.index-create').on('click', function () {
+            $('.modal-body').children('div').remove();
             var url = $(this).data('href');
             $.get(url, function (msg) {
-                console.log(msg)
                  $('.modal-body').html(msg);
             })
         });
@@ -67,7 +66,7 @@ $this->registerJs($js);
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'pjax' => true,
+        'pjax' => false,
         'pjaxSettings' => [
             'neverTimeout' => true,
         ],

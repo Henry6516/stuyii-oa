@@ -258,7 +258,7 @@ function centerFormat($name)
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'oa-goods',
-        'pjax'=>true,
+        'pjax'=>false,
         'pjaxSettings'=>[
             'neverTimeout'=>true,
         ],

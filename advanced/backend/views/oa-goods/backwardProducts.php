@@ -242,7 +242,7 @@ function centerFormat($name) {
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'oa-check',
-        'pjax'=>true,
+        'pjax'=>false,
         'pjaxSettings'=>[
             'neverTimeout'=>true,
         ],
