@@ -961,8 +961,10 @@ class OaGoodsController extends BaseController
         $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
         $connection = Yii::$app->db;
         $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
-        $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll()[0]['haveStock'];
-        if($used>=$have) {
+        $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll();
+        if(!$have){
+            return 'no';
+        }else if($used>=$have[0]['haveStock']) {
            return 'no';
         }
         return 'yes';

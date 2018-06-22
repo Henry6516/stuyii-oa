@@ -89,7 +89,7 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
 
 
     <div class="form-group">
-        <?= Html::button('创建', ['id' => 'create-btn','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton('创建', ['id' => 'create-btn','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         <?= Html::button('创建并提交审批', ['id' => 'create-to-check', 'class' => 'btn btn-info']) ?>
     </div>
 
