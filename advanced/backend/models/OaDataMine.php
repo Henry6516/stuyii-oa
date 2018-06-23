@@ -17,6 +17,7 @@ use Yii;
  */
 class OaDataMine extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -32,8 +33,8 @@ class OaDataMine extends \yii\db\ActiveRecord
     {
         return [
             [['proId', 'platForm', 'progress', 'creator'], 'string'],
-            [['createTime', 'updateTime'], 'safe'],
-            [['mainImage','infoId','pyGoodsCode','devStatus','detailStatus','cat','subCat','goodsCode','varMainImage'], 'safe']
+            [['createTime', 'updateTime','isLiquid','isPowder','isMagnetism','isCharged'], 'safe'],
+            [['spAttribute','mainImage','infoId','pyGoodsCode','devStatus','detailStatus','cat','subCat','goodsCode','varMainImage'], 'safe']
         ];
     }
 
@@ -57,6 +58,7 @@ class OaDataMine extends \yii\db\ActiveRecord
             'goodsCode' => '商品编码',
             'pyGoodsCode' => '普源商品编码',
             'devStatus' => '开发状态',
+            'spAttribute' => '特殊属性'
         ];
     }
 

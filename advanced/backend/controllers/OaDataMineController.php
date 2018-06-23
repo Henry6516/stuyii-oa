@@ -121,7 +121,7 @@ class OaDataMineController extends BaseController
     public function actionUpdate($id)
     {
         $query = OaDataMineDetail::find()->joinWith('oa_data_mine');
-        $query->select('oa_data_mine_detail.*,oa_data_mine.cat,oa_data_mine.subCat');
+        $query->select('oa_data_mine_detail.*,oa_data_mine.cat,oa_data_mine.subCat,oa_data_mine.spAttribute');
         $query->where(['mid'=>$id]);
         $mine = $query->one();
         $cat_sql  = 'select CategoryName from B_GoodsCats where CategoryLevel=1';
@@ -583,7 +583,22 @@ class OaDataMineController extends BaseController
         try {
             $cat = $form['cat'];
             $sub_cat = $form['subCat'];
+            $spAttribute = $form['spAttribute'];
             $mine = OaDataMine::findOne(['id'=>$mid]);
+            $attributes = [
+                '' => '', 'isLiquid' => '液体商品', 'isCharged' => '带电商品',
+                'isMagnetism' => '带磁商品', 'isPowder' => '粉末商品'];
+
+            $mine->spAttribute = $attributes[$spAttribute];
+            if(!empty($spAttribute)){
+                $mine->$spAttribute = 1;
+            }
+            else {
+                $mine->isLiquid = 0;
+                $mine->isPowder = 0;
+                $mine->isMagnetism = 0;
+                $mine->isCharged = 0;
+            }
             $mine->cat = $cat;
             $mine->subCat = $sub_cat;
 
