@@ -307,12 +307,35 @@ class OaDataMineController extends BaseController
     public function actionExport($mid)
     {
         $db = Yii::$app->db;
-        $sql = "select parentId,proName,description,tags,
-                childId,color,proSize,quantity,price,msrPrice,
-                shipping,shippingWeight,shippingTime,MainImage,varMainImage,
+        $sql = "select odm.parentId,odm.proName,odm.description,odm.tags,
+                odm.childId,odm.color,odm.proSize,odm.quantity,odm.price,odm.msrPrice,
+                odm.shipping,odm.shippingWeight,odm.shippingTime,odm.MainImage,odm.varMainImage,
                 extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
+                extra_image8,extra_image9,extra_image10,'' as extra_image0,
+                CASE
+                WHEN isnull(isLiquid, 0) = 1 THEN
+                    'liquid'
+                ELSE
+                    CASE
+                WHEN isnull(IsPowder, 0) = 1 THEN
+                    'powder'
+                ELSE
+                    CASE
+                WHEN isnull(isMagnetism, 0) = 1 THEN
+                    'withBattery'
+                ELSE
+                    CASE
+                WHEN isnull(IsCharged, 0) = 1 THEN
+                    'withBattery'
+                ELSE
+                    'notDangerous'
+                END
+                END
+                END
+                End  AS 'Dangerous Kind'
+                from oa_data_mine_detail as odm left join oa_data_mine as om
+                on om.id=odm.mid
                 where mid=:mid";
         $query = $db->createCommand($sql ,[':mid' => $mid]);
         $ret = $query->queryAll();
@@ -343,6 +366,7 @@ class OaDataMineController extends BaseController
             'Extra Image URL 8',
             'Extra Image URL 9',
             'Extra Image URL 10',
+            'Dangerous Kind'
         ];
 
         $excel = new \PHPExcel();
@@ -388,12 +412,35 @@ class OaDataMineController extends BaseController
     {
         $lots_mid = explode(',',$lots_mid);
         $db = Yii::$app->db;
-        $sql = "select parentId,proName,description,tags,
-                childId,color,proSize,quantity,price,msrPrice,
-                shipping,shippingWeight,shippingTime,MainImage,varMainImage,
+        $sql = "select odm.parentId,odm.proName,odm.description,odm.tags,
+                odm.childId,odm.color,odm.proSize,odm.quantity,odm.price,odm.msrPrice,
+                odm.shipping,odm.shippingWeight,odm.shippingTime,odm.MainImage,odm.varMainImage,
                 extra_image1,extra_image2,extra_image3,
                 extra_image4,extra_image5,extra_image6,extra_image7,
-                extra_image8,extra_image9,extra_image10,'' as extra_image0  from oa_data_mine_detail
+                extra_image8,extra_image9,extra_image10,'' as extra_image0,
+                CASE
+                WHEN isnull(isLiquid, 0) = 1 THEN
+                    'liquid'
+                ELSE
+                    CASE
+                WHEN isnull(IsPowder, 0) = 1 THEN
+                    'powder'
+                ELSE
+                    CASE
+                WHEN isnull(isMagnetism, 0) = 1 THEN
+                    'withBattery'
+                ELSE
+                    CASE
+                WHEN isnull(IsCharged, 0) = 1 THEN
+                    'withBattery'
+                ELSE
+                    'notDangerous'
+                END
+                END
+                END
+                End  AS 'Dangerous Kind'
+                from oa_data_mine_detail as odm left join oa_data_mine as om
+                on om.id=odm.mid
                 where mid=:mid";
 
 
@@ -424,6 +471,7 @@ class OaDataMineController extends BaseController
             'Extra Image URL 8',
             'Extra Image URL 9',
             'Extra Image URL 10',
+            'Dangerous Kind'
         ];
 
         $excel = new \PHPExcel();
