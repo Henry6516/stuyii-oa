@@ -124,51 +124,59 @@ class OaCheckController extends BaseController
      */
     public function actionPassLots()
     {
-        $_model = new OaGoodsinfo();
+        $info = new OaGoodsinfo();
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
-        foreach ($ids as $id)
-        {
-            $trans = $connection->beginTransaction();
-            try{
+        $trans = $connection->beginTransaction();
+        try {
+            foreach ($ids as $id) {
                 $model = $this->findModel($id);
                 //插入到OagoodsInfo里面
                 $developer = $model->developer;
-                $_model = clone $_model;
+                $_model = clone $info;
                 $nid = $model->nid;
                 $img = $model->img;
                 $cate = $model->cate;
                 $code = $this->generateCode($cate);
-                $_model->goodsid =$nid;
-                $_model->GoodsCode =$code;
+                $_model->goodsid = $nid;
+                $_model->GoodsCode = $code;
                 $_model->picUrl = $img;
-                $_model->developer =$developer;
-                $_model->devDatetime =strftime('%F %T');
-                $_model->updateTime =strftime('%F %T');
-                $_model->achieveStatus='待处理';
-                $_model->GoodsName='';
-                $arc_model = OaSysRules::find()->where(['ruleKey' => $developer])->andWhere(['ruleType' => 'dev-arc-map'])->one();
-                $pur_model = OaSysRules::find()->where(['ruleKey' => $developer])->andWhere(['ruleType' => 'dev-pur-map'])->one();
+                $_model->developer = $developer;
+                $_model->devDatetime = strftime('%F %T');
+                $_model->updateTime = strftime('%F %T');
+                $_model->achieveStatus = '待处理';
+                $_model->GoodsName = '';
+                if(empty($_model->possessMan1)){
+                    $arc_model = OaSysRules::find()->where(['ruleKey' => $developer])->andWhere(['ruleType' => 'dev-arc-map'])->one();
+                    $arc = $arc_model?$arc_model->ruleValue:'';
+                    $_model->possessMan1 = $arc;
+                }
+
+                if(empty($_model->Purchaser)){
+                    $pur_model = OaSysRules::find()->where(['ruleKey' => $developer])->andWhere(['ruleType' => 'dev-pur-map'])->one();
+                    $pur = $pur_model->ruleValue;
+                    $_model->Purchaser = $pur;
+                }
                 $arc = $arc_model->ruleValue;
                 $pur = $pur_model->ruleValue;
                 $_model->possessMan1 = $arc;
                 $_model->Purchaser = $pur;
                 $_model->stockUp = $model->stockUp;
                 $model->checkStatus = '已审批';
-                if(!($_model->save(false))) {
+                if (!($_model->save(false))) {
                     throw new Exception('fail to insert data into oa-goodsInfo!');
                 }
-                if(!$model->save(false)){
+                if (!$model->save(false)) {
                     throw new Exception('fail to update checkStatus!');
                 }
-                $trans->commit();
-                $msg = "审核成功";
             }
-            catch (Exception $e){
-                $trans->rollBack();
-                $msg = "审核失败";
-            }
+            $trans->commit();
+            $msg = "审核成功";
         }
+        catch (Exception $e){
+            $trans->rollBack();
+            $msg = "审核失败";
+            }
         return $msg;
     }
 
