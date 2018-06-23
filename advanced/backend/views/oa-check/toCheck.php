@@ -86,7 +86,8 @@ $('.data-view').on('click',  function () {
            type:"post",
            data:{id:ids},
            success:function(res){
-                console.log(res);
+                alert(res);
+                window.location.reload(); //刷新当前页面
            }
         });
     });
