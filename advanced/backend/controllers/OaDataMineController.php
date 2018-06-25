@@ -751,7 +751,10 @@ class OaDataMineController extends BaseController
 
         $mine = OaDataMine::findOne(['id' => $mid]);
         $user = Yii::$app->user->identity->username;
-
+        $canStock = $this->validateStock();
+        if($canStock === 'no') {
+            return '超出本月可备货数量，请取消备货';
+        }
         if($mine->devStatus !== '未开发'){
             return '不能重复转开发！';
         }
@@ -861,6 +864,24 @@ class OaDataMineController extends BaseController
 
         }
         return $ret;
+    }
+
+
+
+    private function validateStock()
+    {
+        $user = Yii::$app->user->identity->username;
+        $stockUsed = 'select count(*) as usedStock from oa_goods where stockUp=1 and developer=:developer and DATEDIFF(mm, createDate, getdate()) = 0';
+        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
+        $connection = Yii::$app->db;
+        $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll();
+        if(!$have){
+            return 'no';
+        }else if($used>=$have[0]['haveStock']) {
+            return 'no';
+        }
+        return 'yes';
     }
 
 }
