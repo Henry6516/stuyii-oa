@@ -44,7 +44,7 @@ Modal::end();
 <?= $form->field($mine,'parentId')?>
 <?= $form->field($mine, 'cat')->dropDownList(array_combine($cat,$cat), ['class'=>'cat-list','prompt' => '--请选择主类目--']) ?>
 <?= $form->field($mine, 'subCat')->dropDownList(array_combine($subCat,$subCat), ['class'=>'sub-list','prompt' => '--请选择子类目--',]) ?>
-<?= $form->field($mine, 'spAttribute')->dropDownList(['' => '', 'isLiquid' => '液体商品', 'isCharged' => '带电商品', 'isMagnetism' => '带磁商品', 'isPowder' => '粉末商品'], ['class'=>'sub-list','prompt' => '--请选择--',]) ?>
+<?= $form->field($mine, 'spAttribute')->dropDownList(['' => '', 'isLiquid' => '液体商品', 'isCharged' => '带电商品', 'isMagnetism' => '带磁商品', 'isPowder' => '粉末商品'], ['class'=>'sp-attributes','prompt' => '--请选择--',]) ?>
 <?= $form->field($mine,'description')->textarea(['style' => "width: 885px; height: 282px;"])?>
 
 <div class="blockTitle" >
