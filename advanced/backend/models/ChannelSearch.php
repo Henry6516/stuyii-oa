@@ -79,6 +79,7 @@ class ChannelSearch extends Channel
         //如果是数据中中心的Wish待刊登模块则只返回wish平台未完善数据
         if ($model_name == 'oa-data-center' && $unit == 'Wish待刊登') {
             $query->where(['wishpublish' => 'Y']);
+            $query->andWhere(['not like',"isnull(DictionaryName,'')",'wish']);
             $query->andWhere(['OR',['not like', 'completeStatus', 'Wish已完善'],['completeStatus' => null]]);
         }
 
