@@ -568,24 +568,28 @@ class OaGoodsController extends BaseController
             $ids =$_POST["id"];
             $sql = "select isnull(completeStatus,'') as completeStatus from oa_goodsinfo where goodsid= :id";
             if(!empty($ids)){
-                foreach ($ids as $id) {
-                    $complete_status_query = OaGoodsinfo::findBySql($sql,[":id"=>$id])->one();
-                    if(!empty($complete_status_query)){
-                        $completeStatus = $complete_status_query->completeStatus;
-                        if(empty($completeStatus)){
-                            $this->findModel($id)->delete();
-                            echo '删除成功!';
+                try{
+                    foreach ($ids as $id) {
+                        $complete_status_query = OaGoodsinfo::findBySql($sql,[":id"=>$id])->one();
+                        if(!empty($complete_status_query)){
+                            $completeStatus = $complete_status_query->completeStatus;
+                            if(empty($completeStatus)){
+                                $this->findModel($id)->delete();
+                            }
+
                         }else{
-                            echo '已完善的产品不能轻易删除!';
+                            $this->findModel($id)->delete();
                         }
-                    }else{
-                        $this->findModel($id)->delete();
                     }
+                    $msg = '删除成功!';
                 }
-                echo '删除成功!';
+                catch (\yii\db\Exception $why) {
+                    $msg = '删除失败!';
+                }
+
             }
         }
-
+        return $msg;
 
     }
 

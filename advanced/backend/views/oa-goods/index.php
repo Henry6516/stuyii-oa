@@ -66,6 +66,7 @@ krajeeYiiConfirm = function(dialog) {
             }
             });
         });
+    
   // 批量作废
 $('.delete-lots').on('click',function() {
     var ids = $("#oa-goods").yiiGridView("getSelectedRows");
@@ -76,7 +77,8 @@ $('.delete-lots').on('click',function() {
         type:"post",
         data:{id:ids},
         success:function(res){
-            console.log("yeah lots failed!");
+            alert(res);
+            window.location.reload();
         }
     });
 });
