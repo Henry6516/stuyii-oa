@@ -262,7 +262,7 @@ $createJobUrl = URl::toRoute('create-job');
                 ['attribute' => 'devStatus',
                     'format' => 'raw',
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ['未开发' =>'未开发','开发中' => '开发中', '已开发' => '已开发'],
+                    'filter' => ['未开发' =>'未开发','开发中' => '开发中', '已开发' => '已开发', '已关联' => '已关联'],
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true],
                     ],
