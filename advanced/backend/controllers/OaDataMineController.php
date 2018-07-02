@@ -211,11 +211,16 @@ class OaDataMineController extends BaseController
             {
                 $mine_detail = OaDataMineDetail::findOne(['id'=>$key]);
                 if(empty($mine_detail->pySku)){
-                    $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
+                    $bind_ret = $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
+                    if(!$bind_ret) {
+                        throw new \Exception('关联失败！');
+                    }
                 }
-                $con->createCommand($update_sql,[':sku' => $row['pySku'],':childId' => $row['childId']])->execute();
-                $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
-
+                $update_ret = $con->createCommand($update_sql,[':sku' => $row['pySku'],':childId' => $row['childId']])->execute();
+                $detail_ret = $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
+                if(!$update_ret || !$detail_ret ) {
+                    throw new \Exception('关联失败！');
+                }
             }
             $trans->commit();
             $msg='关联成功！';
