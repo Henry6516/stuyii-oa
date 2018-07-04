@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'id' => 'chanel-table',
-        'pjax'=>true,
+//        'pjax'=>true,
         'pjaxSettings'=>[
             'neverTimeout'=>true,
         ],
@@ -130,25 +130,50 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'completeStatus',
-                'width' => '500px',
-                'filterType' => '\dosamigos\multiselect\MultiSelect',
-                'filterWidgetOptions' => [
-                    'data' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-                        'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-                        'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-                        'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-                        'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-                    ],
-                    "options" => ['multiple'=>"multiple"],
-
-                    "clientOptions" =>
-                        [
-                            'numberDisplayed' => 1,
-                            'nonSelectedText' => '--请选择--',
-
-                        ],
+                //'value'=>'oa_goods.cate',
+                'width' => '150px',
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
                 ],
+                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => [
+                            'allowClear' => true,
+                            'tags' => false,
+                        ],
+                    'options' => ['multiple' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+                //'group'=>true,  // enable grouping
             ],
+//            [
+//                'attribute' => 'completeStatus',
+//                'width' => '500px',
+//                'filterType' => '\dosamigos\multiselect\MultiSelect',
+//                'filterWidgetOptions' => [
+//                    'data' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+//                        'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+//                        'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+//                        'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+//                        'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+//                    ],
+//                    "options" => [
+//                            'multiple'=>"multiple",
+//                            '未设置'=>['Selected'=>true]
+//                    ],
+//
+//                    "clientOptions" =>
+//                        [
+//                            'numberDisplayed' => 1,
+//                            'nonSelectedText' => '--请选择--',
+//
+//                        ],
+//                ],
+//            ],
              'GoodsName',
             [
                 'attribute' => 'cate',
@@ -430,5 +455,6 @@ JS;
 $this->registerJs($js);
 
 ?>
+
 
 

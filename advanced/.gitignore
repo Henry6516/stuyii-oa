@@ -39,3 +39,4 @@ phpunit.phar
 /composer.json
 /composer.lock
 /console/controllers/TestRedisController.php
+/backend/runtime/
