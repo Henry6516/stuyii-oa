@@ -10,6 +10,7 @@ $this->title = Yii::t('app', '平台信息');
 $this->params['breadcrumbs'][] = $this->title;
 \backend\assets\AppAsset::addJs($this,'plugins/bootstrap-select/bootstrap-select.min.js');
 \backend\assets\AppAsset::addCss($this,'plugins/bootstrap-select/bootstrap-select.min.css');
+$searchModel->completeStatus = ['eBay已完善','Wish已完善'];
 ?>
 <!--<link rel="stylesheet" href="../css/bootstrap-select.min.css">-->
 
@@ -143,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterWidgetOptions' => [
                     'pluginOptions' => [
                             'allowClear' => true,
-                            'tags' => false,
+                            'tags' => true,
                         ],
                     'options' => ['multiple' => true],
                 ],
