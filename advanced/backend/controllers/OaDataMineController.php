@@ -205,8 +205,6 @@ class OaDataMineController extends BaseController
         $update_sql = 'update B_goodsSKULinkShop set sku=:sku where ShopSKU=:childId';
         $trans = $con->beginTransaction();
         try{
-            $con->createCommand($mine_sql,[':code' =>$code,':sta'=>'已关联',':id'=>$mid])->execute();
-
             foreach ($details as $key=>$row)
             {
                 $mine_detail = OaDataMineDetail::findOne(['id'=>$key]);
@@ -218,9 +216,15 @@ class OaDataMineController extends BaseController
                 }
                 $update_ret = $con->createCommand($update_sql,[':sku' => $row['pySku'],':childId' => $row['childId']])->execute();
                 $detail_ret = $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
+
                 if(!$update_ret || !$detail_ret ) {
                     throw new \Exception('关联失败！');
                 }
+            }
+
+            $status_ret = $con->createCommand($mine_sql,[':code' =>$code,':sta'=>'已关联',':id'=>$mid])->execute();
+            if(!$status_ret) {
+                throw new \Exception('关联失败！');
             }
             $trans->commit();
             $msg='关联成功！';
