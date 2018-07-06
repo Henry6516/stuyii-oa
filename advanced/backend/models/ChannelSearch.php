@@ -258,8 +258,11 @@ class ChannelSearch extends Channel
 
         //完成状态
 
+
         if (!empty($this->completeStatus)) {
             $complete_status_condition = explode(',', $this->completeStatus);
+//            $this->completeStatus = explode(',', $this->completeStatus);
+//            $complete_status_condition = $this->completeStatus;
 
             //var_dump($this->completeStatus);exit;
             $completeStatus = ['or'];

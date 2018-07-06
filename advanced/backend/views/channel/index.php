@@ -10,7 +10,6 @@ $this->title = Yii::t('app', '平台信息');
 $this->params['breadcrumbs'][] = $this->title;
 \backend\assets\AppAsset::addJs($this,'plugins/bootstrap-select/bootstrap-select.min.js');
 \backend\assets\AppAsset::addCss($this,'plugins/bootstrap-select/bootstrap-select.min.css');
-$searchModel->completeStatus = ['eBay已完善','Wish已完善'];
 ?>
 <!--<link rel="stylesheet" href="../css/bootstrap-select.min.css">-->
 
@@ -129,52 +128,50 @@ $searchModel->completeStatus = ['eBay已完善','Wish已完善'];
                 'filterInputOptions' => ['placeholder' => '-请选择-'],
                 //'group'=>true,  // enable grouping
             ],
-            [
-                'attribute' => 'completeStatus',
-                //'value'=>'oa_goods.cate',
-                'width' => '150px',
-                'filterType' => GridView::FILTER_SELECT2,
-                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-                ],
-                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
-                'filterWidgetOptions' => [
-                    'pluginOptions' => [
-                            'allowClear' => true,
-                            'tags' => true,
-                        ],
-                    'options' => ['multiple' => true],
-                ],
-                'filterInputOptions' => ['placeholder' => '-请选择-'],
-                //'group'=>true,  // enable grouping
-            ],
 //            [
 //                'attribute' => 'completeStatus',
-//                'width' => '500px',
-//                'filterType' => '\dosamigos\multiselect\MultiSelect',
-//                'filterWidgetOptions' => [
-//                    'data' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-//                        'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-//                        'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-//                        'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-//                        'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-//                    ],
-//                    "options" => [
-//                            'multiple'=>"multiple",
-//                            '未设置'=>['Selected'=>true]
-//                    ],
-//
-//                    "clientOptions" =>
-//                        [
-//                            'numberDisplayed' => 1,
-//                            'nonSelectedText' => '--请选择--',
-//
-//                        ],
+//                'width' => '150px',
+//                'filterType' => GridView::FILTER_SELECT2,
+//                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+//                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+//                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+//                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+//                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
 //                ],
+//                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
+//                'filterWidgetOptions' => [
+//                    'pluginOptions' => [
+//                            'allowClear' => true,
+//                            'tags' => true,
+//                        ],
+//                    'options' => ['multiple' => true],
+//                ],
+//                'filterInputOptions' => ['placeholder' => '-请选择-'],
+//                //'group'=>true,  // enable grouping
 //            ],
+            [
+                'attribute' => 'completeStatus',
+                'width' => '500px',
+                'filterType' => '\dosamigos\multiselect\MultiSelect',
+                'filterWidgetOptions' => [
+                    'data' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
+                        'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
+                        'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
+                        'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
+                        'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
+                    ],
+                    "options" => [
+                            'id' => 'complete-status',
+                            'multiple'=>"multiple",
+                    ],
+                    "clientOptions" =>
+                        [
+                            'numberDisplayed' => 1,
+                            'nonSelectedText' => '--请选择--',
+
+                        ],
+                ],
+            ],
              'GoodsName',
             [
                 'attribute' => 'cate',
@@ -325,6 +322,18 @@ $searchModel->completeStatus = ['eBay已完善','Wish已完善'];
 $joomUrl = Url::toRoute(['export-lots-joom']);
 
 $js = <<< JS
+
+//默认选中项
+// var data = 'eBay已完善,Wish已完善,Joom已完善';
+var data = '{$selectedStatus}';
+debugger;
+var valArr = data.split(",");
+var i = 0, size = valArr.length;
+for (i; i < size; i++) {
+    $('#channelsearch-completestatus').multiselect('select', valArr[i]);
+}
+
+
 
 /*
 批量导出joom模板
