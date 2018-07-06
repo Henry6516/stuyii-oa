@@ -326,7 +326,6 @@ $js = <<< JS
 //默认选中项
 // var data = 'eBay已完善,Wish已完善,Joom已完善';
 var data = '{$selectedStatus}';
-debugger;
 var valArr = data.split(",");
 var i = 0, size = valArr.length;
 for (i; i < size; i++) {
