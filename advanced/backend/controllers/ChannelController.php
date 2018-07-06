@@ -50,7 +50,7 @@ class ChannelController extends BaseController
     {
         $searchModel = new ChannelSearch();
         $params = Yii::$app->request->queryParams;
-        $selectedStatus = $params? $params['ChannelSearch']['completeStatus']:'';
+        $selectedStatus = null !== $params && isset($params['ChannelSearch'])? $params['ChannelSearch']['completeStatus']:'';
         $selectedStatus = $selectedStatus?:[];
         $dataProvider = $searchModel->search($params,'channel','平台信息');
         $connection = Yii::$app->db;

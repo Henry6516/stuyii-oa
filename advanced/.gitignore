@@ -40,3 +40,4 @@ phpunit.phar
 /composer.lock
 /console/controllers/TestRedisController.php
 /backend/runtime/
+!/backend/web/index.php
