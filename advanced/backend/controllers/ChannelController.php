@@ -50,7 +50,8 @@ class ChannelController extends BaseController
     {
         $searchModel = new ChannelSearch();
         $params = Yii::$app->request->queryParams;
-        $selectedStatus = $params? $params['ChannelSearch']['completeStatus']:[];
+        $selectedStatus = $params? $params['ChannelSearch']['completeStatus']:'';
+        $selectedStatus = $selectedStatus?:[];
         $dataProvider = $searchModel->search($params,'channel','平台信息');
         $connection = Yii::$app->db;
         $jooms = $connection->createCommand('select joomName from oa_joom_suffix ORDER BY joomName')->queryAll();
