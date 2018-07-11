@@ -121,6 +121,73 @@ class StockPerformController extends BaseController
     }
 
     /**
+     * 非订货产品表现
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionNonstock()
+    {
+        $model = new EntryForm();
+        //获取开发员列表
+        $devList = $this->getDevList();
+        //获取搜索条件
+        $get = Yii::$app->request->get();
+        if(isset($get['EntryForm'])){
+            $create_range = $get['EntryForm']['create_range'];
+            $create = explode(' - ', $create_range);
+            $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
+            $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
+            $model->cat = $data['cat'] = $get['EntryForm']['cat'];
+            $model->create_range = $create_range;
+        }else{
+            $data['cat'] = '';
+            $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
+            $data['create_end'] = date('Y-m-d');
+            $create_range = $data['create_start'] . ' - ' . $data['create_end'];
+            $model->cat = $data['cat'];
+            $model->create_range = $create_range;
+        }
+        //获取数据
+        $sql = "P_oa_Non_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
+
+        //缓存数据
+        $cache = Yii::$app->local_cache;
+        $ret = $cache->get($sql);
+        if($ret !== false){
+            $result = $ret;
+        } else {
+            $result = Yii::$app->db->createCommand($sql)->queryAll();
+            $cache->set($sql,$result,3600*24);
+        }
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $result,
+            'pagination' => [
+                'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
+            ],
+            'sort' => [
+                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate', 'exuStyleNum', 'exuStyleRate','stockNumThisMonth','stockNumLastMonth'],
+            ],
+        ]);
+
+        return $this->render('nonstock', [
+            'model' => $model,
+            'list' => $devList,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * 销售产品表现（包括备货和不备货）
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionSales()
+    {
+
+    }
+
+
+    /**
      * 根据登录人员身份获取开发员列表
      */
     public function getDevList(){
