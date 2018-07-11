@@ -92,7 +92,7 @@ $this->title = '备货产品表现';
             ],
             [
                 'attribute' => 'hotStyleNum',
-                'label' => '爆款数量',
+                'label' => '旺款数量',
                 'hAlign' => 'right',
                 //'width' => '150px',
                 'format' => ['decimal', 0],
@@ -103,12 +103,12 @@ $this->title = '备货产品表现';
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
-                'label' => '爆款率(%)',
+                'label' => '旺款率(%)',
                 //'pageSummary' => true
             ],
             [
                 'attribute' => 'exuStyleNum',
-                'label' => '旺款数量',
+                'label' => '爆款数量',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
                 'pageSummary' => true,
@@ -118,7 +118,7 @@ $this->title = '备货产品表现';
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
-                'label' => '旺款率(%)',
+                'label' => '爆款率(%)',
                 //'pageSummary' => true
             ],
             [
