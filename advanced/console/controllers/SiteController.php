@@ -90,7 +90,8 @@ class SiteController extends Controller
 
         //获取数据库数据，查看是否已存在数据
         $checkSql = "SELECT * FROM oa_stock_goods_number 
-                    WHERE CONVERT(VARCHAR(10),createDate,121)=CONVERT(VARCHAR(10),CAST((CONVERT(VARCHAR(7),'{$end}',121)+'-01') AS DATETIME),121)";
+                    WHERE CONVERT(VARCHAR(10),createDate,121)=CONVERT(VARCHAR(10),CAST((CONVERT(VARCHAR(7),'{$end}',121)+'-01') AS DATETIME),121)
+                    AND isStock='stock'";
         $check = Yii::$app->db->createCommand($checkSql)->queryAll();
         if($check){
             echo date('Y-m-d H:i:s')." 本月可用备货数量已经更新，请勿重复操作！\n";
@@ -99,7 +100,7 @@ class SiteController extends Controller
             $list = Yii::$app->db->createCommand($sql)->queryAll();
             $res = Yii::$app->db->createCommand()->batchInsert(
                 'oa_stock_goods_number',
-                ['developer','Number','orderNum','hotStyleNum','exuStyleNum','rate1','rate2','stockNumThisMonth','stockNumLastMonth','createDate'],
+                ['developer','Number','orderNum','hotStyleNum','exuStyleNum','rate1','rate2','stockNumThisMonth','stockNumLastMonth','createDate','isStock'],
                 $list
             )->execute();
             if($res){
@@ -112,5 +113,42 @@ class SiteController extends Controller
     }
 
 
+    /**
+     * 不备货产品表现
+     * 每月第一天（1号）更新开发员在本月的可用备货数量
+     * 访问方法: php yii site/stock
+     * @return mixed
+     */
+    public function actionNonstock()
+    {
+        $end = date('Y-m-d');
+        $end = date('2018-07-01');
+        if(substr($end,8,2) !== '01'){
+            echo date('Y-m-d H:i:s')." 当前时间不可更新该项数据，请于管理员联系确认！";exit();
+        }
+        $start = date('Y-m-d',strtotime('-60 days', strtotime($end)));
 
+        //获取数据库数据，查看是否已存在数据
+        $checkSql = "SELECT * FROM oa_stock_goods_number 
+                    WHERE CONVERT(VARCHAR(10),createDate,121)=CONVERT(VARCHAR(10),CAST((CONVERT(VARCHAR(7),'{$end}',121)+'-01') AS DATETIME),121)
+                    AND isStock='nonstock'";
+        $check = Yii::$app->db->createCommand($checkSql)->queryAll();
+        if($check){
+            echo date('Y-m-d H:i:s')." 本月不备货产品可用数量已经更新，请勿重复操作！\n";
+        }else{
+            $sql = "EXEC P_oa_Non_StockPerformance '" . $start . "','" . $end . "','',1";
+            $list = Yii::$app->db->createCommand($sql)->queryAll();
+            $res = Yii::$app->db->createCommand()->batchInsert(
+                'oa_stock_goods_number',
+                ['developer','Number','orderNum','hotStyleNum','exuStyleNum','rate1','rate2','stockNumThisMonth','stockNumLastMonth','createDate','isStock'],
+                $list
+            )->execute();
+            if($res){
+                echo date('Y-m-d H:i:s')." 开发员的不备货产品可用数量更新成功！\n";
+            }else{
+                echo date('Y-m-d H:i:s')." 开发员的不备货产品可用数量更新成功！\n";
+            }
+        }
+
+    }
 }

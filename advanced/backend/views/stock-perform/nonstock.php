@@ -5,7 +5,7 @@ use \kartik\form\ActiveForm;
 use  \kartik\grid\GridView;
 use kartik\daterange\DateRangePicker;
 
-$this->title = '备货产品表现';
+$this->title = '不备货产品表现';
 ?>
 <?php //echo $this->render('_search'); ?>
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -16,7 +16,7 @@ $this->title = '备货产品表现';
     <!--搜索框开始-->
     <div class="box-body row">
         <?php $form = ActiveForm::begin([
-            'action' => ['stock-perform/stock'],
+            'action' => ['stock-perform/nonstock'],
             'method' => 'get',
             'options' => ['class' => 'form-inline drp-container form-group col-lg-12'],
             'fieldConfig' => [
@@ -55,7 +55,7 @@ $this->title = '备货产品表现';
         'pjax' => true,
         'striped' => true,
         'hover' => true,
-        'panel' => ['type' => 'primary', 'heading' => '备货产品表现'],
+        'panel' => ['type' => 'primary', 'heading' => '不备货产品表现'],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
@@ -71,7 +71,7 @@ $this->title = '备货产品表现';
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '备货产品款数',
+                'label' => '不备货产品款数',
                 'pageSummary' => true
             ],
             [
@@ -126,14 +126,14 @@ $this->title = '备货产品表现';
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '本月可用备货款数',
+                'label' => '本月可用不备货产品款数',
                 //'pageSummary' => true
             ],[
                 'attribute' => 'stockNumLastMonth',
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
-                'label' => '下月可用备货款数',
+                'label' => '下月可用不备货产品款数',
                 //'pageSummary' => true
             ],
         ],
