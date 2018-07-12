@@ -35,7 +35,7 @@ class ChannelSearch extends Channel
     {
         return [
             [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'number'], 'integer'],
-            [['introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
+            [['mapPersons','introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
                 'subCat', 'wishpublish', 'goodsstatus', 'stockdays','mid'], 'safe'],
@@ -179,6 +179,7 @@ class ChannelSearch extends Channel
                 'DictionaryName',
                 'completeStatus',
                 'mid',
+                'mapPersons',
                 /* 下面这段是加入的 */
                 /*=============*/
                 'cate' => [
@@ -365,6 +366,7 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'oa_goods.cate', $this->cate])
             ->andFilterWhere(['like', 'oa_goods.subCate', $this->subCate])
             ->andFilterWhere(['like', 'oa_goodsInfo.stockUp', $this->stockUp])
+            ->andFilterWhere(['like', 'oa_goodsInfo.mapPersons', $this->mapPersons])
             ->andFilterWhere(['like', 'oa_goods.introducer', $this->introducer]);
         Yii::$app->db->cache(function ($db) use ($dataProvider) {
             $dataProvider->prepare();
