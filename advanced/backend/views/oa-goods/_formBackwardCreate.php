@@ -11,15 +11,9 @@ use yii\helpers\ArrayHelper;
 $createUrl = Url::toRoute(['oa-goods/forward-create','type'=>'check', ]);
 $js = <<<JS
 
-//创建提交审核事件
-$('#create-to-check').on('click',function() {
-    var form = $('#create-form');
-        form.attr('action', form.data('href'));
-        form.submit();
-});
-
-//ajax 提交表单
-$("#create-btn").on('click', function() {
+function checkNumber(ele) {
+  //ajax 提交表单
+  ele.on('click', function() {
   
   if(!$('#oaforwardgoods-stockup').is(":checked")) {
     if('$canCreate' === 'no') {
@@ -33,12 +27,17 @@ $("#create-btn").on('click', function() {
       type: 'post',
       data: form.serialize(),
       success: function(ret) {
-        // alert(ret);
+        alert(ret);
         window.location.reload();
       }
   });
 })
+  
+}
 
+//create
+checkNumber($('#create-btn'));
+checkNumber($('#create-to-check'));
 
 JS;
 $this->registerJs($js);
