@@ -184,6 +184,7 @@ class StockPerformController extends BaseController
     public function actionSales()
     {
 
+
     }
 
 

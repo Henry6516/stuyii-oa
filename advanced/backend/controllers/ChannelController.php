@@ -17,12 +17,10 @@ use backend\models\WishSuffixDictionary;
 use backend\models\OaWishgoods;
 use backend\models\Wishgoodssku;
 use yii\db\Exception;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
-use kartik\helpers\Html;
 
 /**
  * ChannelController implements the CRUD actions for Channel model.

@@ -91,6 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->GoodsCode;
                 }
             ],
+            'mapPersons',
             [
                 'attribute' => 'StoreName',
                 'filterType' => GridView::FILTER_SELECT2,
@@ -128,27 +129,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterInputOptions' => ['placeholder' => '-请选择-'],
                 //'group'=>true,  // enable grouping
             ],
-//            [
-//                'attribute' => 'completeStatus',
-//                'width' => '150px',
-//                'filterType' => GridView::FILTER_SELECT2,
-//                'filter' => ['未设置' => '未设置', 'eBay已完善' => 'eBay已完善', 'Wish已完善' => 'Wish已完善','Joom已完善' => 'Joom已完善',
-//                    'Wish已完善|eBay已完善' => 'Wish已完善|eBay已完善',
-//                    'Wish已完善|Joom已完善' => 'Wish已完善|Joom已完善',
-//                    'Joom已完善|eBay已完善' => 'Joom已完善|eBay已完善',
-//                    'Wish已完善|eBay已完善|Joom已完善' => 'Wish已完善|eBay已完善|Joom已完善'
-//                ],
-//                //'filter'=>ArrayHelper::map(\backend\models\OaGoodsinfo::find()->orderBy('pid')->asArray()->all(), 'pid', 'IsLiquid'),
-//                'filterWidgetOptions' => [
-//                    'pluginOptions' => [
-//                            'allowClear' => true,
-//                            'tags' => true,
-//                        ],
-//                    'options' => ['multiple' => true],
-//                ],
-//                'filterInputOptions' => ['placeholder' => '-请选择-'],
-//                //'group'=>true,  // enable grouping
-//            ],
             [
                 'attribute' => 'completeStatus',
                 'width' => '500px',

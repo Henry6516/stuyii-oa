@@ -26,7 +26,16 @@ use kartik\select2\Select2;
             'allowClear' => true
         ],
     ]) ?>
-
+    <?= $form->field($model, 'canStockUp')->textInput() ?>
+    <?= $form->field($model, 'mapPersons')->widget(Select2::classname(), [
+        'data' => $person,
+        'options' => ['placeholder' => '--请选择销售--',
+            'multiple' => true,
+        ],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

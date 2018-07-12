@@ -38,7 +38,7 @@ class OaGoodsinfo extends GoodsCats
                 'updateTime','developer','devDatetime','GoodsCode','achieveStatus','description','SupplierName','Season','StoreName',
                 'PackName','DictionaryName','GoodsName'], 'string'],
             [['StoreName','GoodsName','SupplierName', 'AliasCnName','AliasEnName','PackName','description',], 'required'],
-            [['stockUp','wishtags','completeStatus','DictionaryName','vendor1'],'safe'],
+            [['mapPersons','stockUp','wishtags','completeStatus','DictionaryName','vendor1'],'safe'],
         ];
     }
 
@@ -79,6 +79,7 @@ class OaGoodsinfo extends GoodsCats
             'tailKeywords' => '最后关键词',
             'wishtags' => '关键词tags',
             'stockUp' => '是否备货',
+            'mapPersons' => '对应销售',
 
 
 

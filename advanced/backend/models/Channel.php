@@ -61,7 +61,7 @@ class Channel extends \yii\db\ActiveRecord
                 'SupplierName', 'StoreName', 'Purchaser', 'possessMan1', 'possessMan2', 'picUrl', 'GoodsCode', 'achieveStatus',
                 'developer', 'picStatus', 'AttributeName','completeStatus', 'goodsstatus', 'wishpublish'], 'string'],
             [['DeclaredValue'], 'number'],
-            [['devDatetime', 'updateTime'], 'safe'],
+            [['mapPersons','devDatetime', 'updateTime'], 'safe'],
         ];
     }
 
@@ -112,6 +112,7 @@ class Channel extends \yii\db\ActiveRecord
             'stockdays' => Yii::t('app', '采购到货天数'),
             'number' => Yii::t('app', '库存'),
             'mid' => Yii::t('app', '是否是采集数据'),
+            'mapPersons' => Yii::t('app', '对应销售'),
         ];
     }
 
