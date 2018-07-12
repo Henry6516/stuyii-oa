@@ -186,6 +186,7 @@ class StockPerformController extends BaseController
         $model = new EntryForm();
         //获取销售员列表
         $salesList = $this->getSalesList();
+        $sales = implode(',',$salesList);
         //获取搜索条件
         $get = Yii::$app->request->get();
         if(isset($get['EntryForm'])){
@@ -193,22 +194,23 @@ class StockPerformController extends BaseController
             $create = explode(' - ', $create_range);
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
             $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
-            $model->type = $data['type'] = $get['EntryForm']['type'];
+            $model->code = $data['code'] = $get['EntryForm']['code'];
             $model->cat = $data['cat'] = $get['EntryForm']['cat'];
             $model->create_range = $create_range;
         }else{
-            $data['cat'] = '';
+            $data['cat'] = $sales;
             $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
             $data['create_end'] = date('Y-m-d');
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
-            $model->type = $data['type'] = '';
+            $model->code = $data['code'] = '';
             $model->cat = $data['cat'];
             $model->create_range = $create_range;
         }
-        //获取数据
-        //$sql = "P_oa_sales_Performance '" . $data['type'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
-        $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
 
+        //获取数据
+        $sql = "P_oa_sales_Performance '" . $data['code'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
+        //$sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
+        //var_dump($sql);exit;
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
@@ -224,7 +226,7 @@ class StockPerformController extends BaseController
                 'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate', 'exuStyleNum', 'exuStyleRate'],
+                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate'],
             ],
         ]);
 

@@ -26,7 +26,7 @@ $this->title = '销售产品表现';
             ],
         ]); ?>
 
-        <?= $form->field($model, 'type', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-2']])
+        <?= $form->field($model, 'code', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-2']])
             ->dropDownList([1 => '备货', 2 => '不备货'], ['prompt' => '请选择'])->label('是否是备货产品:') ?>
 
         <?= $form->field($model, 'cat', ['template' => '{label}{input}', 'options' => ['class' => 'col-lg-2']])
@@ -62,7 +62,7 @@ $this->title = '销售产品表现';
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
-                'attribute' => 'developer',
+                'attribute' => 'saler',
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'label' => '销售员',
@@ -94,7 +94,7 @@ $this->title = '销售产品表现';
                 //'pageSummary' => true
             ],
             [
-                'attribute' => 'hotStyleNum',
+                'attribute' => 'exuStyleNum',
                 'label' => '旺款数量',
                 'hAlign' => 'right',
                 //'width' => '150px',
@@ -102,7 +102,7 @@ $this->title = '销售产品表现';
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'hotStyleRate',
+                'attribute' => 'exuStyleRate',
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
@@ -110,14 +110,14 @@ $this->title = '销售产品表现';
                 //'pageSummary' => true
             ],
             [
-                'attribute' => 'exuStyleNum',
+                'attribute' => 'hotStyleNum',
                 'label' => '爆款数量',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'exuStyleRate',
+                'attribute' => 'hotStyleRate',
                 //'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 2],
