@@ -966,8 +966,10 @@ class OaGoodsController extends BaseController
                       where og.stockUp=1 and og.developer=:developer 
                       and DATEDIFF(mm, createDate, getdate()) = 0
                       and ogs.mid is null';
-        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number 
-                      where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
+        $stockHave = "select stockNumThisMonth as haveStock  from oa_stock_goods_number 
+                      where isStock= 'stock'
+                      and DATEDIFF(mm, createDate, getdate()) = 0
+                      and developer=:developer";
         $connection = Yii::$app->db;
         $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
         $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll();
@@ -975,6 +977,29 @@ class OaGoodsController extends BaseController
             return 'no';
         }else if($used>=$have[0]['haveStock']) {
            return 'no';
+        }
+        return 'yes';
+    }
+
+    private function validateCreate()
+    {
+        $user = Yii::$app->user->identity->username;
+        $numberUsed = 'select count(og.nid) as usedStock  from oa_goods as og  
+                      LEFT JOIN oa_goodsinfo as ogs on og.nid = ogs.goodsid
+                      where isnull(og.stockUp,0)=0 and og.developer=:developer 
+                      and DATEDIFF(mm, createDate, getdate()) = 0
+                      and ogs.mid is null';
+        $numberHave = "select isnull(stockNumThisMonth,0) as haveStock  from oa_stock_goods_number 
+                      where isStock= 'nonstock'
+                      and DATEDIFF(mm, createDate, getdate()) = 0
+                      and developer=:developer";
+        $connection = Yii::$app->db;
+        $used = $connection->createCommand($numberUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll();
+        if(!$have){
+            return 'no';
+        }else if($used>=$have[0]['haveStock']) {
+            return 'no';
         }
         return 'yes';
     }
