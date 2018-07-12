@@ -177,7 +177,7 @@ class StockPerformController extends BaseController
     }
 
     /**
-     * 销售产品表现（包括备货和不备货）
+     * 销售人员对应销售的产品表现（包括备货和不备货）
      * @return string
      * @throws \yii\db\Exception
      */

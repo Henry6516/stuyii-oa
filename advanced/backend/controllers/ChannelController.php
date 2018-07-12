@@ -1,5 +1,7 @@
 <?php
+
 namespace backend\controllers;
+
 use backend\models\Goodssku;
 use backend\models\OaGoods;
 use backend\models\OaGoodsinfo;
@@ -50,18 +52,21 @@ class ChannelController extends BaseController
     {
         $searchModel = new ChannelSearch();
         $params = Yii::$app->request->queryParams;
+
         $selectedStatus = null !== $params && isset($params['ChannelSearch'])? $params['ChannelSearch']['completeStatus']:'';
         $selectedStatus = $selectedStatus?:[];
         $dataProvider = $searchModel->search($params,'channel','平台信息');
         $connection = Yii::$app->db;
         $jooms = $connection->createCommand('select joomName from oa_joom_suffix ORDER BY joomName')->queryAll();
-        $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
+        $joomAccount = \array_map(function ($arr) {
+            return $arr['joomName'];
+        }, $jooms);
 
 
         //获取商品状态列表
         $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
         $res = $connection->createCommand($sql)->queryAll();
-        $list = ArrayHelper::map($res,'DictionaryName','DictionaryName');
+        $list = ArrayHelper::map($res, 'DictionaryName', 'DictionaryName');
         $stores = $this->getStore();
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -69,7 +74,39 @@ class ChannelController extends BaseController
             'goodsStatusList' => $list,
             'joomAccount' => $joomAccount,
             'stores' => $stores,
-            'selectedStatus' =>\implode(',',$selectedStatus)
+            'selectedStatus' => \implode(',', $selectedStatus)
+        ]);
+    }
+
+    /**
+     * 销售人员销售产品列表
+     * Lists all Channel models.
+     * @return mixed
+     */
+    public function actionSales()
+    {
+        $searchModel = new ChannelSearch();
+        $params = Yii::$app->request->queryParams;
+        $selectedStatus = null !== $params && isset($params['ChannelSearch'])? $params['ChannelSearch']['completeStatus']:'';
+        $selectedStatus = $selectedStatus?:[];
+        //设置默认推广状态
+        if(!$params){
+            $params['ChannelSearch']['extendStatus'] = '未推广';
+        }
+        $dataProvider = $searchModel->search($params, 'channel', '销售产品列表');
+        $connection = Yii::$app->db;
+
+        //获取商品状态列表
+        $sql = 'SELECT DictionaryName FROM B_Dictionary WHERE CategoryID=15 ORDER BY FitCode ASC ';
+        $res = $connection->createCommand($sql)->queryAll();
+        $list = ArrayHelper::map($res, 'DictionaryName', 'DictionaryName');
+        $stores = $this->getStore();
+        return $this->render('sales', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'goodsStatusList' => $list,
+            'stores' => $stores,
+            'selectedStatus' => \implode(',', $selectedStatus)
         ]);
     }
 
@@ -130,7 +167,7 @@ class ChannelController extends BaseController
 
             }
             $sku[0]['extra_images'] = rtrim($sku[0]['extra_images'], "\n");
-            if($sku[0]->update(false)) {
+            if ($sku[0]->update(false)) {
                 return '保存成功！';
             }
             return '保存失败！';
@@ -141,7 +178,9 @@ class ChannelController extends BaseController
             $extra_images = array_filter($extra_images_All);
             $connection = Yii::$app->db;
             $jooms = $connection->createCommand('select joomName from oa_joom_suffix ORDER BY joomName')->queryAll();
-            $joomAccount = \array_map(function ($arr) { return $arr['joomName'];}, $jooms);
+            $joomAccount = \array_map(function ($arr) {
+                return $arr['joomName'];
+            }, $jooms);
             return $this->render('editwish', [
                 'extra_images' => $extra_images,
                 'sku' => $sku[0],
@@ -212,7 +251,7 @@ class ChannelController extends BaseController
                 'outShippingService' => $OutShippingService,
                 'ebayAccount' => $ebay_map,
                 'ebayStores' => $ebay_stores,
-                'currencyCode' =>$currency_ret['currencyCode'],
+                'currencyCode' => $currency_ret['currencyCode'],
             ]);
         }
 
@@ -261,7 +300,7 @@ class ChannelController extends BaseController
             $template->setAttributes($data, true);
 
             //动态计算产品的状态
-            $old_status = $info->completeStatus?$info->completeStatus:'';
+            $old_status = $info->completeStatus ? $info->completeStatus : '';
             $status = str_replace('|eBay已完善', '', $old_status);
             $complete_status = $status . '|eBay已完善';
             $info->completeStatus = $complete_status;
@@ -400,8 +439,8 @@ class ChannelController extends BaseController
     public function actionDelete($id)
     {
         $model = OaGoodsinfo::findOne(['pid' => $id]);
-        if($model && empty($model->completeStatus)){
-            try{
+        if ($model && empty($model->completeStatus)) {
+            try {
                 $this->findModel($id)->delete();//OaGoodsinfo信息删除
                 OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
                 Goodssku::deleteAll(['pid' => $id]);//Goodssku信息删除
@@ -411,8 +450,7 @@ class ChannelController extends BaseController
                 OaWishgoods::deleteAll(['infoid' => $id]);//Wish平台信息删除
                 OaWishgoodssku::deleteAll(['pid' => $id]);//Wish平台SKU信息删除
 
-            }
-            catch (Exception $e){
+            } catch (Exception $e) {
             }
         }
         return $this->redirect(['index']);
@@ -470,8 +508,6 @@ class ChannelController extends BaseController
      * @brief ebay模板导出时多余的字段维护在一个数组中
      */
     private $extra_fields = ['nameCode', 'specifics'];//因其他需要返回的字段
-
-
 
 
     /**
@@ -540,7 +576,7 @@ class ChannelController extends BaseController
             $objPHPExcel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($num) . '1', $name);
         }
 
-        $data =  $this->actionNameTags($id,'oa_templates');
+        $data = $this->actionNameTags($id, 'oa_templates');
         //写入单元格值
         $title_list = []; //存放已生成标题的标题池。
         foreach ($ret as $rowNum => $row) {
@@ -550,11 +586,11 @@ class ChannelController extends BaseController
             }
             //Title
             $names = '';
-            while(true){
-                $title = $this->actionNonOrder($data,'eBay');
-                if(!in_array($title,$title_list)||empty($title)){
+            while (true) {
+                $title = $this->actionNonOrder($data, 'eBay');
+                if (!in_array($title, $title_list) || empty($title)) {
                     $name = $title;
-                    array_push($title_list,$title);
+                    array_push($title_list, $title);
                     break;
                 }
             }
@@ -637,24 +673,24 @@ class ChannelController extends BaseController
         $objPHPExcel = new \PHPExcel();
         $sheet = 0;
         $objPHPExcel->setActiveSheetIndex($sheet);
-        $foos[0] = OaWishgoods::find()->where(['infoid'=>$id])->all();
-        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid='.$id.')';
-        $back_sql = ' select categoryParentName as cate from b_goods as bgs LEFT  JOIN b_goodsCats as bc on bgs.goodscategoryId = bc.nid where bgs.nid=(SELECT Bgoodsid FROM oa_goodsinfo WHERE pid='.$id.')';
+        $foos[0] = OaWishgoods::find()->where(['infoid' => $id])->all();
+        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid=' . $id . ')';
+        $back_sql = ' select categoryParentName as cate from b_goods as bgs LEFT  JOIN b_goodsCats as bc on bgs.goodscategoryId = bc.nid where bgs.nid=(SELECT Bgoodsid FROM oa_goodsinfo WHERE pid=' . $id . ')';
 
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $cate = $query->queryAll();
-        if(empty($cate)){
+        if (empty($cate)) {
             $query = $db->createCommand($back_sql);
             $cate = $query->queryAll();
         }
-        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid='.$id;
+        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid=' . $id;
         $dataGoodsCode = $db->createCommand($sql_GoodsCode)
-                        ->queryAll();
+            ->queryAll();
         $GoodsCode = $dataGoodsCode[0]['GoodsCode'];
         $isVar = $dataGoodsCode[0]['isVar'];
 
-        $columnNum = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'];
+        $columnNum = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
         $colName = [
             'sku', 'selleruserid', 'name', 'inventory', 'price', 'msrp', 'shipping', 'shipping_time', 'main_image', 'extra_images',
             'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc'];
@@ -672,16 +708,16 @@ class ChannelController extends BaseController
             ->orWhere("ParentCategory is null")
             ->addParams([':cate' => '%' . $cate[0]['cate'] . '%'])
             ->all();
-        $data =  $this->actionNameTags($id,'oa_wishgoods');
+        $data = $this->actionNameTags($id, 'oa_wishgoods');
 
         $title_list = [];
-        foreach($suffixAll as $key=>$value){
+        foreach ($suffixAll as $key => $value) {
             //标题关键字
-            while(true){
-                $title = $this->actionNonOrder($data,'Wish');
-                if(!in_array($title,$title_list)||empty($title)){
+            while (true) {
+                $title = $this->actionNonOrder($data, 'Wish');
+                if (!in_array($title, $title_list) || empty($title)) {
                     $name = $title;
-                    array_push($title_list,$title);
+                    array_push($title_list, $title);
                     break;
 
                 }
@@ -701,30 +737,30 @@ class ChannelController extends BaseController
 
             }
             //主图用商品编码 拼接
-            if($isVar=='是'){
-                $strvariant = $this->actionVariationWish($id,$value['Suffix'],$value['Rate']);
-            }else{
+            if ($isVar == '是') {
+                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
+            } else {
                 $strvariant = '';
             }
 
-            $row = $key+2;
-            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/'.$GoodsCode.'-_'.$value['MainImg'].'_.jpg' ;
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$foos[0][0]['SKU'].$value['Suffix']);
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['IbaySuffix']);
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$name);
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$foos[0][0]['inventory']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$foos[0][0]['price']);
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$foos[0][0]['msrp']);
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$foos[0][0]['shipping']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,'7-21');
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$foos[0][0]['main_image']);
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,$foos[0][0]['extra_images']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,$strvariant);
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,'');
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,$foos[0][0]['wishtags']);
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,$foos[0][0]['description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,'');
-            $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,'');
+            $row = $key + 2;
+            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/' . $GoodsCode . '-_' . $value['MainImg'] . '_.jpg';
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $row, $foos[0][0]['SKU'] . $value['Suffix']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $row, $value['IbaySuffix']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, $name);
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $row, $foos[0][0]['inventory']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $row, $foos[0][0]['price']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $row, $foos[0][0]['msrp']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $row, $foos[0][0]['shipping']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $row, '7-21');
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $row, $foos[0][0]['main_image']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J' . $row, $foos[0][0]['extra_images']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $row, $strvariant);
+            $objPHPExcel->getActiveSheet()->setCellValue('L' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('M' . $row, $foos[0][0]['wishtags']);
+            $objPHPExcel->getActiveSheet()->setCellValue('N' . $row, $foos[0][0]['description']);
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('P' . $row, '');
 
         }
 
@@ -742,24 +778,25 @@ class ChannelController extends BaseController
      * return $data array
      */
 
-    public function actionNameTags($id,$table){
+    public function actionNameTags($id, $table)
+    {
 
-        if($table === 'oa_wishgoods') {
+        if ($table === 'oa_wishgoods') {
             $sql = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE infoid=' . $id;
         }
-        if($table === 'oa_templates') {
+        if ($table === 'oa_templates') {
             $sql = ' SELECT headKeywords,requiredKeywords,randomKeywords,tailKeywords FROM ' . $table . ' WHERE nid=' . $id;
         }
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $words = $query->queryAll();
-        if (empty($words)){
+        if (empty($words)) {
             return;
         }
         $data['head'] = $words[0]['headKeywords'];
         $data['tail'] = $words[0]['tailKeywords'];
         $data['need'] = json_decode($words[0]['requiredKeywords']);
-        $data['random']= json_decode($words[0]['randomKeywords']);
+        $data['random'] = json_decode($words[0]['randomKeywords']);
         return $data;
 
     }
@@ -767,59 +804,58 @@ class ChannelController extends BaseController
     /*
      * 乱序数组
      */
-    public function actionNonOrder($data,$div){
-        if($div === 'eBay'){
+    public function actionNonOrder($data, $div)
+    {
+        if ($div === 'eBay') {
             $max_length = 80;
         }
-        if($div === 'Wish'){
+        if ($div === 'Wish') {
             $max_length = 110;
         }
-        if($div === 'Joom'){
+        if ($div === 'Joom') {
             $max_length = 100;
         }
         $head = [$data['head']];
         $tail = [$data['tail']];
 
-        $need = array_filter($data['need']?:[],
-            function ($ele)
-            {
-                if(!empty($ele)){
+        $need = array_filter($data['need'] ?: [],
+            function ($ele) {
+                if (!empty($ele)) {
                     return $ele;
                 }
             });
-        $random = array_filter($data['random']?:[],
-            function ($ele)
-            {
-                if(!empty($ele)){
+        $random = array_filter($data['random'] ?: [],
+            function ($ele) {
+                if (!empty($ele)) {
                     return $ele;
                 }
             });
-        if(empty($random)||empty($need)){
+        if (empty($random) || empty($need)) {
             return '';
         }
         //判断固定部分的长度
-        $unchanged_len = \strlen(implode(' ',array_merge($head,$need,$tail)));
-        if($unchanged_len > $max_length){
+        $unchanged_len = \strlen(implode(' ', array_merge($head, $need, $tail)));
+        if ($unchanged_len > $max_length) {
             shuffle($need);
-            $real_len =  implode(' ',array_merge($head,$need,$tail));
+            $real_len = implode(' ', array_merge($head, $need, $tail));
             return $real_len;
         }
         //可用长度
         $available_len = $max_length - $unchanged_len - 1;
         shuffle($random); //摇匀词库
         $random_str1 = [array_shift($random)]; //从摇匀的词库里不放回抽一个
-        $random_arr = \array_slice($random,0,4);//从剩余的词库里抽四个
-        $real_len = \strlen(implode(' ',array_merge($random_str1,$random_arr)));
-        for($i=0;$i<4;$i++){
-            if($real_len<=$available_len){
+        $random_arr = \array_slice($random, 0, 4);//从剩余的词库里抽四个
+        $real_len = \strlen(implode(' ', array_merge($random_str1, $random_arr)));
+        for ($i = 0; $i < 4; $i++) {
+            if ($real_len <= $available_len) {
                 break;
             }
             array_shift($random_arr); //去掉一个随机词
-            $real_len = \strlen(implode(' ',array_merge($random_str1,$random_arr)));
+            $real_len = \strlen(implode(' ', array_merge($random_str1, $random_arr)));
 
         }
         shuffle($need);
-        return  implode(' ',array_merge($head,$random_str1,$need,$random_arr,$tail));
+        return implode(' ', array_merge($head, $random_str1, $need, $random_arr, $tail));
     }
 
     /*
@@ -870,7 +906,6 @@ class ChannelController extends BaseController
     }
 
 
-
     /*
      *编辑完成状态
      */
@@ -880,19 +915,58 @@ class ChannelController extends BaseController
         $info = OaGoodsinfo::find()->where(['pid' => $id])->one();
         //动态计算产品的状态
 
-        $old_status = $info->completeStatus?$info->completeStatus:'';
+        $old_status = $info->completeStatus ? $info->completeStatus : '';
         $status = str_replace('Wish已完善', '', $old_status);
-        $complete_status = 'Wish已完善'.$status;
+        $complete_status = 'Wish已完善' . $status;
         $info->completeStatus = $complete_status;
 
         $info->wishpublish = 'N';
         $ret = $info->save(false);
-        if($ret){
+        if ($ret) {
             $this->actionUpdate($id);
             return "标记成功!";
         }
         return "标记失败!";
     }
+
+    /**
+     * 批量标记推广已完成
+     * @return mixed
+     */
+    public function actionExtendLots()
+    {
+        $ids = yii::$app->request->post()["id"];
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try {
+            foreach ($ids as $id) {
+                $model = $this->findModel($id);
+                $model->extendStatus = '已推广';
+                if (!$model->save(false)) {
+                    throw new Exception('fail to update extendStatus!');
+                }
+            }
+            $trans->commit();
+            $msg = "批量标记推广完成成功";
+        } catch (Exception $e) {
+            $trans->rollBack();
+            $msg = "批量标记推广完成失败！";
+        }
+        return $msg;
+    }
+
+    /**
+     * 单个标记推广已完成
+     * @return mixed
+     */
+    public function actionExtend($id)
+    {
+        $model = $this->findModel($id);
+        $model->extendStatus = '已推广';
+        return $model->save(false) ? "标记推广完成成功" : "标记推广完成失败！";
+    }
+
+
     /**
      * 批量标记Wish已完善
      * @return mixed
@@ -902,27 +976,27 @@ class ChannelController extends BaseController
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
         $trans = $connection->beginTransaction();
-        try{
-            foreach ($ids as $id)
-            {
+        try {
+            foreach ($ids as $id) {
                 $model = $this->findModel($id);
-                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $old_status = $model->completeStatus ? $model->completeStatus : '';
                 $status = str_replace('Wish已完善', '', $old_status);
-                $complete_status = 'Wish已完善'.$status;
+                $complete_status = 'Wish已完善' . $status;
                 $model->completeStatus = $complete_status;
                 $model->wishpublish = 'N';
-                if(!$model->save(false)){
+                if (!$model->save(false)) {
                     throw new Exception('fail to update completeStatus!');
                 }
             }
             $trans->commit();
             $msg = "批量标记Wish已完善成功";
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $trans->rollBack();
             $msg = "批量标记Wish已完善失败！";
         }
         return $msg;
     }
+
 
     /*
      *编辑完成状态
@@ -933,17 +1007,18 @@ class ChannelController extends BaseController
         $info = OaGoodsinfo::find()->where(['pid' => $id])->one();
         //动态计算产品的状态
 
-        $old_status = $info->completeStatus?$info->completeStatus:'';
+        $old_status = $info->completeStatus ? $info->completeStatus : '';
         $status = str_replace('|Joom已完善', '', $old_status);
-        $complete_status = $status.'|Joom已完善';
+        $complete_status = $status . '|Joom已完善';
         $info->completeStatus = $complete_status;
         $ret = $info->save(false);
-        if($ret){
+        if ($ret) {
             $this->actionUpdate($id);
             return "标记成功!";
         }
         return "标记失败!";
     }
+
     /**
      * 批量标记Joom已完善
      * @return mixed
@@ -953,26 +1028,26 @@ class ChannelController extends BaseController
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
         $trans = $connection->beginTransaction();
-        try{
-            foreach ($ids as $id)
-            {
+        try {
+            foreach ($ids as $id) {
                 $model = $this->findModel($id);
-                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $old_status = $model->completeStatus ? $model->completeStatus : '';
                 $status = str_replace('|Joom已完善', '', $old_status);
-                $complete_status = $status.'|Joom已完善';
+                $complete_status = $status . '|Joom已完善';
                 $model->completeStatus = $complete_status;
-                if(!$model->save(false)){
+                if (!$model->save(false)) {
                     throw new Exception('fail to update completeStatus!');
                 }
             }
             $trans->commit();
             $msg = "批量标记Joom已完善成功";
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $trans->rollBack();
             $msg = "批量标记Joom已完善失败！";
         }
         return $msg;
     }
+
     /**
      * 批量标记eBay已完善
      * @return mixed
@@ -982,26 +1057,26 @@ class ChannelController extends BaseController
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
         $trans = $connection->beginTransaction();
-        try{
-            foreach ($ids as $id)
-            {
+        try {
+            foreach ($ids as $id) {
                 $model = $this->findModel($id);
-                $old_status = $model->completeStatus?$model->completeStatus:'';
+                $old_status = $model->completeStatus ? $model->completeStatus : '';
                 $status = str_replace('|eBay已完善', '', $old_status);
                 $complete_status = $status . '|eBay已完善';
                 $model->completeStatus = $complete_status;
-                if(!$model->save(false)){
+                if (!$model->save(false)) {
                     throw new Exception('fail to update completeStatus!');
                 }
             }
             $trans->commit();
             $msg = "批量标记eBay已完善成功";
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $trans->rollBack();
             $msg = "批量标记eBay已完善失败！";
         }
         return $msg;
     }
+
     /**
      * 批量标记全部已完善
      * @return mixed
@@ -1011,20 +1086,19 @@ class ChannelController extends BaseController
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
         $trans = $connection->beginTransaction();
-        try{
-            foreach ($ids as $id)
-            {
+        try {
+            foreach ($ids as $id) {
                 $model = $this->findModel($id);
                 $complete_status = 'Wish已完善|eBay已完善|Joom已完善';
                 $model->completeStatus = $complete_status;
                 $model->wishpublish = 'N';
-                if(!$model->save(false)){
+                if (!$model->save(false)) {
                     throw new Exception('fail to update completeStatus!');
                 }
             }
             $trans->commit();
             $msg = "批量标记全部已完善成功";
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $trans->rollBack();
             $msg = "批量标记全部已完善失败！";
         }
@@ -1083,11 +1157,11 @@ class ChannelController extends BaseController
      */
     public function actionExportJoom($id, $suffix)
     {
-        $da = $this->actionNameTags($id,'oa_wishgoods');
-        $pro_name = $this->actionNonOrder($da,'Joom');
-        $name = str_replace("'","''",$pro_name);
-        $sql = 'P_oa_toSecJoom @pid=' . $id.",@name='".$name."',@joom=".$suffix;
-        $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
+        $da = $this->actionNameTags($id, 'oa_wishgoods');
+        $pro_name = $this->actionNonOrder($da, 'Joom');
+        $name = str_replace("'", "''", $pro_name);
+        $sql = 'P_oa_toSecJoom @pid=' . $id . ",@name='" . $name . "',@joom=" . $suffix;
+        $adjust_sql = 'select greater_equal,less,added_price from oa_joom_wish';
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $joomRes = $query->queryAll();
@@ -1099,10 +1173,10 @@ class ChannelController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            $weight = $joom['Shipping weight'] * 1000 ;
+            $weight = $joom['Shipping weight'] * 1000;
             foreach ($adjust_ret as $adjust) {
-                if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
-                    $joom['*Price'] += $adjust['added_price'] ;
+                if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                    $joom['*Price'] += $adjust['added_price'];
                     break;
                 }
             }
@@ -1120,11 +1194,11 @@ class ChannelController extends BaseController
      */
     public function actionExportSecJoom($id)
     {
-        $da = $this->actionNameTags($id,'oa_wishgoods');
-        $name = $this->actionNonOrder($da,'Joom');
-        $name = str_replace("'","''",$name);
-        $sql = 'P_oa_toSecJoom @pid=' . $id.",@name='".$name."'";
-        $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
+        $da = $this->actionNameTags($id, 'oa_wishgoods');
+        $name = $this->actionNonOrder($da, 'Joom');
+        $name = str_replace("'", "''", $name);
+        $sql = 'P_oa_toSecJoom @pid=' . $id . ",@name='" . $name . "'";
+        $adjust_sql = 'select greater_equal,less,added_price from oa_joom_wish';
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $joomRes = $query->queryAll();
@@ -1136,10 +1210,10 @@ class ChannelController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            $weight = $joom['Shipping weight'] * 1000 ;
+            $weight = $joom['Shipping weight'] * 1000;
             foreach ($adjust_ret as $adjust) {
-                if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
-                    $joom['*Price'] += $adjust['added_price'] ;
+                if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                    $joom['*Price'] += $adjust['added_price'];
                     break;
                 }
             }
@@ -1159,7 +1233,7 @@ class ChannelController extends BaseController
      */
     public function actionExportLotsJoom($pids, $suffix)
     {
-        if(empty($pids)){
+        if (empty($pids)) {
             $this->actionExportCsv([], [], 'none');
             return;
         }
@@ -1168,11 +1242,11 @@ class ChannelController extends BaseController
         $filter_ret = [];
         $header = [];
         foreach ($pids as $pid) {
-            $da = $this->actionNameTags($pid,'oa_wishgoods');
-            $name = $this->actionNonOrder($da,'Joom');
-            $name = str_replace("'","''",$name);
-            $sql = $procedur.'@pid=' . $pid.",@name='".$name."',@joom=".$suffix;
-            $adjust_sql  = 'select greater_equal,less,added_price from oa_joom_wish';
+            $da = $this->actionNameTags($pid, 'oa_wishgoods');
+            $name = $this->actionNonOrder($da, 'Joom');
+            $name = str_replace("'", "''", $name);
+            $sql = $procedur . '@pid=' . $pid . ",@name='" . $name . "',@joom=" . $suffix;
+            $adjust_sql = 'select greater_equal,less,added_price from oa_joom_wish';
             $db = yii::$app->db;
             $query = $db->createCommand($sql);
             $joomRes = $query->queryAll();
@@ -1184,10 +1258,10 @@ class ChannelController extends BaseController
             // adjust price according to weight
 
             foreach ($joomRes as $joom) {
-                $weight = $joom['Shipping weight'] * 1000 ;
+                $weight = $joom['Shipping weight'] * 1000;
                 foreach ($adjust_ret as $adjust) {
-                    if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
-                        $joom['*Price'] += $adjust['added_price'] ;
+                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                        $joom['*Price'] += $adjust['added_price'];
                         break;
                     }
                 }
@@ -1200,23 +1274,25 @@ class ChannelController extends BaseController
 
 
     }
+
     /**
      * @brief ebay简称,仓储国家二级联动
      * @param string $store
      * @return mixed
      */
-    public  function  actionStoreCountry($store)
+    public function actionStoreCountry($store)
     {
         $sql = 'select  ebaySuffix from oa_ebay_suffix where storeCountry=:store';
-        $query = Yii::$app->db->createCommand($sql,[':store'=>$store]);
+        $query = Yii::$app->db->createCommand($sql, [':store' => $store]);
         if (empty($store)) {
             $sql = 'select  ebaySuffix from oa_ebay_suffix';
             $query = Yii::$app->db->createCommand($sql);
         }
-        $ret = ArrayHelper::getColumn($query->queryAll(),'ebaySuffix');
+        $ret = ArrayHelper::getColumn($query->queryAll(), 'ebaySuffix');
         return json_encode($ret);
 
     }
+
     /**
      * 导出Shopee
      * @param int $id 商品id
@@ -1226,19 +1302,19 @@ class ChannelController extends BaseController
         $objPHPExcel = new \PHPExcel();
         $sheet = 0;
         $objPHPExcel->setActiveSheetIndex($sheet);
-        $foos[0] = OaWishgoods::find()->where(['infoid'=>$id])->all();
-        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid='.$id.')';
+        $foos[0] = OaWishgoods::find()->where(['infoid' => $id])->all();
+        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid=' . $id . ')';
 
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $cate = $query->queryAll();
 
-        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid='.$id;
+        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid=' . $id;
         $dataGoodsCode = $db->createCommand($sql_GoodsCode)->queryAll();
         $GoodsCode = $dataGoodsCode[0]['GoodsCode'];
         $isVar = $dataGoodsCode[0]['isVar'];
 
-        $columnNum = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
+        $columnNum = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q'];
         //$colName = ['sku', 'selleruserid', 'name', 'inventory', 'price', 'msrp', 'shipping', 'shipping_time', 'main_image', 'extra_images',
         //    'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc'];
         $colName = ['mubanid', 'selleruserid', 'categoryid', 'name', 'sku', 'price', 'stock', 'weight', 'package_width', 'package_length', 'package_height',
@@ -1260,15 +1336,15 @@ class ChannelController extends BaseController
             ->all();
         //var_dump($suffixAll);exit;
         //获取关键字
-        $data =  $this->actionNameTags($id,'oa_wishgoods');
+        $data = $this->actionNameTags($id, 'oa_wishgoods');
         $title_list = [];
-        foreach($suffixAll as $key=>$value){
+        foreach ($suffixAll as $key => $value) {
             //标题关键字
-            while(true){
-                $title = $this->actionNonOrder($data,'Wish');
-                if(!in_array($title,$title_list)||empty($title)){
+            while (true) {
+                $title = $this->actionNonOrder($data, 'Wish');
+                if (!in_array($title, $title_list) || empty($title)) {
                     $name = $title;
-                    array_push($title_list,$title);
+                    array_push($title_list, $title);
                     break;
                 }
             }
@@ -1287,32 +1363,32 @@ class ChannelController extends BaseController
 
             }
             //主图用商品编码 拼接
-            if($isVar=='是'){
-                $strvariant = $this->actionVariationWish($id,$value['Suffix'],$value['Rate']);
-            }else{
+            if ($isVar == '是') {
+                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
+            } else {
                 $strvariant = '';
             }
             //var_dump($foos[0][0]);
             //var_dump($value);exit;
-            $row = $key+2;
-            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/'.$GoodsCode.'-_'.$value['MainImg'].'_.jpg' ;
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$foos[0][0]['SKU']);                  //模板ID SKU
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['IbaySuffix']);              //卖家简称
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$value['ParentCategory']);            //分类
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$name);                               //商品名称
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$foos[0][0]['SKU'].$value['Suffix']); //唯一SKU
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$foos[0][0]['price']);                 //价格 price
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$foos[0][0]['shippingtime']);             //stock
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,'7-21');                              //重量
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,5);                                   //包裹宽度
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,5);                                   //包裹长度
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,5);                                   //包裹高度
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,'7-21');                              //shipdays 7-21天
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,$foos[0][0]['main_image']);           // 图片imgurl  ？主图
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,$foos[0][0]['description']);          //描述
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,'');                                  //attributes属性？
-            $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,'');                                  //logistics ？物流
-            $objPHPExcel->getActiveSheet()->setCellValue('Q'.$row,$strvariant);                         //variation
+            $row = $key + 2;
+            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/' . $GoodsCode . '-_' . $value['MainImg'] . '_.jpg';
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $row, $foos[0][0]['SKU']);                  //模板ID SKU
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $row, $value['IbaySuffix']);              //卖家简称
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, $value['ParentCategory']);            //分类
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $row, $name);                               //商品名称
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $row, $foos[0][0]['SKU'] . $value['Suffix']); //唯一SKU
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $row, $foos[0][0]['price']);                 //价格 price
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $row, $foos[0][0]['shippingtime']);             //stock
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $row, '7-21');                              //重量
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $row, 5);                                   //包裹宽度
+            $objPHPExcel->getActiveSheet()->setCellValue('J' . $row, 5);                                   //包裹长度
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $row, 5);                                   //包裹高度
+            $objPHPExcel->getActiveSheet()->setCellValue('L' . $row, '7-21');                              //shipdays 7-21天
+            $objPHPExcel->getActiveSheet()->setCellValue('M' . $row, $foos[0][0]['main_image']);           // 图片imgurl  ？主图
+            $objPHPExcel->getActiveSheet()->setCellValue('N' . $row, $foos[0][0]['description']);          //描述
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . $row, '');                                  //attributes属性？
+            $objPHPExcel->getActiveSheet()->setCellValue('P' . $row, '');                                  //logistics ？物流
+            $objPHPExcel->getActiveSheet()->setCellValue('Q' . $row, $strvariant);                         //variation
 
         }
 
@@ -1329,8 +1405,8 @@ class ChannelController extends BaseController
         $db = Yii::$app->db;
         $sql = 'SELECT StoreName as store from B_store';
         $query = $db->createCommand($sql)->queryAll();
-        $ret = ArrayHelper::getColumn($query,'store');
-        return \array_combine($ret,$ret);
+        $ret = ArrayHelper::getColumn($query, 'store');
+        return \array_combine($ret, $ret);
 
 
     }
