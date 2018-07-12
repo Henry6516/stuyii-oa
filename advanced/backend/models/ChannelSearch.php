@@ -204,11 +204,8 @@ class ChannelSearch extends Channel
                 'DictionaryName',
                 'completeStatus',
                 'mid',
-<<<<<<< HEAD
                 'extendStatus',
-=======
                 'mapPersons',
->>>>>>> 172da6b64d64fc3bf0d4ce890950bd9795cc69b3
                 /* 下面这段是加入的 */
                 /*=============*/
                 'cate' => [
