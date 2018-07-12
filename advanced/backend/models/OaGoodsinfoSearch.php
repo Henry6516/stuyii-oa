@@ -32,7 +32,7 @@ class OaGoodsinfoSearch extends OaGoodsinfo
     {
         return [
             [['stockUp','pid','IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged'], 'integer'],
-            [['hopeWeight','picStatus','isVar','vendor1','vendor2','vendor3','developer','devDatetime','updateTime','achieveStatus','GoodsCode',
+            [['mapPersons','hopeWeight','picStatus','isVar','vendor1','vendor2','vendor3','developer','devDatetime','updateTime','achieveStatus','GoodsCode',
                 'GoodsName','SupplierName', 'AliasCnName','AliasEnName','PackName','description','Season','StoreName','DictionaryName',
                 'possessMan2','possessMan1'],'safe'],
         ];

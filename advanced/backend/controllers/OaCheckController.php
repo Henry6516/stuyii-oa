@@ -9,6 +9,7 @@ use backend\models\OaGoods;
 use backend\models\OaGoodsSearch;
 use backend\models\OaGoodsinfo;
 use backend\models\OaSysRules;
+use backend\models\User;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
@@ -72,10 +73,13 @@ class OaCheckController extends BaseController
         $request = yii::$app->request->post()['OaGoods'];
         $connection = yii::$app->db;
         $id = $request['nid'];
+        $userid = Yii::$app->user->identity->getId();
         $approvalNote = isset($request['approvalNote'])?$request['approvalNote']:'';
         $model = $this->findModel($id);
         $trans = $connection->beginTransaction();
         try{
+            $user = User::findOne(['id' => $userid]);
+            $mapPersons = $user->mapPersons;
             $cate = $model->cate;
             $_model = new OaGoodsinfo();
             $model ->checkStatus = '已审批';
@@ -87,6 +91,7 @@ class OaCheckController extends BaseController
             $nid = $model->nid;
             $img = $model->img;
             $developer = $model->developer;
+            $_model->mapPersons = $mapPersons;
             $_model->goodsid =$nid;
             $_model->GoodsCode =$code;
             $_model->picUrl = $img;

@@ -267,7 +267,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 
 <div class="row" style="margin-left: 8px">
     <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <?php echo '<label class="control-label">禁售平台</label>';
             echo Select2::widget([
                 'name' => 'DictionaryName',
@@ -282,7 +282,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 ],
             ]); ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <?= $form->field($goodsItem, 'cate')->dropDownList($goodsItem->getCatList(0),
                 ['prompt' => '--请选择父类--', 'onchange' => '           
             $("select#oagoods-subcate").children("option").remove();
@@ -296,8 +296,19 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             });',
                 ]) ?>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <?= $form->field($goodsItem, 'subCate')->dropDownList($goodsItem->getCatList($goodsItem->catNid), ['prompt' => '--特殊属性--',]) ?>
+        </div>
+        <div class="col-sm-3">
+            <?= $form->field($info, 'mapPersons')->widget(Select2::classname(), [
+                'data' => $person,
+                'options' => ['placeholder' => '--请选择人员--',
+                    'multiple' => true,
+                ],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]) ?>
         </div>
     </div>
 

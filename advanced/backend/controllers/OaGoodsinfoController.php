@@ -22,7 +22,7 @@ use backend\models\GoodsCats;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use yii\helpers\ArrayHelper;
 
 use yii\data\ActiveDataProvider;
 
@@ -141,6 +141,11 @@ class OaGoodsinfoController extends BaseController
 
         $post = Yii::$app->request->post();
         unset($post['OaGoodsinfo']['stockUp']);
+
+        //解析对应人员
+        $person = $this->getPerson();
+        $info->mapPersons = $info->mapPersons?explode(',',$info->mapPersons):[];
+
         if($info->load($post)){
             $SupplerName = $updata['OaGoodsinfo']['SupplierName'];
             // 如果该查询没有结果则返回 false
@@ -163,6 +168,12 @@ class OaGoodsinfoController extends BaseController
             if (!empty($updata['DictionaryName'])){
                 $info->DictionaryName = implode(',',$updata['DictionaryName']);
             }
+
+            //解析对应人员
+            $person = $updata['OaGoodsinfo']['mapPersons']?implode(',',$updata['OaGoodsinfo']['mapPersons']):'';
+            $info->mapPersons = $person;
+
+
             $info->updateTime = strftime('%F %T');
             $developer = $updata['OaGoodsinfo']['developer'];
             $info->developer = $developer;
@@ -272,6 +283,7 @@ class OaGoodsinfoController extends BaseController
                 'lock' => $data['platFrom'],
                 'packname' => $data['packname'],
                 'goodsItem' => $goodsItem[0],
+                'person' => $person,
             ]);
         }
     }
@@ -590,5 +602,13 @@ class OaGoodsinfoController extends BaseController
         }
     }
 
+    private function getPerson()
+    {
+        $db = Yii::$app->db;
+        $sql = "select ur.username as person from [user] as ur LEFT JOIN auth_assignment as ag on ur.id = ag.user_id where ag.item_name like '%开发%' or ag.item_name like '%销售%'";
+        $query = $db->createCommand($sql)->queryAll();
+        $ret = ArrayHelper::getColumn($query,'person');
+        return \array_combine($ret,$ret);
+    }
 
 }
