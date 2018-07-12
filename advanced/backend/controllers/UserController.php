@@ -110,20 +110,25 @@ class UserController extends BaseController
     {
         $model = $this->findModel($id);
         $model->store = $model->store?explode(',',$model->store):[];
+        $model->mapPersons = $model->mapPersons?explode(',',$model->mapPersons):[];
         $store = $this->getStore();
+        $person = $this->getPerson();
         $request = Yii::$app->request;
         if($request->isPost){
             $post = $request->post();
             $user = $post['User'];
             $stores = $user['store']?implode(',',$user['store']):'';
             $post['User']['store'] = $stores;
+            $person = $user['mapPersons']?implode(',',$user['mapPersons']):'';
+            $post['User']['mapPersons'] = $person;
             if ($model->load($post) && $model->save()) {
                 return $this->redirect(['index']);
             }
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'store' => $store
+                'store' => $store,
+                'person' => $person
             ]);
         }
     }
@@ -164,6 +169,15 @@ class UserController extends BaseController
         $sql = 'SELECT StoreName as store from B_store';
         $query = $db->createCommand($sql)->queryAll();
         $ret = ArrayHelper::getColumn($query,'store');
+        return \array_combine($ret,$ret);
+    }
+
+    private function getPerson()
+    {
+        $db = Yii::$app->db;
+        $sql = "select ur.username as person from [user] as ur LEFT JOIN auth_assignment as ag on ur.id = ag.user_id where ag.item_name like '%开发%' or ag.item_name like '%销售%'";
+        $query = $db->createCommand($sql)->queryAll();
+        $ret = ArrayHelper::getColumn($query,'person');
         return \array_combine($ret,$ret);
     }
 

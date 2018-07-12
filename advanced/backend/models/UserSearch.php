@@ -19,7 +19,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['store','department','isLeader','leaderName','username', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'safe'],
+            [['mapPersons','canStockUp','store','department','isLeader','leaderName','username', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'safe'],
         ];
     }
 
