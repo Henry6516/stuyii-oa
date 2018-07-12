@@ -200,6 +200,7 @@ class OaGoodsController extends BaseController
     {
         $model = new OaForwardGoods();
         $canStock = $this->validateStock();
+        $canCreate = $this->validateCreate();
         $status = ['create' => '待提交', 'check' => '待审批'];
         $request = Yii::$app->request;
         if ($request->isPost) {
@@ -236,10 +237,11 @@ class OaGoodsController extends BaseController
                 $current_model->cate = $cateModel->CategoryParentName;
                 $current_model->subCate = $cateModel->CategoryName;
                 $current_model->update(false);
-                return $this->redirect(['forward-products']);
+                $msg = '创建成功！';
             } else {
-                return $this->redirect(['forward-products']);
+                $msg = '创建失败！';
             }
+            return $msg;
 
         }
 
@@ -254,7 +256,8 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('forwardCreate', [
                 'model' => $model,
-                'canStock' => $canStock
+                'canStock' => $canStock,
+                'canCreate' => $canCreate,
             ]);
         }
 
@@ -1001,7 +1004,7 @@ class OaGoodsController extends BaseController
         }else if($used>=$have[0]['haveStock']) {
             return 'no';
         }
-        return 'yes';
+        return 'no';
     }
 
 }

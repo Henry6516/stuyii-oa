@@ -3,8 +3,6 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
-use kartik\dialog\Dialog;
 use \backend\models\GoodsCats;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\OaGoodsSearch */
