@@ -29,7 +29,7 @@ use kartik\select2\Select2;
     <?= $form->field($model, 'canStockUp')->textInput() ?>
     <?= $form->field($model, 'mapPersons')->widget(Select2::classname(), [
         'data' => $person,
-        'options' => ['placeholder' => '--请选择人员--',
+        'options' => ['placeholder' => '--请选择销售--',
             'multiple' => true,
         ],
         'pluginOptions' => [

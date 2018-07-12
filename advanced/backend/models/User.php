@@ -54,7 +54,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'leaderName' => '主管',
             'store' => '仓库',
             'canStockUp' => '是否能备货',
-            'mapPersons' => '对应人员',
+            'mapPersons' => '对应销售',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',

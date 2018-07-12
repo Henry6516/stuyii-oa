@@ -175,7 +175,9 @@ class UserController extends BaseController
     private function getPerson()
     {
         $db = Yii::$app->db;
-        $sql = "select ur.username as person from [user] as ur LEFT JOIN auth_assignment as ag on ur.id = ag.user_id where ag.item_name like '%开发%' or ag.item_name like '%销售%'";
+        $sql = "select ur.username as person from [user] as ur 
+                LEFT JOIN auth_assignment as ag on 
+                ur.id = ag.user_id where ag.item_name like '%销售%'";
         $query = $db->createCommand($sql)->queryAll();
         $ret = ArrayHelper::getColumn($query,'person');
         return \array_combine($ret,$ret);

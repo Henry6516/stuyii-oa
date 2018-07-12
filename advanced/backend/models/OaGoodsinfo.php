@@ -79,7 +79,7 @@ class OaGoodsinfo extends GoodsCats
             'tailKeywords' => '最后关键词',
             'wishtags' => '关键词tags',
             'stockUp' => '是否备货',
-            'mapPersons' => '对应人员',
+            'mapPersons' => '对应销售',
 
 
 

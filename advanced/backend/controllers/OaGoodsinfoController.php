@@ -142,7 +142,7 @@ class OaGoodsinfoController extends BaseController
         $post = Yii::$app->request->post();
         unset($post['OaGoodsinfo']['stockUp']);
 
-        //解析对应人员
+        //解析对应销售
         $person = $this->getPerson();
         $info->mapPersons = $info->mapPersons?explode(',',$info->mapPersons):[];
 
@@ -169,7 +169,7 @@ class OaGoodsinfoController extends BaseController
                 $info->DictionaryName = implode(',',$updata['DictionaryName']);
             }
 
-            //解析对应人员
+            //解析对应销售
             $person = $updata['OaGoodsinfo']['mapPersons']?implode(',',$updata['OaGoodsinfo']['mapPersons']):'';
             $info->mapPersons = $person;
 
@@ -605,7 +605,9 @@ class OaGoodsinfoController extends BaseController
     private function getPerson()
     {
         $db = Yii::$app->db;
-        $sql = "select ur.username as person from [user] as ur LEFT JOIN auth_assignment as ag on ur.id = ag.user_id where ag.item_name like '%开发%' or ag.item_name like '%销售%'";
+        $sql = "select ur.username as person from [user] as ur 
+                LEFT JOIN auth_assignment as ag on 
+                ur.id = ag.user_id where ag.item_name like '%销售%'";
         $query = $db->createCommand($sql)->queryAll();
         $ret = ArrayHelper::getColumn($query,'person');
         return \array_combine($ret,$ret);

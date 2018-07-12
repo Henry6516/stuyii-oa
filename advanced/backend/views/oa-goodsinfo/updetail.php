@@ -302,7 +302,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
         <div class="col-sm-3">
             <?= $form->field($info, 'mapPersons')->widget(Select2::classname(), [
                 'data' => $person,
-                'options' => ['placeholder' => '--请选择人员--',
+                'options' => ['placeholder' => '--请选择销售--',
                     'multiple' => true,
                 ],
                 'pluginOptions' => [
