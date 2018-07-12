@@ -15,7 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_formBackwardCreate', [
         'model' => $model,
-        'canStock' => $canStock
+        'canStock' => $canStock,
+        'canCreate' => $canCreate,
     ]) ?>
 
 </div>

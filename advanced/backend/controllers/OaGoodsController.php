@@ -274,6 +274,7 @@ class OaGoodsController extends BaseController
         $status = ['create' => '待提交', 'check' => '待审批'];
         $model = new OaBackwardGoods();
         $canStock = $this->validateStock();
+        $canCreate = $this->validateCreate();
         $request = Yii::$app->request;
         if ($request->isPost) {
 
@@ -327,7 +328,8 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('backwardCreate', [
                 'model' => $model,
-                'canStock' => $canStock
+                'canStock' => $canStock,
+                'canCreate' => $canCreate
             ]);
         }
 
@@ -1004,7 +1006,7 @@ class OaGoodsController extends BaseController
         }else if($used>=$have[0]['haveStock']) {
             return 'no';
         }
-        return 'no';
+        return 'yes';
     }
 
 }
