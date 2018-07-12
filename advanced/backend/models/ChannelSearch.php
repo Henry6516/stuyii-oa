@@ -38,7 +38,7 @@ class ChannelSearch extends Channel
             [['mapPersons','introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
-                'subCat', 'wishpublish', 'goodsstatus', 'stockdays','mid'], 'safe'],
+                'subCat', 'wishpublish', 'goodsstatus', 'stockdays', 'mid', 'extendStatus'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -68,8 +68,8 @@ class ChannelSearch extends Channel
                 'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
         }
 
-        if(isset($params['ChannelSearch']['completeStatus']) && is_array($params['ChannelSearch']['completeStatus'])){
-            $params['ChannelSearch']['completeStatus'] = implode(',',$params['ChannelSearch']['completeStatus']);
+        if (isset($params['ChannelSearch']['completeStatus']) && is_array($params['ChannelSearch']['completeStatus'])) {
+            $params['ChannelSearch']['completeStatus'] = implode(',', $params['ChannelSearch']['completeStatus']);
         }
         //如果是数据中中心模块则只返回已完善数据
         if ($model_name == 'oa-data-center') {
@@ -79,8 +79,8 @@ class ChannelSearch extends Channel
         //如果是数据中中心的Wish待刊登模块则只返回wish平台未完善数据
         if ($model_name == 'oa-data-center' && $unit == 'Wish待刊登') {
             $query->where(['wishpublish' => 'Y']);
-            $query->andWhere(['not like',"isnull(DictionaryName,'')",'wish']);
-            $query->andWhere(['OR',['not like', 'completeStatus', 'Wish已完善'],['completeStatus' => null]]);
+            $query->andWhere(['not like', "isnull(DictionaryName,'')", 'wish']);
+            $query->andWhere(['OR', ['not like', 'completeStatus', 'Wish已完善'], ['completeStatus' => null]]);
         }
 
         //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
@@ -99,8 +99,8 @@ class ChannelSearch extends Channel
                     ");
         $role = $role_sql
             ->queryAll();
-        $roleList = ArrayHelper::getColumn($role,'role');
-        $roles = implode(',',$roleList);
+        $roleList = ArrayHelper::getColumn($role, 'role');
+        $roles = implode(',', $roleList);
 
         // 返回当前用户管辖下的用户
         $sql = "oa_P_users '{$user}'";
@@ -115,42 +115,67 @@ class ChannelSearch extends Channel
                     WHERE  t1.id=t2.user_id and t2.item_name = t3.role and
                     username=:username';
 
-        $constraintRet = $connection->createCommand($constraintSql,[':username'=>$user])->queryAll();
+        $constraintRet = $connection->createCommand($constraintSql, [':username' => $user])->queryAll();
         $stores = '';
         $plats = '';
         foreach ($constraintRet as $ret) {
-            $stores = empty($stores)?$stores: $stores .',';
-            $stores .=  $ret['store'];
-            $plats = empty($plats)? $plats: $plats .',';
+            $stores = empty($stores) ? $stores : $stores . ',';
+            $stores .= $ret['store'];
+            $plats = empty($plats) ? $plats : $plats . ',';
             $plats .= $ret['plat'];
         }
-        $storeList = !empty($stores)?explode(',',$stores):[];
-        $platsList = !empty($plats)?explode(',',$plats):[];
+        $storeList = !empty($stores) ? explode(',', $stores) : [];
+        $platsList = !empty($plats) ? explode(',', $plats) : [];
 
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
         if ($unit == '平台信息') {
-            if(strpos($roles,'销售') ===false) {
-                if (strpos($roles,'部门主管') !== false  || $unit == 'Wish待刊登') {
+            if (strpos($roles, '销售') === false) {
+                if (strpos($roles, '部门主管') !== false || $unit == 'Wish待刊登') {
                     $query->andWhere(['in', 'oa_goods.developer', $users]);
-                } elseif (strpos($roles,'开发') !== false ) {
+                } elseif (strpos($roles, '开发') !== false) {
                     $query->andWhere(['in', 'oa_goods.developer', $users]);
-                } elseif (strpos($roles,'美工') !== false ) {
+                } elseif (strpos($roles, '美工') !== false) {
                     $query->andWhere(['in', 'possessMan1', $users]);
                 }
             }
             //根据仓库和平台过滤产品
-            if(!empty($storeList)){
+            if (!empty($storeList)) {
                 $query->andWhere(['in', 'oa_goodsinfo.storeName', $storeList]);
             }
-            if(!empty($platsList)){
+            if (!empty($platsList)) {
                 foreach ($platsList as $plat) {
-                    $query->andWhere(['not like','oa_goodsinfo.dictionaryName',$plat]);
+                    $query->andWhere(['not like', 'oa_goodsinfo.dictionaryName', $plat]);
                 }
             }
 
         }
+
+        if ($unit == '销售产品列表') {
+            //过滤销售员产品
+            $map[0] = 'or';
+            foreach ($users as $k => $username) {
+                $map[$k + 1] = ['like', 'mapPersons', $username];
+            }
+            $query->andWhere($map);
+
+            //过滤禁售平台产品
+            if ($roles == 'Wish销售') {
+                $query->andWhere(['not like', 'DictionaryName', 'wish']);
+            }
+            if ($roles == 'SMT销售') {
+                $query->andWhere(['not like', 'DictionaryName', 'SMT']);
+            }
+            if ($roles == 'Joom销售') {
+                $query->andWhere(['not like', 'DictionaryName', 'Joom']);
+            }
+            if ($roles == 'eBay销售') {
+                $query->andWhere(['not like', 'DictionaryName', 'eBay']);
+            }
+            //var_dump($roles);exit;
+        }
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -179,6 +204,7 @@ class ChannelSearch extends Channel
                 'DictionaryName',
                 'completeStatus',
                 'mid',
+                'extendStatus',
                 'mapPersons',
                 /* 下面这段是加入的 */
                 /*=============*/
@@ -256,6 +282,13 @@ class ChannelSearch extends Channel
             $query->andWhere(['mid' => null]);
         }
 
+        //推广状态
+        if ($this->extendStatus == '已推广') {
+            $query->andFilterWhere(['extendStatus' => '已推广']);
+        }
+        if ($this->extendStatus == '未推广') {
+            $query->andWhere(['or', ['extendStatus' => null], ['extendStatus' => '未推广']]);
+        }
 
         //完成状态
 
