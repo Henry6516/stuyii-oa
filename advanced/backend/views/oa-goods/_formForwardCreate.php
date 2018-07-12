@@ -35,7 +35,7 @@ $("#create-btn").on('click', function() {
       type: 'post',
       data: form.serialize(),
       success: function(ret) {
-        alert(ret);
+        // alert(ret);
         window.location.reload();
       }
   });
