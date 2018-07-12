@@ -961,8 +961,13 @@ class OaGoodsController extends BaseController
     private function validateStock()
     {
         $user = Yii::$app->user->identity->username;
-        $stockUsed = 'select count(*) as usedStock from oa_goods where stockUp=1 and developer=:developer and DATEDIFF(mm, createDate, getdate()) = 0';
-        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
+        $stockUsed = 'select count(og.nid) as usedStock  from oa_goods as og  
+                      LEFT JOIN oa_goodsinfo as ogs on og.nid = ogs.goodsid
+                      where og.stockUp=1 and og.developer=:developer 
+                      and DATEDIFF(mm, createDate, getdate()) = 0
+                      and ogs.mid is null';
+        $stockHave = 'select stockNumThisMonth as haveStock  from oa_stock_goods_number 
+                      where DATEDIFF(mm, createDate, getdate()) = 0 and developer=:developer';
         $connection = Yii::$app->db;
         $used = $connection->createCommand($stockUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
         $have = $connection->createCommand($stockHave,[':developer'=>$user])->queryAll();
