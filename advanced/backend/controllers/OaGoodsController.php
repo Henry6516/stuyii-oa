@@ -1003,7 +1003,7 @@ class OaGoodsController extends BaseController
         $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll();
         if(!$have){
             return 'no';
-        }else if($used>=$have[0]['haveStock']) {
+        }else if($have>0 && $used>=$have[0]['haveStock']) {
             return 'no';
         }
         return 'yes';
