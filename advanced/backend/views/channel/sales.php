@@ -94,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return $model->GoodsCode;
             }
         ],
+        'mapPersons',
         [
             'attribute' => 'StoreName',
             'filterType' => GridView::FILTER_SELECT2,

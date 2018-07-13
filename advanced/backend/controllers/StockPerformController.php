@@ -152,13 +152,14 @@ class StockPerformController extends BaseController
 
         //缓存数据
         $cache = Yii::$app->local_cache;
-        $ret = $cache->get($sql);
+        //$cache->flush();
+        /*$ret = $cache->get($sql);
         if($ret !== false){
             $result = $ret;
-        } else {
+        } else {*/
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,3600*24);
-        }
+            //$cache->set($sql,$result,3600*24);
+        //}
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
@@ -209,8 +210,6 @@ class StockPerformController extends BaseController
 
         //获取数据
         $sql = "P_oa_sales_Performance '" . $data['code'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
-        //$sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
-        //var_dump($sql);exit;
         //缓存数据
         $cache = Yii::$app->local_cache;
         $ret = $cache->get($sql);
@@ -226,7 +225,7 @@ class StockPerformController extends BaseController
                 'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['Number', 'orderNum', 'orderRate', 'hotStyleNum', 'hotStyleRate'],
+                'attributes' => ['Number', 'orderNum', 'orderRate', 'exuStyleNum', 'exuStyleRate', 'hotStyleNum', 'hotStyleRate'],
             ],
         ]);
 
