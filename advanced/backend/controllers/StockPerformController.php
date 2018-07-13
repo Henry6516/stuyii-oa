@@ -96,13 +96,13 @@ class StockPerformController extends BaseController
 
         //缓存数据
         $cache = Yii::$app->local_cache;
-        $ret = $cache->get($sql);
-        if($ret !== false){
-            $result = $ret;
-        } else {
+//        $ret = $cache->get($sql);
+//        if($ret !== false){
+//            $result = $ret;
+//        } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,3600*24);
-        }
+//            $cache->set($sql,$result,3600*24);
+//        }
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
@@ -212,13 +212,13 @@ class StockPerformController extends BaseController
         $sql = "P_oa_sales_Performance '" . $data['code'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
         //缓存数据
         $cache = Yii::$app->local_cache;
-        $ret = $cache->get($sql);
-        if($ret !== false){
-            $result = $ret;
-        } else {
+//        $ret = $cache->get($sql);
+//        if($ret !== false){
+//            $result = $ret;
+//        } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            $cache->set($sql,$result,3600*24);
-        }
+//            $cache->set($sql,$result,3600*24);
+//        }
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
