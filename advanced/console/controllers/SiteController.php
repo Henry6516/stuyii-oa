@@ -83,6 +83,7 @@ class SiteController extends Controller
     public function actionStock()
     {
         $end = date('Y-m-d');
+        //$end = '2018-07-01';
         if(substr($end,8,2) !== '01'){
             echo date('Y-m-d H:i:s')." 当前时间不可更新该项数据，请于管理员联系确认！";exit();
         }
@@ -116,13 +117,13 @@ class SiteController extends Controller
     /**
      * 不备货产品表现
      * 每月第一天（1号）更新开发员在本月的可用备货数量
-     * 访问方法: php yii site/stock
+     * 访问方法: php yii site/nonstock
      * @return mixed
      */
     public function actionNonstock()
     {
         $end = date('Y-m-d');
-        $end = date('2018-07-01');
+        //$end = date('2018-07-01');
         if(substr($end,8,2) !== '01'){
             echo date('Y-m-d H:i:s')." 当前时间不可更新该项数据，请于管理员联系确认！";exit();
         }
