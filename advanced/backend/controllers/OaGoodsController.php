@@ -1012,7 +1012,7 @@ class OaGoodsController extends BaseController
             $have = 0;
         }
 
-         if($have>0 && $used>=$have[0]['haveStock']) {
+         if($have>0 && $used>=$have) {
             return 'no';
         }
         return 'yes';
