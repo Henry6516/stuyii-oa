@@ -200,6 +200,7 @@ class OaGoodsController extends BaseController
     {
         $model = new OaForwardGoods();
         $canStock = $this->validateStock();
+        $canCreate = $this->validateCreate();
         $status = ['create' => '待提交', 'check' => '待审批'];
         $request = Yii::$app->request;
         if ($request->isPost) {
@@ -236,10 +237,11 @@ class OaGoodsController extends BaseController
                 $current_model->cate = $cateModel->CategoryParentName;
                 $current_model->subCate = $cateModel->CategoryName;
                 $current_model->update(false);
-                return $this->redirect(['forward-products']);
+                $msg = '创建成功！';
             } else {
-                return $this->redirect(['forward-products']);
+                $msg = '创建失败！';
             }
+            return $msg;
 
         }
 
@@ -254,7 +256,8 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('forwardCreate', [
                 'model' => $model,
-                'canStock' => $canStock
+                'canStock' => $canStock,
+                'canCreate' => $canCreate,
             ]);
         }
 
@@ -271,6 +274,7 @@ class OaGoodsController extends BaseController
         $status = ['create' => '待提交', 'check' => '待审批'];
         $model = new OaBackwardGoods();
         $canStock = $this->validateStock();
+        $canCreate = $this->validateCreate();
         $request = Yii::$app->request;
         if ($request->isPost) {
 
@@ -324,7 +328,8 @@ class OaGoodsController extends BaseController
 
             return $this->renderAjax('backwardCreate', [
                 'model' => $model,
-                'canStock' => $canStock
+                'canStock' => $canStock,
+                'canCreate' => $canCreate
             ]);
         }
 
@@ -994,11 +999,20 @@ class OaGoodsController extends BaseController
                       and DATEDIFF(mm, createDate, getdate()) = 0
                       and developer=:developer";
         $connection = Yii::$app->db;
-        $used = $connection->createCommand($numberUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
-        $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll();
-        if(!$have){
-            return 'no';
-        }else if($used>=$have[0]['haveStock']) {
+        try {
+            $used = $connection->createCommand($numberUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        }
+        catch (\Exception $e) {
+            $used = 0;
+        }
+        try {
+            $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll()[0]['haveStock'];
+        }
+        catch (\Exception $e) {
+            $have = 0;
+        }
+
+         if($have>0 && $used>=$have) {
             return 'no';
         }
         return 'yes';

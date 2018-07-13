@@ -3,23 +3,43 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
 
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaGoods */
 /* @var $form yii\widgets\ActiveForm */
 
+$createUrl = Url::toRoute(['oa-goods/forward-create','type'=>'check', ]);
 
 $js = <<<JS
 
-//创建提交审核事件
-$('#create-to-check').on('click',function() {
-    var form = $('#create-form');
-        form.attr('action', form.data('href'));
-        form.submit();
-});
+function checkNumber(ele) {
+  //ajax 提交表单
+  ele.on('click', function() {
+  
+  if(!$('#oaforwardgoods-stockup').is(":checked")) {
+    if('$canCreate' === 'no') {
+      alert('已经超过本月数量限制！');
+      return false;
+    }
+  }
+  var form = $('#create-form');
+  $.ajax({
+      url:'$createUrl',
+      type: 'post',
+      data: form.serialize(),
+      success: function(ret) {
+        alert(ret);
+        window.location.reload();
+      }
+  });
+})
+  
+}
 
+//create
+checkNumber($('#create-btn'));
+checkNumber($('#create-to-check'));
 
 
 
@@ -37,14 +57,10 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
         [
             'id' => 'create-form',
             'method' => 'post',
-            'options' => ['data-href' => Url::to(['oa-goods/forward-create', 'type' => 'check'])],
-//            'name' => 'oa-forward-create-form'
         ]
     ); ?>
 
     <?php echo  $form->field($model, 'img',['template' => "<font color='red'>*{label}</font>\n<div >{input}</div>\n<div >{error}</div>",])->textInput(['placeholder' => '--必填--']) ?>
-
-    <?php //echo $form->field($model, 'cate',['template' => "<font color='red'>*{label}</font>\n<div >{input}</div>\n<div>{error}</div>",])->textInput(['placeholder' => '--必填--']) ?>
 
     <?= $form->field($model,'cate',['template' => "<font color='red'>*{label}</font>\n<div >{input}</div>\n<div >{error}</div>",])->dropDownList($model->getCatList(0),
         [
@@ -89,7 +105,7 @@ $getSubCateUrl = Url::toRoute(['oa-goods/forward-create','typeid'=>1, ]);
 
 
     <div class="form-group">
-        <?= Html::submitButton('创建', ['id' => 'create-btn','class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::button('创建', ['id' => 'create-btn','class' => 'btn btn-primary']) ?>
         <?= Html::button('创建并提交审批', ['id' => 'create-to-check', 'class' => 'btn btn-info']) ?>
     </div>
 
