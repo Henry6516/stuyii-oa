@@ -999,11 +999,20 @@ class OaGoodsController extends BaseController
                       and DATEDIFF(mm, createDate, getdate()) = 0
                       and developer=:developer";
         $connection = Yii::$app->db;
-        $used = $connection->createCommand($numberUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
-        $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll();
-        if(!$have){
-            return 'no';
-        }else if($have>0 && $used>=$have[0]['haveStock']) {
+        try {
+            $used = $connection->createCommand($numberUsed,[':developer'=>$user])->queryAll()[0]['usedStock'];
+        }
+        catch (\Exception $e) {
+            $used = 0;
+        }
+        try {
+            $have = $connection->createCommand($numberHave,[':developer'=>$user])->queryAll()[0]['haveStock'];
+        }
+        catch (\Exception $e) {
+            $have = 0;
+        }
+
+         if($have>0 && $used>=$have[0]['haveStock']) {
             return 'no';
         }
         return 'yes';
