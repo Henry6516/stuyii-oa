@@ -73,12 +73,12 @@ class OaCheckController extends BaseController
         $request = yii::$app->request->post()['OaGoods'];
         $connection = yii::$app->db;
         $id = $request['nid'];
-        $userid = Yii::$app->user->identity->getId();
         $approvalNote = isset($request['approvalNote'])?$request['approvalNote']:'';
         $model = $this->findModel($id);
         $trans = $connection->beginTransaction();
         try{
-            $user = User::findOne(['id' => $userid]);
+            $developer = $model->developer;
+            $user = User::findOne(['username' => $developer]);
             $mapPersons = $user->mapPersons;
             $cate = $model->cate;
             $_model = new OaGoodsinfo();
@@ -90,7 +90,6 @@ class OaCheckController extends BaseController
             $code = $this->generateCode($cate);
             $nid = $model->nid;
             $img = $model->img;
-            $developer = $model->developer;
             $_model->mapPersons = $mapPersons;
             $_model->goodsid =$nid;
             $_model->GoodsCode =$code;
@@ -138,11 +137,14 @@ class OaCheckController extends BaseController
                 $model = $this->findModel($id);
                 //插入到OagoodsInfo里面
                 $developer = $model->developer;
+                $user = User::findOne(['username' => $developer]);
+                $mapPersons = $user->mapPersons;
                 $_model = clone $info;
                 $nid = $model->nid;
                 $img = $model->img;
                 $cate = $model->cate;
                 $code = $this->generateCode($cate);
+                $_model->mapPersons = $mapPersons;
                 $_model->goodsid = $nid;
                 $_model->GoodsCode = $code;
                 $_model->picUrl = $img;
