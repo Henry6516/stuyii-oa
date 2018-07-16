@@ -149,7 +149,7 @@ class StockPerformController extends BaseController
         }
         //获取数据
         $sql = "P_oa_Non_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
-
+        //var_dump($sql);exit;
         //缓存数据
         $cache = Yii::$app->local_cache;
         //$cache->flush();

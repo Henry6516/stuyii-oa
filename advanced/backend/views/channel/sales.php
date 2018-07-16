@@ -49,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'aria-label' => '标记推广',
                         'data-id' => $key,
                         'class' => 'index-extend',
-                        'data-href' => $url,
+                        'data-href' => Url::toRoute(['/channel/extend']),
                     ];
                     return Html::a('<span  class="glyphicon glyphicon-check"></span>', '#', $options);
                 },
@@ -74,9 +74,19 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'extendStatus',
             'label' => '推广状态',
             //'format' => 'raw',
-            /*'value' => function ($model) {
-                return $model->extendStatus ? $model->extendStatus : '未推广';
-            },*/
+            'value' => function ($model) use($role){
+                if(strpos($role,'销售') !== false){
+                    $user = yii::$app->user->identity->username;
+                    $res = yii::$app->db->createCommand("SELECT status FROM [oa_goodsinfo_extend_status] 
+                    WHERE  goodsinfo_id=" . $model->pid . " and saler='{$user}'")->queryOne();
+                    //var_dump($res);exit;
+                    return $res && $res['status'] && $model->extendStatus ?
+                        ($model->extendStatus.'('.$res['status'].')') :
+                        $model->extendStatus.'(未推广)';
+                }else{
+                    return $model->extendStatus ? $model->extendStatus : '未推广';
+                }
+            },
             'filterType' => GridView::FILTER_SELECT2,
             'filter' => ['已推广' => '已推广','未推广' => '未推广'],
             'filterWidgetOptions' => [
@@ -338,11 +348,14 @@ $('.extend-lots').on('click', function() {
 
 //单个标记推广完成
 $('.index-extend').on('click', function() {
+    id = $(this).closest('tr').data('key');
+    console.log($('.index-extend').data('href'));
     krajeeDialog.confirm('确定标记推广完成?',function(res) {
         if(res){
             $.ajax({
                 type:"get",
                 url:$('.index-extend').data('href'),
+                data:{id:id},
                 success:function(data) {
                     alert(data);
                     location.reload()

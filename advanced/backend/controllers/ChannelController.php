@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Goodssku;
 use backend\models\OaGoods;
 use backend\models\OaGoodsinfo;
+use backend\models\OaGoodsinfoExtendStatus;
 use backend\models\OaWishgoodssku;
 use backend\unitools\PHPExcelTools;
 use common\components\BaseController;
@@ -99,12 +100,24 @@ class ChannelController extends BaseController
         $res = $connection->createCommand($sql)->queryAll();
         $list = ArrayHelper::map($res, 'DictionaryName', 'DictionaryName');
         $stores = $this->getStore();
+
+        //获取用户角色
+        $user = yii::$app->user->identity->username;
+        $role_sql = yii::$app->db->createCommand("SELECT t2.item_name as role FROM [user] t1,[auth_assignment] t2 
+                    WHERE  t1.id=t2.user_id and username='$user'");
+        $role = $role_sql->queryAll();
+        $roleList = ArrayHelper::getColumn($role, 'role');
+        $roles = implode(',', $roleList);
+
+
+
         return $this->render('sales', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'goodsStatusList' => $list,
             'stores' => $stores,
-            'selectedStatus' => \implode(',', $selectedStatus)
+            'selectedStatus' => \implode(',', $selectedStatus),
+            'role' => $roles,
         ]);
     }
 
@@ -933,15 +946,42 @@ class ChannelController extends BaseController
      */
     public function actionExtendLots()
     {
+        $username = yii::$app->user->identity->username;
         $ids = yii::$app->request->post()["id"];
         $connection = yii::$app->db;
         $trans = $connection->beginTransaction();
         try {
             foreach ($ids as $id) {
                 $model = $this->findModel($id);
-                $model->extendStatus = '已推广';
-                if (!$model->save(false)) {
+                //判断当前用户是否可以推广
+                $salerList = explode(',',$model->mapPersons);
+                if(!in_array($username,$salerList)){
+                    throw new Exception('You can not promote the product!');
+                }
+                //保存个人推广信息
+                $statusModel = OaGoodsinfoExtendStatus::findOne(['goodsinfo_id' => $id, 'saler' => $username]);
+                if($statusModel){
+                    $statusModel->status = '已推广';
+                }else{
+                    $statusModel = new OaGoodsinfoExtendStatus();
+                    $statusModel->goodsinfo_id = $id;
+                    $statusModel->saler = $username;
+                    $statusModel->status = '已推广';
+                    $statusModel->createtime = date('Y-m-d H:i:s',time());
+                }
+                if(!$statusModel->save(false)){
                     throw new Exception('fail to update extendStatus!');
+                }
+
+                //查看销售推广情况
+                $salerNum = count($salerList);
+                $number = OaGoodsinfoExtendStatus::find()
+                    ->andWhere(['goodsinfo_id' => $id,'status' => '已推广'])
+                    ->count();
+                //保存商品所有推广信息（所有人推广完成，商品推广完成）
+                if($salerNum == $number){
+                    $model->extendStatus = '已推广';
+                    $model->save(false);
                 }
             }
             $trans->commit();
@@ -960,8 +1000,48 @@ class ChannelController extends BaseController
     public function actionExtend($id)
     {
         $model = $this->findModel($id);
-        $model->extendStatus = '已推广';
-        return $model->save(false) ? "标记推广完成成功" : "标记推广完成失败！";
+        $username = yii::$app->user->identity->username;
+        $connection = yii::$app->db;
+        $trans = $connection->beginTransaction();
+        try{
+            //判断当前用户是否可以推广
+            $salerList = explode(',',$model->mapPersons);
+            if(!in_array($username,$salerList)){
+                throw new Exception('You can not promote the product!');
+            }
+            //保存个人推广信息
+            $statusModel = OaGoodsinfoExtendStatus::findOne(['goodsinfo_id' => $id, 'saler' => $username]);
+            if($statusModel){
+                $statusModel->status = '已推广';
+            }else{
+                $statusModel = new OaGoodsinfoExtendStatus();
+                $statusModel->goodsinfo_id = $id;
+                $statusModel->saler = $username;
+                $statusModel->status = '已推广';
+                $statusModel->createtime = date('Y-m-d H:i:s',time());
+            }
+            if(!$statusModel->save(false)){
+                throw new Exception('fail to update extendStatus!');
+            }
+
+            //查看销售推广情况
+            $salerNum = count($salerList);
+            $number = OaGoodsinfoExtendStatus::find()
+                ->andWhere(['goodsinfo_id' => $id,'status' => '已推广'])
+                ->count();
+            //保存商品所有推广信息（所有人推广完成，商品推广完成）
+            if($salerNum == $number){
+                $model->extendStatus = '已推广';
+                $model->save(false);
+            }
+            $trans->commit();
+            $res = '标记推广完成成功';
+        }catch (\Exception $ex) {
+            $trans->rollback();
+            $res = '标记推广完成失败!';
+            //echo $ex;
+        }
+        return $res;
     }
 
 

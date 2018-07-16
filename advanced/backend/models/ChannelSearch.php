@@ -5,6 +5,7 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -97,8 +98,7 @@ class ChannelSearch extends Channel
                     WHERE  t1.id=t2.user_id and
                     username='$user'
                     ");
-        $role = $role_sql
-            ->queryAll();
+        $role = $role_sql->queryAll();
         $roleList = ArrayHelper::getColumn($role, 'role');
         $roles = implode(',', $roleList);
 
@@ -284,10 +284,39 @@ class ChannelSearch extends Channel
 
         //推广状态
         if ($this->extendStatus == '已推广') {
-            $query->andFilterWhere(['extendStatus' => '已推广']);
+//            if(strpos($roles,'销售') !== false){
+//                $query->andFilterWhere([
+//                    'EXISTS',
+//                    //OaGoodsinfoExtendStatus::find()
+//                    (new Query())->select('*')->from('oa_goodsinfo_extend_status')
+//                        ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+//                        ->andWhere(['saler' => $user])
+//                        ->andWhere(['status' => '已推广'])
+//                    ]);
+//            }else {
+                $query->andFilterWhere(['extendStatus' => '已推广']);
+//            }
         }
         if ($this->extendStatus == '未推广') {
-            $query->andWhere(['or', ['extendStatus' => null], ['extendStatus' => '未推广']]);
+//            if(strpos($roles,'销售') !== false){
+//                $query->andFilterWhere([
+//                    'OR',
+//                    [
+//                        'EXISTS',
+//                        OaGoodsinfoExtendStatus::find()
+//                        ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+//                        ->andWhere(['saler' => $user, 'status' => '未推广'])
+//                    ],
+//                    [
+//                        'NOT EXISTS',
+//                        OaGoodsinfoExtendStatus::find()
+//                            ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+//                            ->andWhere(['saler' => $user])
+//                    ]
+//                ]);
+//            }else {
+                $query->andWhere(['OR', ['extendStatus' => null], ['extendStatus' => '未推广']]);
+//            }
         }
 
         //完成状态

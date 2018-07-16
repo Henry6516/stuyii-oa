@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaGoods */
 /* @var $form yii\widgets\ActiveForm */
-$createUrl = Url::toRoute(['oa-goods/forward-create','type'=>'check', ]);
+$createUrl = Url::toRoute(['oa-goods/backward-create','type'=>'check', ]);
 $js = <<<JS
 
 function checkNumber(ele) {
