@@ -118,6 +118,7 @@ class ChannelController extends BaseController
             'stores' => $stores,
             'selectedStatus' => \implode(',', $selectedStatus),
             'role' => $roles,
+            'user' => $user,
         ]);
     }
 
@@ -989,7 +990,9 @@ class ChannelController extends BaseController
         } catch (Exception $e) {
             $trans->rollBack();
             $msg = "批量标记推广完成失败！";
+            $msg = $e->getMessage();
         }
+        var_dump($msg);exit;
         return $msg;
     }
 
@@ -1039,6 +1042,7 @@ class ChannelController extends BaseController
         }catch (\Exception $ex) {
             $trans->rollback();
             $res = '标记推广完成失败!';
+            $res = $ex->getMessage();
             //echo $ex;
         }
         return $res;

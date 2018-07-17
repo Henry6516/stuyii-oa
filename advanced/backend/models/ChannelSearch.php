@@ -36,10 +36,10 @@ class ChannelSearch extends Channel
     {
         return [
             [['stockUp', 'pid', 'IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged', 'goodsid', 'SupplierID', 'StoreID', 'bgoodsid', 'number'], 'integer'],
-            [['mapPersons','introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
+            [['mapPersons', 'introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
-                'subCat', 'wishpublish', 'goodsstatus', 'stockdays', 'mid', 'extendStatus'], 'safe'],
+                'subCat', 'wishpublish', 'goodsstatus', 'stockdays', 'mid'/*, 'extendStatus'*/], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -284,39 +284,62 @@ class ChannelSearch extends Channel
 
         //推广状态
         if ($this->extendStatus == '已推广') {
-//            if(strpos($roles,'销售') !== false){
-//                $query->andFilterWhere([
-//                    'EXISTS',
-//                    //OaGoodsinfoExtendStatus::find()
-//                    (new Query())->select('*')->from('oa_goodsinfo_extend_status')
-//                        ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
-//                        ->andWhere(['saler' => $user])
-//                        ->andWhere(['status' => '已推广'])
-//                    ]);
-//            }else {
-                $query->andFilterWhere(['extendStatus' => '已推广']);
-//            }
+
+
+
+            $query->andFilterWhere([
+                'OR',
+                [
+                    'AND',
+                    [
+                        'EXISTS',
+                        OaGoodsinfoExtendStatus::find()
+                        //(new Query())->select('*')->from('oa_goodsinfo_extend_status')
+                            ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+                            ->andWhere(['saler' => $user])
+                            ->andWhere(['status' => '已推广'])
+                            //->exists()
+                    ],
+                    ['like', 'mapPersons', $user]
+                ],
+                [
+                    'AND',
+                    ['not like', 'mapPersons', $user],
+                    ['extendStatus' => '已推广']
+                ]
+            ]);
         }
         if ($this->extendStatus == '未推广') {
-//            if(strpos($roles,'销售') !== false){
-//                $query->andFilterWhere([
-//                    'OR',
-//                    [
-//                        'EXISTS',
-//                        OaGoodsinfoExtendStatus::find()
-//                        ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
-//                        ->andWhere(['saler' => $user, 'status' => '未推广'])
-//                    ],
-//                    [
-//                        'NOT EXISTS',
-//                        OaGoodsinfoExtendStatus::find()
-//                            ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
-//                            ->andWhere(['saler' => $user])
-//                    ]
-//                ]);
-//            }else {
-                $query->andWhere(['OR', ['extendStatus' => null], ['extendStatus' => '未推广']]);
-//            }
+            //var_dump(1111);exit;
+            $query->andWhere([
+                'OR',
+                [
+                    'AND',
+                    ['like', 'mapPersons', $user],
+                    [
+                        'OR',
+                        [
+                            'EXISTS',
+                            (new Query())->select('*')->from('oa_goodsinfo_extend_status')
+                                ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+                                ->andWhere(['saler' => $user])
+                                ->andWhere(['status' => '未推广'])
+                        ],
+                        [
+                            'NOT EXISTS',
+                            (new Query())->select('*')->from('oa_goodsinfo_extend_status')
+                                ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
+                                ->andWhere(['saler' => $user])
+                        ]
+                    ]
+                ],
+                [
+                    'AND',
+                    ['not like', 'mapPersons', $user],
+                    ["ISNULL(extendStatus,'未推广')" => '未推广']
+                ]
+
+            ]);
         }
 
         //完成状态
@@ -430,9 +453,9 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'oa_goodsInfo.stockUp', $this->stockUp])
             ->andFilterWhere(['like', 'oa_goodsInfo.mapPersons', $this->mapPersons])
             ->andFilterWhere(['like', 'oa_goods.introducer', $this->introducer]);
-        Yii::$app->db->cache(function ($db) use ($dataProvider) {
+        /*Yii::$app->db->cache(function ($db) use ($dataProvider) {
             $dataProvider->prepare();
-        }, 60);
+        }, 60);*/
         return $dataProvider;
     }
 }

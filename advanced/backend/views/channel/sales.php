@@ -12,6 +12,7 @@ $this->title = Yii::t('app', '销售产品列表');
 $this->params['breadcrumbs'][] = $this->title;
 \backend\assets\AppAsset::addJs($this, 'plugins/bootstrap-select/bootstrap-select.min.js');
 \backend\assets\AppAsset::addCss($this, 'plugins/bootstrap-select/bootstrap-select.min.css');
+
 ?>
 <!--<link rel="stylesheet" href="../css/bootstrap-select.min.css">-->
 
@@ -74,15 +75,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'extendStatus',
             'label' => '推广状态',
             //'format' => 'raw',
-            'value' => function ($model) use($role){
-                if(strpos($role,'销售') !== false){
-                    $user = yii::$app->user->identity->username;
+            'value' => function ($model) use($role,$user){
+                if(strpos($model->mapPersons,$user) !== false){
                     $res = yii::$app->db->createCommand("SELECT status FROM [oa_goodsinfo_extend_status] 
                     WHERE  goodsinfo_id=" . $model->pid . " and saler='{$user}'")->queryOne();
                     //var_dump($res);exit;
-                    return $res && $res['status'] && $model->extendStatus ?
-                        ($model->extendStatus.'('.$res['status'].')') :
-                        $model->extendStatus.'(未推广)';
+                    return $res && $res['status'] ? $res['status'] : '未推广';
                 }else{
                     return $model->extendStatus ? $model->extendStatus : '未推广';
                 }
