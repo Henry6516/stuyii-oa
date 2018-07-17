@@ -39,7 +39,7 @@ class ChannelSearch extends Channel
             [['mapPersons', 'introducer', 'isVar', 'cate', 'subCate', 'description', 'GoodsName', 'AliasCnName', 'AliasEnName', 'PackName',
                 'Season', 'DictionaryName', 'SupplierName', 'StoreName', 'completeStatus', 'Purchaser', 'possessMan1', 'possessMan2',
                 'picUrl', 'GoodsCode', 'achieveStatus', 'devDatetime', 'developer', 'updateTime', 'picStatus', 'AttributeName', 'cate',
-                'subCat', 'wishpublish', 'goodsstatus', 'stockdays', 'mid'/*, 'extendStatus'*/], 'safe'],
+                'subCat', 'wishpublish', 'goodsstatus', 'stockdays', 'mid', 'extendStatus'], 'safe'],
             [['DeclaredValue'], 'number'],
         ];
     }
@@ -127,8 +127,8 @@ class ChannelSearch extends Channel
         $storeList = !empty($stores) ? explode(',', $stores) : [];
         $platsList = !empty($plats) ? explode(',', $plats) : [];
 
-        foreach ($result as $user) {
-            array_push($users, $user['userName']);
+        foreach ($result as $u) {
+            array_push($users, $u['userName']);
         }
         if ($unit == '平台信息') {
             if (strpos($roles, '销售') === false) {
@@ -284,22 +284,13 @@ class ChannelSearch extends Channel
 
         //推广状态
         if ($this->extendStatus == '已推广') {
-
-
-
+            $query->joinWith(['oa_goods_extend']);
             $query->andFilterWhere([
                 'OR',
                 [
                     'AND',
-                    [
-                        'EXISTS',
-                        OaGoodsinfoExtendStatus::find()
-                        //(new Query())->select('*')->from('oa_goodsinfo_extend_status')
-                            ->where("goodsinfo_id={{oa_goodsinfo}}.pid")
-                            ->andWhere(['saler' => $user])
-                            ->andWhere(['status' => '已推广'])
-                            //->exists()
-                    ],
+                    ['oa_goodsinfo_extend_status.saler' => $user,],
+                    ['oa_goodsinfo_extend_status.status' => '已推广',],
                     ['like', 'mapPersons', $user]
                 ],
                 [
@@ -308,6 +299,7 @@ class ChannelSearch extends Channel
                     ['extendStatus' => '已推广']
                 ]
             ]);
+            //echo $query->createCommand()->getRawSql();exit;
         }
         if ($this->extendStatus == '未推广') {
             //var_dump(1111);exit;
@@ -338,8 +330,8 @@ class ChannelSearch extends Channel
                     ['not like', 'mapPersons', $user],
                     ["ISNULL(extendStatus,'未推广')" => '未推广']
                 ]
-
             ]);
+            //echo $query->createCommand()->getRawSql();exit;
         }
 
         //完成状态

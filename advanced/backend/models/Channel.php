@@ -135,6 +135,13 @@ class Channel extends \yii\db\ActiveRecord
     }
 
 
+    public function getoa_goods_extend()
+    {
+        // hasOne要求返回两个参数 第一个参数是关联表的类名 第二个参数是两张表的关联关系
+        // 这里uid是auth表关联id, 关联user表的uid id是当前模型的主键id
+        return $this->hasOne(OaGoodsinfoExtendStatus::className(), ['goodsinfo_id' => 'pid']);
+    }
+
 
 }
 
