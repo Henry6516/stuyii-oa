@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-sm-1">
             <?= Html::button(Yii::t('app', '批量标记推广完成'),
-                ['class' => 'extend-lots btn btn-info','data-href' => Url::toRoute(['extend-lots'])]) ?>
+                ['class' => 'extend-lots btn btn-info', 'data-href' => Url::toRoute(['extend-lots'])]) ?>
         </div>
 
     </div>
@@ -74,19 +74,26 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'attribute' => 'extendStatus',
             'label' => '推广状态',
-            //'format' => 'raw',
-            'value' => function ($model) use($role,$user){
-                if(strpos($model->mapPersons,$user) !== false){
+            'format' => 'raw',
+            'value' => function ($model) use ($role, $user) {
+                if (strpos($model->mapPersons, $user) !== false) {
                     $res = yii::$app->db->createCommand("SELECT status FROM [oa_goodsinfo_extend_status] 
                     WHERE  goodsinfo_id=" . $model->pid . " and saler='{$user}'")->queryOne();
                     //var_dump($res);exit;
                     return $res && $res['status'] ? $res['status'] : '未推广';
-                }else{
-                    return $model->extendStatus ? $model->extendStatus : '未推广';
+                } else {
+                    return Html::a($model->extendStatus ? $model->extendStatus : '未推广',
+                        'javascript:void(0);',
+                        [
+                            'title' => 'create', 'data-toggle' => 'modal',
+                            'data-target' => '#index-modal',
+                            'data-url' => Url::toRoute(['extend-view']),
+                            'class' => 'admin-extend-status'
+                        ]);
                 }
             },
             'filterType' => GridView::FILTER_SELECT2,
-            'filter' => ['已推广' => '已推广','未推广' => '未推广'],
+            'filter' => ['已推广' => '已推广', '未推广' => '未推广'],
             'filterWidgetOptions' => [
                 'pluginOptions' => ['allowClear' => true],
             ],
@@ -307,9 +314,22 @@ $this->params['breadcrumbs'][] = $this->title;
 ]);
 
 ?>
-
-
 <?php
+//创建模态框
+use yii\bootstrap\Modal;
+
+Modal::begin([
+    'id' => 'index-modal',
+    'footer' => '<a href="#" class="btn btn-primary" data-dismiss="modal">关闭</a>',
+    'size' => "modal-lg",
+    'options' => [
+        'data-backdrop' => 'static',//点击空白处不关闭弹窗
+        'data-keyboard' => false,
+    ],
+]);
+Modal::end();
+
+
 $js = <<< JS
 
 //默认选中项
@@ -320,6 +340,16 @@ var i = 0, size = valArr.length;
 for (i; i < size; i++) {
     $('#channelsearch-completestatus').multiselect('select', valArr[i]);
 }
+//查看推广详情
+$('.admin-extend-status').on('click', function() {
+    $('.modal-body').children('div').remove();
+    $.get($('.admin-extend-status').data('url'),{ id: $(this).closest('tr').data('key') },
+        function (data) {
+            $('.modal-body').html(data);
+        }
+    );
+})
+
 
 //批量标记推广完成
 $('.extend-lots').on('click', function() {

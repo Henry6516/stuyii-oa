@@ -135,6 +135,31 @@ class ChannelController extends BaseController
     }
 
     /**
+     * 推广详情
+     * @param $id
+     * @return string
+     */
+    public function actionExtendView($id)
+    {
+        $model = $this->findModel($id);
+        $salerList = explode(',',$model->mapPersons);
+        $data = [];
+        foreach ($salerList as $k => $v){
+            $data[$k]['saler'] = $v;
+            $extendModel = OaGoodsinfoExtendStatus::findOne(['goodsinfo_id' => $id, 'saler' => $v]);
+            if($extendModel){
+                $data[$k]['status'] = $extendModel['status'];
+            }else{
+                $data[$k]['status'] = '未推广';
+            }
+        }
+        return $this->renderAjax('extend-view', [
+            'data' => $data,
+            'model' => $model,
+        ]);
+    }
+
+    /**
      * Creates a new Channel model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
