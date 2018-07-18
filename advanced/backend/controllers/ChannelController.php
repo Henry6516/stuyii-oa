@@ -1301,6 +1301,7 @@ class ChannelController extends BaseController
             unset($joom['joomPrice']);
             $filter_ret[] = $joom;
         }
+        unset($joomRes[0]['joomPrice']);
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom模板csv';
         $this->actionExportCsv($filter_ret, $header_data, $file_name);
@@ -1338,6 +1339,7 @@ class ChannelController extends BaseController
             }
             $filter_ret[] = $joom;
         }
+
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom2模板csv';
         $this->actionExportCsv($filter_ret, $header_data, $file_name);
@@ -1392,6 +1394,7 @@ class ChannelController extends BaseController
                 unset($joom['joomPrice']);
                 $filter_ret[] = $joom;
             }
+            unset($joomRes[0]['joomPrice']);
             $header['header'] = array_keys($joomRes[0]);
         }
         $file_name = date('Y-m-d') . '-Joom模板csv';
