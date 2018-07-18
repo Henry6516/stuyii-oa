@@ -472,7 +472,7 @@ $('body').on('click','.down-btn',function() {
         return false;
         }
         window.location.href = '{$joomUrl}' + '&suffix=' + joom;
-    })
+    });  
     
     //底部选择导出Joom模板
     $('.export-joom-bottom').on('click',function() {

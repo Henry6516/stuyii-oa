@@ -760,6 +760,17 @@ class ChannelController extends BaseController
                 }
             }
 
+            //主图用商品编码 拼接
+            if ($isVar == '是') {
+                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
+
+            } else {
+                $strvariant = '';
+                $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
+                $foos[0][0]['price'] = $goodsSku->price;
+                $foos[0][0]['shipping'] = $goodsSku->shipping;
+            }
+
             //价格判断
             $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
             if ($totalprice <= 2) {
@@ -773,12 +784,7 @@ class ChannelController extends BaseController
                 $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
 
             }
-            //主图用商品编码 拼接
-            if ($isVar == '是') {
-                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
-            } else {
-                $strvariant = '';
-            }
+
 
             $row = $key + 2;
             $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/' . $GoodsCode . '-_' . $value['MainImg'] . '_.jpg';
