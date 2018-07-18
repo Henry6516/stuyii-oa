@@ -249,7 +249,7 @@ if (empty($sku->randomKeywords)) {
 
 
 </div>
-<div class="wish-btn">
+<div class="wish-btn-bottom">
     <button class="btn btn-info update-info" type="button">更新</button>
     <button class="btn btn-primary wish-sign" type="button">Wish保存并完善</button>
     <button class="btn btn-success export" type="button">导出ibay模版</button>
@@ -262,7 +262,7 @@ if (empty($sku->randomKeywords)) {
         ?>
         ?>
     </select>
-    <button class="btn export-joom" type="button">导出Joom模板</button>
+    <button class="btn export-joom-bottom" type="button">导出Joom模板</button>
 <!--    <button class="btn shopee-csv" type="button" style="background-color: #a1abff; color: #fff">导出shopee</button>-->
 </div>
 <?php ActiveForm::end(); ?>
@@ -464,9 +464,19 @@ $('body').on('click','.down-btn',function() {
          window.location.href = '{$joomSecUrl}'
     });
     
-    //选择导出Joom模板
+    //顶部选择导出Joom模板
     $('.export-joom').on('click',function() {
         var joom = $('.wish-btn select option:selected').val();
+        if( joom===null ||joom===undefined ||joom==='') {
+        alert("请选择Joom账号！");
+        return false;
+        }
+        window.location.href = '{$joomUrl}' + '&suffix=' + joom;
+    })
+    
+    //底部选择导出Joom模板
+    $('.export-joom-bottom').on('click',function() {
+        var joom = $('.wish-btn-bottom select option:selected').val();
         if( joom===null ||joom===undefined ||joom==='') {
         alert("请选择Joom账号！");
         return false;
