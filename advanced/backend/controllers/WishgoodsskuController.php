@@ -111,6 +111,7 @@ class WishgoodsskuController extends BaseController
                         $sku_model->size = isset($value['size']) ? $value['size'] : '';
                         $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
                         $sku_model->price = isset($value['price']) ? $value['price'] : '';
+                        $sku_model->joomPrice = isset($value['joomPrice']) ? $value['joomPrice'] : '';
                         $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
                         $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
                         $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';

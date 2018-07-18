@@ -1286,13 +1286,19 @@ class ChannelController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            $weight = $joom['Shipping weight'] * 1000;
-            foreach ($adjust_ret as $adjust) {
-                if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
-                    $joom['*Price'] += $adjust['added_price'];
-                    break;
+            if (!empty($joom['joomPrice'])) {
+                $joom['*Price'] = $joom['joomPrice'];
+            }
+            else {
+                $weight = $joom['Shipping weight'] * 1000;
+                foreach ($adjust_ret as $adjust) {
+                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                        $joom['*Price'] += $adjust['added_price'];
+                        break;
+                    }
                 }
             }
+            unset($joom['joomPrice']);
             $filter_ret[] = $joom;
         }
         $header_data = array_keys($joomRes[0]);
@@ -1371,13 +1377,19 @@ class ChannelController extends BaseController
             // adjust price according to weight
 
             foreach ($joomRes as $joom) {
-                $weight = $joom['Shipping weight'] * 1000;
-                foreach ($adjust_ret as $adjust) {
-                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
-                        $joom['*Price'] += $adjust['added_price'];
-                        break;
+                if (!empty($joom['joomPrice'])) {
+                    $joom['*Price'] = $joom['joomPrice'];
+                }
+                else {
+                    $weight = $joom['Shipping weight'] * 1000;
+                    foreach ($adjust_ret as $adjust) {
+                        if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                            $joom['*Price'] += $adjust['added_price'];
+                            break;
+                        }
                     }
                 }
+                unset($joom['joomPrice']);
                 $filter_ret[] = $joom;
             }
             $header['header'] = array_keys($joomRes[0]);
