@@ -104,6 +104,7 @@ class ProductPerformController extends BaseController
                 WHERE aa.item_name IN (" . $role . ") AND ISNULL(u.username,'')='$username'";
         }
         $developer= Yii::$app->db->createCommand($sql)->queryAll();
+        $dev=[];
         foreach($developer as $v){
             $dev[$v['username']]  = $v['username'];
         }
