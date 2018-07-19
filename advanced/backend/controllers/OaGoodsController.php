@@ -975,11 +975,10 @@ class OaGoodsController extends BaseController
         if ($canStock === 0){
             return 'no';
         }
-        $stockUsed = 'select count(og.nid) as usedStock  from oa_goods as og  
-                      LEFT JOIN oa_goodsinfo as ogs on og.nid = ogs.goodsid
-                      where og.stockUp=1 and og.developer=:developer 
-                      and DATEDIFF(mm, createDate, getdate()) = 0
-                      and ogs.mid is null';
+        $stockUsed = "SELECT count(og.nid) AS usedStock FROM oa_goods AS og  
+                      LEFT JOIN oa_goodsinfo AS ogs ON og.nid = ogs.goodsid
+                      WHERE og.stockUp=1 AND og.developer=:developer AND ISNULL(og.checkStatus,'')<>''
+                      AND DATEDIFF(mm, createDate, getdate()) = 0 AND ogs.mid IS NULL ";
         $stockHave = "select stockNumThisMonth as haveStock  from oa_stock_goods_number 
                       where isStock= 'stock'
                       and DATEDIFF(mm, createDate, getdate()) = 0
