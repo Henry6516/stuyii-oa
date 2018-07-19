@@ -86,8 +86,7 @@ class ChannelSearch extends Channel
 
         //如果是平台信息模块则默认返回去除Wish和eBay都已完善数据
         if ($model_name == 'channel') {
-
-            $params['pageSize'] = isset($params['pageSize']) && $params['pageSize'] ? $params['pageSize'] : 6;
+            $params['pageSize'] = isset($params['pageSize']) && $params['pageSize'] ? $params['pageSize'] : 10;
         }
         $query->joinWith(['oa_goods']);
         $query->joinWith(['oa_templates']);
@@ -154,11 +153,17 @@ class ChannelSearch extends Channel
 
         if ($unit == '销售产品列表') {
             //过滤销售员产品
-            $map[0] = 'or';
-            foreach ($users as $k => $username) {
-                $map[$k + 1] = ['like', 'mapPersons', $username];
+            if (strpos($roles, '开发') !== false) {
+                $query->andWhere(['in', 'oa_goods.developer', $users]);
+                $query->andWhere(['<>', "ISNULL(mapPersons,'')", '']);
+            }else{
+                $map[0] = 'or';
+                foreach ($users as $k => $username) {
+                    $map[$k + 1] = ['like', 'mapPersons', $username];
+                }
+                $query->andWhere($map);
             }
-            $query->andWhere($map);
+
 
             //过滤禁售平台产品
             if ($roles == 'Wish销售') {

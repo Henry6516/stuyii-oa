@@ -89,7 +89,7 @@ class ChannelController extends BaseController
         $selectedStatus = null !== $params && isset($params['ChannelSearch'])? $params['ChannelSearch']['completeStatus']:'';
         $selectedStatus = $selectedStatus?:[];
         //设置默认推广状态
-        if(!$params){
+        if(!$params || $params && !isset($params['ChannelSearch'])){
             $params['ChannelSearch']['extendStatus'] = '未推广';
         }
         $dataProvider = $searchModel->search($params, 'channel', '销售产品列表');

@@ -76,7 +76,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'label' => '推广状态',
             'format' => 'raw',
             'value' => function ($model) use ($role, $user) {
-                if (strpos($model->mapPersons, $user) !== false) {
+                if(strpos($role, '开发') !== false){
+                   return $model->extendStatus ? $model->extendStatus : '未推广';
+                }else if(strpos($model->mapPersons, $user) !== false) {
                     $res = yii::$app->db->createCommand("SELECT status FROM [oa_goodsinfo_extend_status] 
                     WHERE  goodsinfo_id=" . $model->pid . " and saler='{$user}'")->queryOne();
                     //var_dump($res);exit;
@@ -85,7 +87,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($model->extendStatus ? $model->extendStatus : '未推广',
                         'javascript:void(0);',
                         [
-                            'title' => 'create', 'data-toggle' => 'modal',
+                            'title' => '查看详情', 'data-toggle' => 'modal',
                             'data-target' => '#index-modal',
                             'data-url' => Url::toRoute(['extend-view']),
                             'class' => 'admin-extend-status'

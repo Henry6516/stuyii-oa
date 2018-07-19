@@ -25,7 +25,16 @@ $this->params['breadcrumbs'][] = $this->title;
                     <?php foreach ($data as $v): ?>
                         <tr>
                             <td><?php echo $v['saler']; ?></td>
-                            <td><?php echo $v['status']; ?></td>
+                            <td>
+                                <?php if($v['status'] === '未推广'){
+                                    echo Html::label($v['status'],null,
+                                        ['style' => 'color:red']);
+                                }else{
+                                    echo Html::label($v['status'],null,
+                                        ['style' => 'color:green']);
+                                }
+                                ?>
+                            </td>
                         </tr>
                         <tr style="display: none;" data-open="false">
                             <td colspan="8" class="show-<?php echo $v['saler']; ?>" data-show="false">
