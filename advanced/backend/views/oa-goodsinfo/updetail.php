@@ -411,6 +411,9 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             'RetailPrice' => ['label' => '零售价', 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'RetailPrice'],
             ],
+            'joomPrice' => ['label' => 'joom总售价', 'type' => TabularForm::INPUT_TEXT,
+                'options' => ['class' => 'joomPrice'],
+            ],
             'stockNum' => ['label' => '备货数量', 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'stockNum', 'readonly' => $stock_flag],
             ],
@@ -433,6 +436,8 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                     Html::button('重量确定', ['id' => 'Weight-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::input('text', 'RetailPrice', '', ['class' => 'RetailPrice-replace', 'placeholder' => '零售价$']) . ' ' .
                     Html::button('价格确定', ['id' => 'RetailPrice-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
+                    Html::input('text', 'joomPrice', '', ['class' => 'joomPrice-replace', 'placeholder' => 'joom总售价$']) . ' ' .
+                    Html::button('价格确定', ['id' => 'joomPrice-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::button('一键生成SKU', ['id' => 'sku-set', 'type' => 'button', 'class' => 'btn btn-success']) . ' ' .
                     Html::button('保存当前数据', ['id' => 'save-only', 'type' => 'button', 'class' => 'btn btn-info',
                         'data-href' => Url::to(['/goodssku/save-only', 'pid' => $pid, 'type' => 'goods-info'])]) . ' ' .
@@ -657,7 +662,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             
             //循环添加循环框
             var inputNames= ['sku','property1','property2',
-            'property3','CostPrice','Weight','RetailPrice','stockNum']
+            'property3','CostPrice','Weight','RetailPrice','joomPrice','stockNum']
             for (var i=3; i<inputNames.length + 3;i++){
                 if(inputNames[i-3] == 'stockNum'){
                     if ({$make_flag} == 0){
@@ -796,6 +801,13 @@ echo FormGrid::widget([ // continuation fields to row above without labels
        });
     });
     
+    //joom售价
+    $('#joomPrice-set').on('click',function(){
+       var newJoomPrice = $('.joomPrice-replace').val(); 
+       $('.joomPrice').each(function(){
+           $(this).val(newJoomPrice);
+       });  
+    });
     //批量编辑
     $('.data-edit').on('click', function() {        
        $.get('{$requestUrl2}', { id:$(this).closest('tr').data('key')},

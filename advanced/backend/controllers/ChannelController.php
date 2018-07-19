@@ -760,6 +760,17 @@ class ChannelController extends BaseController
                 }
             }
 
+            //主图用商品编码 拼接
+            if ($isVar == '是') {
+                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
+
+            } else {
+                $strvariant = '';
+                $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
+                $foos[0][0]['price'] = $goodsSku->price;
+                $foos[0][0]['shipping'] = $goodsSku->shipping;
+            }
+
             //价格判断
             $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
             if ($totalprice <= 2) {
@@ -773,12 +784,7 @@ class ChannelController extends BaseController
                 $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
 
             }
-            //主图用商品编码 拼接
-            if ($isVar == '是') {
-                $strvariant = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
-            } else {
-                $strvariant = '';
-            }
+
 
             $row = $key + 2;
             $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/' . $GoodsCode . '-_' . $value['MainImg'] . '_.jpg';
@@ -1280,15 +1286,22 @@ class ChannelController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            $weight = $joom['Shipping weight'] * 1000;
-            foreach ($adjust_ret as $adjust) {
-                if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
-                    $joom['*Price'] += $adjust['added_price'];
-                    break;
+            if (!empty($joom['joomPrice'])) {
+                $joom['*Price'] = $joom['joomPrice'];
+            }
+            else {
+                $weight = $joom['Shipping weight'] * 1000;
+                foreach ($adjust_ret as $adjust) {
+                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                        $joom['*Price'] += $adjust['added_price'];
+                        break;
+                    }
                 }
             }
+            unset($joom['joomPrice']);
             $filter_ret[] = $joom;
         }
+        unset($joomRes[0]['joomPrice']);
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom模板csv';
         $this->actionExportCsv($filter_ret, $header_data, $file_name);
@@ -1326,6 +1339,7 @@ class ChannelController extends BaseController
             }
             $filter_ret[] = $joom;
         }
+
         $header_data = array_keys($joomRes[0]);
         $file_name = $joomRes[0]['Parent Unique ID'] . '-Joom2模板csv';
         $this->actionExportCsv($filter_ret, $header_data, $file_name);
@@ -1365,15 +1379,22 @@ class ChannelController extends BaseController
             // adjust price according to weight
 
             foreach ($joomRes as $joom) {
-                $weight = $joom['Shipping weight'] * 1000;
-                foreach ($adjust_ret as $adjust) {
-                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
-                        $joom['*Price'] += $adjust['added_price'];
-                        break;
+                if (!empty($joom['joomPrice'])) {
+                    $joom['*Price'] = $joom['joomPrice'];
+                }
+                else {
+                    $weight = $joom['Shipping weight'] * 1000;
+                    foreach ($adjust_ret as $adjust) {
+                        if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                            $joom['*Price'] += $adjust['added_price'];
+                            break;
+                        }
                     }
                 }
+                unset($joom['joomPrice']);
                 $filter_ret[] = $joom;
             }
+            unset($joomRes[0]['joomPrice']);
             $header['header'] = array_keys($joomRes[0]);
         }
         $file_name = date('Y-m-d') . '-Joom模板csv';

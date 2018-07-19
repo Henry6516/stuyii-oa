@@ -53,6 +53,9 @@ $skuForm = ActiveForm::begin([
             'msrp'=>['label'=>'建议零售价(USD)', 'type'=>TabularForm::INPUT_TEXT,
                 'options'=>['class'=>'msrp'],
             ],
+            'joomPrice'=>['label'=>'Joom总售价(USD)', 'type'=>TabularForm::INPUT_TEXT,
+                'options'=>['class'=>'joomPrice']
+            ],
             'shipping_time'=>['label'=>'运输时间', 'type'=>TabularForm::INPUT_TEXT,
                 'options'=>['class'=>'shipping_time'],
             ],
@@ -88,6 +91,8 @@ $skuForm = ActiveForm::begin([
                     Html::button('运费确定', ['id'=>'shipping-set','type'=>'button','class'=>'btn']).' '.
                     Html::input('text','msrp','',['class' => 'msrp-replace','placeholder'=>'建议零售价','size'=>'8']).' '.
                     Html::button('建议零售价', ['id'=>'msrp-set','type'=>'button','class'=>'btn']).' '.
+                    Html::input('text','joomPrice','',['class' => 'joomPrice-replace','placeholder'=>'joom总售价','size'=>'8']).' '.
+                    Html::button('Joom总售价', ['id'=>'joomPrice-set','type'=>'button','class'=>'btn']).' '.
                     Html::input('text','shipping_time','',['class' => 'shipping_time-replace','placeholder'=>'运输时间','size'=>'8']).' '.
                     Html::button('运输时间', ['id'=>'shipping_time-set','type'=>'button','class'=>'btn']).' '.
                     Html::button('删除行', ['id'=>'delete-row','type'=>'button', 'class'=>'btn btn-danger kv-batch-delete']).'  '.
@@ -242,7 +247,14 @@ $js2 = <<<JS
            
        });
     });
-    
+    // joom售价
+    $('#joomPrice-set').on('click',function(){
+       var newJoomPrice = $('.joomPrice-replace').val(); 
+       $('.joomPrice').each(function(){
+           $(this).val(newJoomPrice);
+           
+       });
+    });
     //运费
     $('#shipping-set').on('click',function(){
         var shippingfee = $('.shipping-replace').val();    
