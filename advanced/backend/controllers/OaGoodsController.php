@@ -977,7 +977,7 @@ class OaGoodsController extends BaseController
         }
         $stockUsed = "SELECT count(og.nid) AS usedStock FROM oa_goods AS og  
                       LEFT JOIN oa_goodsinfo AS ogs ON og.nid = ogs.goodsid
-                      WHERE og.stockUp=1 AND og.developer=:developer AND ISNULL(og.checkStatus,'')<>''
+                      WHERE og.stockUp=1 AND og.developer=:developer AND ISNULL(og.checkStatus,'')<>'未通过'
                       AND DATEDIFF(mm, createDate, getdate()) = 0 AND ogs.mid IS NULL ";
         $stockHave = "select stockNumThisMonth as haveStock  from oa_stock_goods_number 
                       where isStock= 'stock'
