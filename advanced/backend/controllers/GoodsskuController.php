@@ -124,6 +124,7 @@ class GoodsskuController extends BaseController
                             $update_model->CostPrice = $row_value['CostPrice'];
                             $update_model->Weight = $row_value['Weight'];
                             $update_model->RetailPrice = $row_value['RetailPrice'];
+                            $update_model->joomPrice = $row_value['joomPrice'];
                             $update_model->stockNum = $row_value['stockNum'];
                             $update_model->update(false);
                         }
@@ -220,6 +221,7 @@ class GoodsskuController extends BaseController
                             $update_model->CostPrice = $row_value['CostPrice'];
                             $update_model->Weight = $row_value['Weight'];
                             $update_model->RetailPrice = $row_value['RetailPrice'];
+                            $update_model->joomPrice = $row_value['joomPrice'];
                             $update_model->stockNum = $row_value['stockNum'];
                             $update_model->update(false);
 
