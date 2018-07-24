@@ -3,7 +3,9 @@
 namespace backend\models;
 
 use Yii;
-
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 /**
  * This is the model class for table "oa_supplierGoods".
  *
@@ -16,7 +18,7 @@ use Yii;
  * @property string $createdTime
  * @property string $updatedTime
  */
-class OaSupplierGoods extends \yii\db\ActiveRecord
+class OaSupplierGoods extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -37,6 +39,19 @@ class OaSupplierGoods extends \yii\db\ActiveRecord
         ];
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['createdTime', 'updatedTime'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updatedTime'],
+                ],
+                 'value' => new Expression('getDate()'),
+            ],
+        ];
+    }
     /**
      * {@inheritdoc}
      */
