@@ -10,6 +10,7 @@ use kartik\grid\GridView;
 use kartik\builder\TabularForm;
 use yii\helpers\Url;
 
+$this->title = '产品关联';
 $form = ActiveForm::begin([
     'id'=>'detail',
     ])

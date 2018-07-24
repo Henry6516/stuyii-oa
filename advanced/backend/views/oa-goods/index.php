@@ -346,8 +346,9 @@ function centerFormat($name)
             centerFormat('subCate'),
             centerFormat('vendor1'),
             centerFormat('origin1'),
-            centerFormat('introducer'),
             centerFormat('introReason'),
+            centerFormat('introducer'),
+            centerFormat('developer'),
             [
                 'attribute' => 'checkStatus',
                 'width' => '100px',

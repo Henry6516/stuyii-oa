@@ -36,7 +36,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
             [['department','isLeader','leaderName','username', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'string'],
-            [['canStockUp','status', 'created_at', 'updated_at'], 'integer'],
+            [['canStockUp', 'maxSupplierNum', 'status', 'created_at', 'updated_at'], 'integer'],
             [['mapPersons','store'],'safe']
         ];
     }
@@ -55,6 +55,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'store' => '仓库',
             'canStockUp' => '是否能备货',
             'mapPersons' => '对应销售',
+            'maxSupplierNum' => '供应商最大数量',
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
