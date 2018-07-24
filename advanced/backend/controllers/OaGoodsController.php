@@ -12,6 +12,7 @@ use PHPUnit\Framework\Exception;
 use Yii;
 use backend\models\OaGoods;
 use backend\models\OaGoodsSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -129,8 +130,16 @@ class OaGoodsController extends BaseController
                 return $model->getCatList($pid);
             }
 
+            $sql = "SELECT u.username FROM auth_assignment AS au LEFT JOIN [user] u ON u.id=au.user_id
+                    WHERE item_name LIKE '%产品开发%' AND u.id IS NOT NULL ORDER BY u.username";
+            $dev = Yii::$app->db->createCommand($sql)->queryAll();
+            //print_r($dev);exit;
+
+            $devList = ArrayHelper::map($dev,'username','username');
+
             return $this->renderAjax('create', [
                 'model' => $model,
+                'devList' => $devList,
             ]);
         }
 
