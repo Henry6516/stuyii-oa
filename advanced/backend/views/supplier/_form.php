@@ -1,11 +1,30 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaSupplier */
 /* @var $form yii\widgets\ActiveForm */
+
+$js = <<<JS
+    $('.create').on('click',function(e) {
+        if('{$status}' == 'yes'){
+            location.href=$('#supplier-info').submit();   
+        }else{
+            alert('您的供应商已到达上限，不能再添加！');
+            return false;
+        }
+    })
+JS;
+$this->registerJs($js);
+
+
+
+
+
 ?>
 
 <div class="oa-supplier-form">
@@ -23,8 +42,26 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'supplierName')->widget(\kartik\select2\Select2::classname(), [
-        'data' => $data,
-        'options' => ['placeholder' => '--请选择供应商--'],
+        //'data' => $data,
+        //'options' => ['placeholder' => '--请选择供应商--'],
+        'options' => ['placeholder' => '请输入供应商名称 ...'],
+        'pluginOptions' => [
+            'allowClear' => true,
+            'minimumInputLength' => 1,//重要
+            'language' => [
+                'errorLoading' => new JsExpression("function () { return 'Waiting...'; }"),
+            ],
+            'ajax' => [
+                'url' => Url::toRoute(['/supplier/search']),
+                'dataType' => 'json',
+                'data' => new JsExpression('function(params) { return {q:params.term}; }'),
+                'cache' => true
+            ],
+            'width' => '400px',
+            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+            'templateResult' => new JsExpression('function(res) { return res.supplierName; }'),
+            'templateSelection' => new JsExpression('function (res) { return res.supplierName; }'),
+        ],
     ])->label('<span style="color: red">供应商名称</span>') ?>
 
     <?= $form->field($model, 'purchase')->textInput()->label('<span style="color: red">线下采购</span>') ?>
@@ -62,7 +99,7 @@ use yii\widgets\ActiveForm;
 
 
     <div class="form-group text-center col-lg-6">
-        <?= Html::submitButton($model->isNewRecord ? '添加' : '编辑', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '添加' : '编辑', ['class' => $model->isNewRecord ? 'create btn btn-success' : 'btn btn-primary']) ?>
         <?php //echo Html::a('返回列表', ['index'], ['class' =>  'btn btn-default' ]) ?>
     </div>
 

@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = '编辑';
             <div class="box-header with-border">
                 <h3 class="box-title">编辑供应商</h3>
             </div>
-            <?php echo $this->render('_form', ['model' => $model, 'data' => $data]) ?>
+            <?php echo $this->render('_form', ['model' => $model, 'data' => $data,'status' => '']) ?>
         </div>
     </div>
 </div>

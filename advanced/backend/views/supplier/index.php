@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\UrL;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -9,6 +10,9 @@ use kartik\grid\GridView;
 
 $this->title = '供应商管理';
 $this->params['breadcrumbs'][] = $this->title;
+
+if(!isset($status)) $status='';
+
 ?>
 <div class="oa-supplier-index">
 
@@ -16,7 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加新供应商', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('添加新供应商', '#', [
+            'class' => 'supplier-create btn btn-success',
+            'data-href' => Url::toRoute(['/supplier/create']),
+            'data-status' => $status,
+        ]) ?>
     </p>
 
     <?= GridView::widget([

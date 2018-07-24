@@ -45,8 +45,10 @@ use yii\helpers\ArrayHelper;
             [
                 'prompt'=>'--请选择子类--',
 
-            ]);
+            ])->label("<span style='color:red' >*子类目</span>");
         ?>
+
+        <?= $form->field($model, 'developer')->textInput()->label("<span style='color:red' >*开发员</span>") ?>
 
         <?= $form->field($model, 'vendor1')->textInput() ?>
 

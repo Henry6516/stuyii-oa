@@ -2,14 +2,15 @@
 
 namespace backend\controllers;
 
+use backend\models\User;
 use Yii;
 use backend\models\OaSupplier;
 use backend\models\OaSupplierSearch;
-use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * SupplierController implements the CRUD actions for OaSupplier model.
@@ -40,6 +41,7 @@ class SupplierController extends Controller
         $searchModel = new OaSupplierSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -69,7 +71,7 @@ class SupplierController extends Controller
         $model = new OaSupplier();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $supplierId = Yii::$app->db->createCommand("SELECT nid FROM B_supplier WHERE supplierName=".$model->supplierName)->queryOne();
+            $supplierId = Yii::$app->db->createCommand("SELECT nid FROM B_supplier WHERE supplierName LIKE '%".$model->supplierName."%'")->queryOne();
             $model->supplierId = $supplierId['nid'];
             $model->save(false);
             return $this->redirect(['view', 'id' => $model->id]);
@@ -80,9 +82,20 @@ class SupplierController extends Controller
         $res = Yii::$app->db->createCommand($sql)->queryAll();
         $data = ArrayHelper::map($res,'supplierName','supplierName');
 
+        //判断当前用户的供应商数量
+        $user = Yii::$app->user->identity->username;
+        $userModel = User::findOne(['username' => $user]);
+        $num = OaSupplier::find()->andWhere(['purchase' => $user])->count();
+        if($userModel['department']=='供应链管理' && $userModel['maxSupplierNum']<=$num){
+            $res = 'no';
+        }else{
+            $res = 'yes';
+        }
+
         return $this->render('create', [
             'model' => $model,
             'data' => $data,
+            'status' => $res,
         ]);
     }
 
@@ -143,4 +156,27 @@ class SupplierController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    /**
+     * 查询供应商名称
+     * @return array
+     */
+    public function actionSearch(){
+        $q = Yii::$app->request->get('q');
+        Yii::$app->response->format = Response::FORMAT_JSON;//响应数据格式为json
+        $out = ['results' => ['supplierName' => '']];
+        if (!$q) {
+            return $out;
+        }
+
+        $sql = "SELECT supplierName FROM B_supplier WHERE used=0 AND supplierName LIKE '%{$q}%' ORDER BY supplierName";
+        $res = Yii::$app->db->createCommand($sql)->queryAll();
+        print_r($res);exit;
+        $data = ArrayHelper::map($res,'supplierName','supplierName');
+
+        return $data;
+    }
+
+
 }
