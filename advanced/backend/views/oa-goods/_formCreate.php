@@ -11,23 +11,23 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <div class="oa-goods-form">
-        <?php $form = ActiveForm::begin([
-            'fieldConfig'=>[
-                'template'=> "{label}\n<div >{input}</div>\n{error}",
-            ]
-        ]); ?>
+    <?php $form = ActiveForm::begin([
+        'fieldConfig' => [
+            'template' => "{label}\n<div >{input}</div>\n{error}",
+        ]
+    ]); ?>
 
-    <?php echo  $form->field($model, 'img',['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])->textInput(['placeholder' => '--必填--']) ?>
-
-
-        <?php //echo $form->field($model, 'subCate')->textInput() ?>
+    <?php echo $form->field($model, 'img', ['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])->textInput(['placeholder' => '--必填--']) ?>
 
 
-    <?= $form->field($model,'cate',['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])->dropDownList($model->getCatList(0),
+    <?php //echo $form->field($model, 'subCate')->textInput() ?>
+
+
+    <?= $form->field($model, 'cate', ['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])->dropDownList($model->getCatList(0),
         [
-            'prompt'=>'--请选择父类--',
-            'onchange'=>'           
-            $.get("'.Url::to(['oa-goods/category', 'typeid' => 1]).
+            'prompt' => '--请选择父类--',
+            'onchange' => '           
+            $.get("' . Url::to(['oa-goods/category', 'typeid' => 1]) .
                 '&pid="+$(this).val(),function(data){
 
                 var str="";
@@ -38,29 +38,31 @@ use yii\helpers\ArrayHelper;
                 $("select#oagoods-subcate").html(str);
             });',
 
-        ]);?>
+        ]); ?>
 
 
-        <?php echo $form->field($model,'subCate')->dropDownList($model->getCatList($model->catNid),
-            [
-                'prompt'=>'--请选择子类--',
+    <?php echo $form->field($model, 'subCate')->dropDownList($model->getCatList($model->catNid),
+        [
+            'prompt' => '--请选择子类--',
 
-            ])->label("<span style='color:red' >*子类目</span>");
-        ?>
+        ])->label("<span style='color:red' >*子类目</span>");
+    ?>
 
-        <?= $form->field($model, 'developer')->textInput()->label("<span style='color:red' >*开发员</span>") ?>
+    <?= $form->field($model, 'developer')->widget(\kartik\select2\Select2::classname(), [
+            'data' => $devList,
+            'options' => ['placeholder' => '--请选择开发员--']]
+    )->label("<span style='color:red' >*开发员</span>") ?>
 
-        <?= $form->field($model, 'vendor1')->textInput() ?>
+    <?= $form->field($model, 'vendor1')->textInput() ?>
 
-        <?= $form->field($model, 'origin1')->textInput() ?>
-        <?php echo  $form->field($model, 'introReason')->textInput(['placeholder' => '--选填--']) ?>
+    <?= $form->field($model, 'origin1')->textInput() ?>
+    <?php echo $form->field($model, 'introReason')->textInput(['placeholder' => '--选填--']) ?>
 
 
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? '创建' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-success']) ?>
+    </div>
 
-        <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? '创建' : '更新', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-success']) ?>
-        </div>
-
-        <?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
 
 </div>
