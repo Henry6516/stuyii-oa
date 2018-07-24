@@ -43,14 +43,14 @@ class OaSupplierGoods extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'supplier' => 'Supplier',
-            'purchaser' => 'Purchaser',
-            'goodsCode' => 'Goods Code',
-            'goodsName' => 'Goods Name',
-            'supplierGoodsCode' => 'Supplier Goods Code',
-            'createdTime' => 'Created Time',
-            'updatedTime' => 'Updated Time',
+//            'id' => 'ID',
+            'supplier' => '供应商名称',
+            'purchaser' => '线下采购员',
+            'goodsCode' => '商品编码',
+            'goodsName' => '商品名称',
+            'supplierGoodsCode' => '供应商商品名称',
+            'createdTime' => '创建时间',
+            'updatedTime' => '更新时间',
         ];
     }
 }

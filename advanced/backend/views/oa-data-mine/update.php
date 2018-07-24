@@ -5,10 +5,6 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\OaDataMine */
 
-$this->title = 'Update Oa Data Mine: {nameAttribute}';
-$this->params['breadcrumbs'][] = ['label' => 'Oa Data Mines', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="oa-data-mine-update">
 

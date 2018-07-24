@@ -5,7 +5,9 @@ namespace backend\controllers;
 use Yii;
 use backend\models\OaSupplierGoods;
 use backend\models\OaSupplierGoodsSearch;
+use backend\models\OaSupplierGoodsSkuSearch;
 use yii\web\Controller;
+use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -45,15 +47,20 @@ class OaSupplierGoodsController extends Controller
     }
 
     /**
-     * Displays a single OaSupplierGoods model.
+     * Displays the OaSupplierGoodsSku.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
+        $skuDetail = new ActiveDataProvider([
+            'query' => OaSupplierGoodsSkuSearch::find()->where(['supplierGoodsId'=>$id]),
+            'pagination' => ['pageSize'=>200]
+        ]);
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'dataProvider' => $skuDetail,
         ]);
     }
 

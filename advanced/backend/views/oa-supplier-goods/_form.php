@@ -22,12 +22,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'supplierGoodsCode')->textInput() ?>
 
-    <?= $form->field($model, 'createdTime')->textInput() ?>
+    <?= $form->field($model, 'createdTime')->textInput(['readonly'=> true]) ?>
 
-    <?= $form->field($model, 'updatedTime')->textInput() ?>
+    <?= $form->field($model, 'updatedTime')->textInput(['readonly'=> true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('保存', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
