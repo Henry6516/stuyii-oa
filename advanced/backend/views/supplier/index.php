@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\UrL;
+use yii\helpers\Url;
 use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
@@ -20,10 +20,8 @@ if(!isset($status)) $status='';
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('添加新供应商', '#', [
-            'class' => 'supplier-create btn btn-success',
-            'data-href' => Url::toRoute(['/supplier/create']),
-            'data-status' => $status,
+        <?= Html::a('添加新供应商', ['create'], [
+            'class' => 'create btn btn-success',
         ]) ?>
     </p>
 
