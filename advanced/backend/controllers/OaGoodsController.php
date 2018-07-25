@@ -187,8 +187,15 @@ class OaGoodsController extends BaseController
                         Yii::$app->response->format = Response::FORMAT_JSON;
                         return $model->getCatList($cid);
                     }
+                    //获取开发员列表
+                    $sql = "SELECT u.username FROM auth_assignment AS au LEFT JOIN [user] u ON u.id=au.user_id
+                    WHERE item_name LIKE '%产品开发%' AND u.id IS NOT NULL ORDER BY u.username";
+                    $dev = Yii::$app->db->createCommand($sql)->queryAll();
+
+                    $devList = ArrayHelper::map($dev,'username','username');
                     return $this->renderAjax('update', [
                         'model' => $model,
+                        'devList' => $devList,
                     ]);
                 }
 

@@ -165,18 +165,23 @@ class SupplierController extends Controller
     public function actionSearch(){
         $q = Yii::$app->request->get('q');
         Yii::$app->response->format = Response::FORMAT_JSON;//响应数据格式为json
-        $out = ['results' => ['supplierName' => '']];
+        $out = ['results' => ['id' => '', 'text' => '']];
         if (!$q) {
             return $out;
         }
 
-        $sql = "SELECT supplierName FROM B_supplier WHERE used=0 AND supplierName LIKE '%{$q}%' ORDER BY supplierName";
+        $sql = "SELECT TOP 50 supplierName FROM B_supplier WHERE used=0 AND supplierName LIKE '%{$q}%' ORDER BY supplierName";
         $res = Yii::$app->db->createCommand($sql)->queryAll();
-        print_r($res);exit;
-        $data = ArrayHelper::map($res,'supplierName','supplierName');
-
-        return $data;
+        $out['results'] = array_map([$this, 'format'], $res);
+        //print_r($out['results']);exit;
+        return $out;
     }
 
+    private function format($data){
+        $result = [];
+        $result['id'] = $data['supplierName'];
+        $result['text'] = $data['supplierName'];
+        return $result;
+    }
 
 }
