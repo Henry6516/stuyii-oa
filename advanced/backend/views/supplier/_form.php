@@ -57,10 +57,10 @@ $this->registerJs($js);
                 'data' => new JsExpression('function(params) { return {q:params.term}; }'),
                 'cache' => true
             ],
-            'width' => '400px',
-            'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
-            'templateResult' => new JsExpression('function(res) { return res.supplierName; }'),
-            'templateSelection' => new JsExpression('function (res) { return res.supplierName; }'),
+            //'width' => '400px',
+            'escapeMarkup' => new JsExpression('function (markup) {console.log(markup); return markup; }'),
+            'templateResult' => new JsExpression('function(res) { console.log(res.text); return res.text; }'),
+            'templateSelection' => new JsExpression('function (res) { return res.text; }'),
         ],
     ])->label('<span style="color: red">供应商名称</span>') ?>
 
