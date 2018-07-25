@@ -5,12 +5,12 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\OaSupplierGoods;
+use backend\models\OaSupplierOrder;
 
 /**
- * OaSupplierGoodsSearch represents the model behind the search form of `backend\models\OaSupplierGoods`.
+ * OaSupplierOrderSearch represents the model behind the search form of `backend\models\OaSupplierOrder`.
  */
-class OaSupplierGoodsSearch extends OaSupplierGoods
+class OaSupplierOrderSearch extends OaSupplierOrder
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,9 @@ class OaSupplierGoodsSearch extends OaSupplierGoods
     public function rules()
     {
         return [
-            [['id'], 'integer'],
-            [['supplier', 'purchaser', 'goodsCode', 'goodsName', 'supplierGoodsCode', 'createdTime', 'updatedTime'], 'safe'],
+            [['id', 'totalNumber'], 'integer'],
+            [['supplierName', 'goodsCode', 'billNumber', 'billStatus', 'purchaser', 'syncTime', 'expressNumber', 'paymentStatus', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
+            [['amt'], 'number'],
         ];
     }
 
@@ -41,11 +42,9 @@ class OaSupplierGoodsSearch extends OaSupplierGoods
      */
     public function search($params)
     {
-        $query = OaSupplierGoods::find();
+        $query = OaSupplierOrder::find();
 
         // add conditions that should always apply here
-        $user = Yii::$app->user->identity->username;
-        $query->andWhere(['purchaser'=>$user]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -62,15 +61,21 @@ class OaSupplierGoodsSearch extends OaSupplierGoods
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'syncTime' => $this->syncTime,
+            'totalNumber' => $this->totalNumber,
+            'amt' => $this->amt,
+            'orderTime' => $this->orderTime,
             'createdTime' => $this->createdTime,
             'updatedTime' => $this->updatedTime,
         ]);
 
-        $query->andFilterWhere(['like', 'supplier', $this->supplier])
-            ->andFilterWhere(['like', 'purchaser', $this->purchaser])
+        $query->andFilterWhere(['like', 'supplierName', $this->supplierName])
             ->andFilterWhere(['like', 'goodsCode', $this->goodsCode])
-            ->andFilterWhere(['like', 'goodsName', $this->goodsName])
-            ->andFilterWhere(['like', 'supplierGoodsCode', $this->supplierGoodsCode]);
+            ->andFilterWhere(['like', 'billNumber', $this->billNumber])
+            ->andFilterWhere(['like', 'billStatus', $this->billStatus])
+            ->andFilterWhere(['like', 'purchaser', $this->purchaser])
+            ->andFilterWhere(['like', 'expressNumber', $this->expressNumber])
+            ->andFilterWhere(['like', 'paymentStatus', $this->paymentStatus]);
 
         return $dataProvider;
     }
