@@ -76,10 +76,12 @@ $this->registerJs($JS);
             ]);
         ?>
 
-        <?= $form->field($model, 'developer')->widget(\kartik\select2\Select2::classname(), [
+        <?= $form->field($model, 'developer',[
+            'template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])
+            ->widget(\kartik\select2\Select2::classname(), [
                 'data' => $devList,
                 'options' => ['placeholder' => '--请选择开发员--']]
-        )->label("<span style='color:red' >*开发员</span>") ?>
+        ) ?>
 
 
         <?= $form->field($model, 'vendor1')->textInput() ?>
