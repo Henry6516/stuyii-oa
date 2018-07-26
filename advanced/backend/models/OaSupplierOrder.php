@@ -21,6 +21,8 @@ use Yii;
  * @property string $orderTime
  * @property string $createdTime
  * @property string $updatedTime
+ * @property string $expressStatus
+ * @property string $deliveryStatus
  */
 class OaSupplierOrder extends \yii\db\ActiveRecord
 {
@@ -38,7 +40,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['supplierName', 'goodsCode', 'billNumber', 'billStatus', 'purchaser', 'expressNumber', 'paymentStatus'], 'string'],
+            [['supplierName', 'goodsCode', 'billNumber', 'billStatus','deliveryStatus','expressStatus', 'purchaser', 'expressNumber', 'paymentStatus'], 'string'],
             [['syncTime', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
             [['totalNumber'], 'integer'],
             [['amt'], 'number'],
@@ -55,13 +57,15 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             'supplierName' => '供应商名称',
             'goodsCode' => '商品编码',
             'billNumber' => '采购单号',
-            'billStatus' => '采购状态',
+            'billStatus' => '采购单状态',
             'purchaser' => '线下采购',
             'syncTime' => '同步时间',
-            'totalNumber' => '采购总数',
-            'amt' => '采购金额',
-            'expressNumber' => '快递单号',
+            'totalNumber' => '总数量',
+            'amt' => '总金额',
+            'deliveryStatus' => '发货状态',
+            'expressNumber' => '物流单号',
             'paymentStatus' => '支付状态',
+            'expressStatus' => '物流状态',
             'orderTime' => '下单时间',
             'createdTime' => '创建时间',
             'updatedTime' => '更新时间',
