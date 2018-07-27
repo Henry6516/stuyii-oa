@@ -72,27 +72,41 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'kartik\grid\ActionColumn',
+                'dropdown' => true,
+                'dropdownButton' => [
+                        'label' => '操作',
+                    'class' => 'btn btn-default dropdown-toggle',
+                    'data-toggle' => 'dropdown',
+                    'aria-haspopup' => 'true',
+                    'aria-expanded' => 'false'
+
+                ],
                 'template' => '{view} {update} {sync} {pay} {delivery} {inputExpress} {inputDeliveryOrder} {check} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open" 
-                                title="产品明细"></span>', $url, ['data-pjax' => 0, 'target' => '_blank']);
+//                        return Html::a('<span class="glyphicon glyphicon-eye-open"
+//                                title="产品明细"></span>', $url, ['data-pjax' => 0, 'target' => '_blank']);
+                        return "<li><a target='_blank' href=$url>订单明细</a></li>";
                     },
                     'update' => function ($url, $model) {
 
-                        return Html::a('<span class="glyphicon glyphicon-pencil" 
-                                title="编辑"></span>',$url, ['data-pjax' => 0, 'target' => '_blank']);
+//                        return Html::a('<span class="glyphicon glyphicon-pencil"
+//                                title="编辑"></span>',$url, ['data-pjax' => 0, 'target' => '_blank']);
+                        return '<li><a href="#">fef</a></li>';
                     },
                     'delete' => function () {
-                        return Html::a('<span class="delete-row glyphicon glyphicon-trash"
-                                title= "删除"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
+//                        return Html::a('<span class="delete-row glyphicon glyphicon-trash"
+//                                title= "删除"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
+                        return '<li><a href="#">fe</a></li>';
                     },
                     'sync' => function () {
-                        return Html::a('<span class="delete-row glyphicon glyphicon-share"
-                                title= "同步"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
+//                        return Html::a('<span class="delete-row glyphicon glyphicon-share"
+//                                title= "同步"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
+                        return '<li><a href="#">Acfeftion</a></li>';
                     },
                 ],
+
             ],
             'supplierName',
             'goodsCode',

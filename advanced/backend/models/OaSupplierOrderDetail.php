@@ -50,16 +50,16 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'orderId' => 'Order ID',
-            'sku' => 'Sku',
-            'image' => 'Image',
-            'supplierGoodsSku' => 'Supplier Goods Sku',
-            'goodsName' => 'Goods Name',
-            'property1' => 'Property1',
-            'property2' => 'Property2',
-            'property3' => 'Property3',
-            'purchaseNumber' => 'Purchase Number',
-            'purchasePrice' => 'Purchase Price',
-            'deliveryNumber' => 'Delivery Number',
+            'sku' => 'SKU',
+            'image' => '图片',
+            'supplierGoodsSku' => '供应商SKU',
+            'goodsName' => '商品名称',
+            'property1' => '款式1',
+            'property2' => '款式2',
+            'property3' => '款式3',
+            'purchaseNumber' => '采购数量',
+            'purchasePrice' => '采购价格',
+            'deliveryNumber' => '发货数量',
         ];
     }
 }

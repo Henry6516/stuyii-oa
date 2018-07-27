@@ -2,13 +2,16 @@
 
 namespace backend\controllers;
 
+use backend\models\OaSupplierOrderDetail;
 use Yii;
 use backend\models\OaSupplierOrder;
 use backend\models\OaSupplierOrderSearch;
+use backend\models\OaSupplierGoodsSkuSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-
+use backend\unitools\PHPExcelTools;
+use yii\data\ActiveDataProvider;
 /**
  * OaSupplierOrderController implements the CRUD actions for OaSupplierOrder model.
  */
@@ -52,8 +55,12 @@ class OaSupplierOrderController extends Controller
      */
     public function actionView($id)
     {
+        $orderDetail = new ActiveDataProvider([
+            'query' => OaSupplierOrderDetail::find()->where(['orderId'=>$id]),
+            'pagination' => ['pageSize'=>200]
+        ]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'dataProvider' => $orderDetail
         ]);
     }
 
@@ -123,5 +130,51 @@ class OaSupplierOrderController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+
+    public function actionExport()
+    {
+        //表头
+        $heard_name = [
+            'Parent Unique ID',
+            '*Product Name',
+        ];
+
+        $excel = new \PHPExcel();
+        $file_name = '-contract-' . date('d-m-Y-His') . '.xlsx';
+        $sheet_num = 0;
+        $excel->getActiveSheetIndex($sheet_num);
+        header('Content-type: text/xlsx');
+        header('Content-Disposition: attachment;filename=' . $file_name . ' ');
+        header('Cache-Control: max-age=0');
+
+        //一个单元格一个单元格写入表头
+        foreach ($heard_name as $index => $name)
+        {
+            $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
+
+        }
+
+        //按单元格写入每行数据
+//        foreach ($ret as $row_num => $row)
+//        {
+//            if(!\is_array($row)){
+//                return;
+//            }
+//
+//            $cell_num = 0;
+//            foreach ($row as $index => $name)
+//            {
+//                $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($cell_num) .($row_num + 2), $name);
+//                ++$cell_num;
+//            }
+//
+//        }
+//        $writer =  new \PHPExcel_Writer_Excel5($excel);
+        $writer = \PHPExcel_IOFactory::createWriter($excel,'Excel2007');
+        $writer->save('php://output');
+
     }
 }

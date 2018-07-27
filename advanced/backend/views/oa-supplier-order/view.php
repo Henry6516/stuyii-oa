@@ -1,48 +1,68 @@
 <?php
 
+use kartik\widgets\ActiveForm;
+use kartik\builder\TabularForm;
 use yii\helpers\Html;
-use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaSupplierOrder */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Oa Supplier Orders', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
-?>
-<div class="oa-supplier-order-view">
+$this->title = '采购单明细';
+$form = ActiveForm::begin();
+ try {
+     echo TabularForm::widget([
+         'dataProvider' => $dataProvider,
+         'id' => 'detail-table',
+         'form' => $form,
+         'actionColumn' => [
+             'class' => '\kartik\grid\ActionColumn',
+             'template' => '{delete}',
+             'buttons' => [
+                 'delete' => function ($url, $model, $key) {
+//                    $delete_url = Url::to(['/goodssku/delete', 'id' => $key]);
+                     $options = [
+                         'title' => '删除',
+                         'aria-label' => '删除',
+                         'data-id' => $key,
+                     ];
+                     return Html::a('<span  class="glyphicon glyphicon-trash"></span>','', $options);
+                 },
+                 'width' => '60px'
+             ],
+         ],
 
-    <h1><?= Html::encode($this->title) ?></h1>
+         'attributes' => [
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'supplierName',
-            'goodsCode',
-            'billNumber',
-            'billStatus',
-            'purchaser',
-            'syncTime',
-            'totalNumber',
-            'amt',
-            'expressNumber',
-            'paymentStatus',
-            'orderTime',
-            'createdTime',
-            'updatedTime',
-        ],
-    ]) ?>
-
-</div>
+             'sku' => ['type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'sku'],
+             ],
+             'image' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'image'],
+             ],
+             'goodsName' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'goodsName'],
+             ],
+             'property1' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'property1'],
+             ],
+             'property2' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'property2'],
+             ],
+             'property3' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'property3'],
+             ],
+             'purchaseNumber' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'purchaseNumber'],
+             ],
+             'purchasePrice' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'purchasePrice'],
+             ],
+             'deliveryNumber' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'deliveryNumber'],
+             ],
+         ]
+     ]);
+ }
+ catch (Exception $why) {
+     throw new Exception($why);
+}

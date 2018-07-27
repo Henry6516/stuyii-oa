@@ -14,11 +14,11 @@ use Yii;
  * @property string $property2
  * @property string $property3
  * @property string $costPrice
- * @property string $purchasPrice
+ * @property string $purchasePrice
  * @property string $weight
  * @property string $image
  * @property string $lowestPrice
- * @property int $purchasNumber
+ * @property int $purchaseNumber
  * @property string $supplierGoodsSku
  */
 class OaSupplierGoodsSku extends \yii\db\ActiveRecord
@@ -37,9 +37,9 @@ class OaSupplierGoodsSku extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['supplierGoodsId', 'purchasNumber'], 'integer'],
+            [['supplierGoodsId', 'purchaseNumber'], 'integer'],
             [['sku', 'property1', 'property2', 'property3', 'image', 'supplierGoodsSku'], 'string'],
-            [['costPrice', 'purchasPrice', 'weight', 'lowestPrice'], 'number'],
+            [['costPrice', 'purchasePrice', 'weight', 'lowestPrice'], 'number'],
         ];
     }
 

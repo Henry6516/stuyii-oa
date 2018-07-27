@@ -18,9 +18,9 @@ class OaSupplierGoodsSkuSearch extends OaSupplierGoodsSku
     public function rules()
     {
         return [
-            [['id', 'supplierGoodsId', 'purchasNumber'], 'integer'],
+            [['id', 'supplierGoodsId', 'purchaseNumber'], 'integer'],
             [['sku', 'property1', 'property2', 'property3', 'image', 'supplierGoodsSku'], 'safe'],
-            [['costPrice', 'purchasPrice', 'weight', 'lowestPrice'], 'number'],
+            [['costPrice', 'purchasePrice', 'weight', 'lowestPrice'], 'number'],
         ];
     }
 
@@ -63,10 +63,10 @@ class OaSupplierGoodsSkuSearch extends OaSupplierGoodsSku
             'id' => $this->id,
             'supplierGoodsId' => $this->supplierGoodsId,
             'costPrice' => $this->costPrice,
-            'purchasPrice' => $this->purchasPrice,
+            'purchasePrice' => $this->purchasePrice,
             'weight' => $this->weight,
             'lowestPrice' => $this->lowestPrice,
-            'purchasNumber' => $this->purchasNumber,
+            'purchaseNumber' => $this->purchaseNumber,
         ]);
 
         $query->andFilterWhere(['like', 'sku', $this->sku])
