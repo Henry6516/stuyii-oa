@@ -64,7 +64,7 @@ class ChannelSearch extends Channel
     {
         $query = ChannelSearch::find()->orderBy('devDatetime desc');
 
-        if (!isset($params['ChannelSearch'])) {
+        if (!isset($params) && !isset($params['ChannelSearch'])) {
             $params['ChannelSearch']['completeStatus'] = ['未设置', 'eBay已完善', 'Wish已完善', 'Joom已完善',
                 'Wish已完善|eBay已完善', 'Wish已完善|Joom已完善', 'Joom已完善|eBay已完善'];
         }
@@ -442,7 +442,8 @@ class ChannelSearch extends Channel
             ->andFilterWhere(['like', 'picUrl', $this->picUrl])
             ->andFilterWhere(['like', 'GoodsCode', $this->GoodsCode])
             ->andFilterWhere(['like', 'achieveStatus', $this->achieveStatus])
-            ->andFilterWhere(['like', 'oa_goods.developer', $this->developer])
+            //->andFilterWhere(['like', 'oa_goods.developer', $this->developer])
+            ->andFilterWhere(['like', 'oa_goodsinfo.developer', $this->developer])
             ->andFilterWhere(['like', 'picStatus', '已完善'])
             ->andFilterWhere(['like', 'AttributeName', $this->AttributeName])
             ->andFilterWhere(['like', 'oa_goods.cate', $this->cate])
