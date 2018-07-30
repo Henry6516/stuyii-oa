@@ -41,17 +41,19 @@ use yii\helpers\ArrayHelper;
         ]); ?>
 
 
-    <?php echo $form->field($model, 'subCate')->dropDownList($model->getCatList($model->catNid),
+    <?php echo $form->field($model, 'subCate', ['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])
+        ->dropDownList($model->getCatList($model->catNid),
         [
             'prompt' => '--请选择子类--',
 
-        ])->label("<span style='color:red' >*子类目</span>");
+        ]);
     ?>
 
-    <?= $form->field($model, 'developer')->widget(\kartik\select2\Select2::classname(), [
+    <?= $form->field($model, 'developer', ['template' => "<span style='color:red' >*{label}\n</span><div >{input}</div>\n<div >{error}</div>",])
+        ->widget(\kartik\select2\Select2::classname(), [
             'data' => $devList,
             'options' => ['placeholder' => '--请选择开发员--']]
-    )->label("<span style='color:red' >*开发员</span>") ?>
+    ) ?>
 
     <?= $form->field($model, 'vendor1')->textInput() ?>
 

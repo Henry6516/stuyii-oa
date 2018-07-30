@@ -59,7 +59,7 @@ class SiteController extends Controller
     {
         $title = "数据中心产品Wish刊登";
         $sql = "SELECT developer,count(goodscode) AS num,email FROM oa_goodsinfo oa
-                LEFT JOIN [user] u ON u.username=oa.developer WHERE wishpublish='Y' GROUP BY developer,email";
+                INNER JOIN [user] u ON u.username=oa.developer WHERE wishpublish='Y' GROUP BY developer,email";
         $leader = Yii::$app->db->createCommand($sql)->queryAll();
         //var_dump($leader);exit;
         foreach ($leader as $v){
