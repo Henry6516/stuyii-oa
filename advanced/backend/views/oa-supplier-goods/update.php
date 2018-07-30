@@ -9,6 +9,7 @@ $this->title = '' . $model->goodsName;
 $this->params['breadcrumbs'][] = ['label' => '供应商产品管理', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->goodsName, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = '编辑';
+
 ?>
 <div class="oa-supplier-goods-update">
 
@@ -16,6 +17,7 @@ $this->params['breadcrumbs'][] = '编辑';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'suppliers' => $suppliers
     ]) ?>
 
 </div>

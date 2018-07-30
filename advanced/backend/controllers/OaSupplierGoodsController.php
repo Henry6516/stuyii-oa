@@ -86,8 +86,7 @@ class OaSupplierGoodsController extends Controller
             return $this->redirect(['index']);
         }
 
-        $supplier = OaSupplier::find()->select('id,supplierName')->asArray()->all();
-        $suppliers = ArrayHelper::map($supplier,'id','supplierName');
+        $suppliers = $this->getSuppliers();
         return $this->render('create', [
             'model' => $model,
             'suppliers' => $suppliers
@@ -106,11 +105,13 @@ class OaSupplierGoodsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
+        $suppliers = $this->getSuppliers();
         return $this->render('update', [
             'model' => $model,
+            'suppliers' => $suppliers
         ]);
     }
 
@@ -189,5 +190,15 @@ class OaSupplierGoodsController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /*
+     * get suppliers
+     * @return array
+     */
+    private function getSuppliers()
+    {
+        $supplier = OaSupplier::find()->select('id,supplierName')->asArray()->all();
+        return ArrayHelper::map($supplier,'id','supplierName');
     }
 }
