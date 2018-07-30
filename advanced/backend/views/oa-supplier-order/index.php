@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'dropdown' => true,
                 'dropdownButton' => [
                         'label' => '操作',
-                    'class' => 'btn btn-default dropdown-toggle',
+                    'class' => 'action btn btn-default',
                     'data-toggle' => 'dropdown',
                     'aria-haspopup' => 'true',
                     'aria-expanded' => 'false'
@@ -125,3 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
     }
      ?>
 </div>
+<style>
+
+
+</style>

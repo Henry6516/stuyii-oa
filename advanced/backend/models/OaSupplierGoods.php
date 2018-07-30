@@ -36,6 +36,7 @@ class OaSupplierGoods extends ActiveRecord
         return [
             [['supplier', 'purchaser', 'goodsCode', 'goodsName', 'supplierGoodsCode'], 'string'],
             [['createdTime', 'updatedTime'], 'safe'],
+            [['supplier','purchaser'],'required'],
         ];
     }
 

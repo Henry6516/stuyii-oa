@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
+use backend\models\OaSupplier;
 use backend\models\OaSupplierGoods;
 use backend\models\OaSupplierGoodsSearch;
 use backend\models\OaSupplierGoodsSkuSearch;
@@ -10,6 +11,7 @@ use yii\web\Controller;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * OaSupplierGoodsController implements the CRUD actions for OaSupplierGoods model.
@@ -74,11 +76,15 @@ class OaSupplierGoodsController extends Controller
         $model = new OaSupplierGoods();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            //TODO save goods detail
+            return $this->redirect(['index']);
         }
 
+        $supplier = OaSupplier::find()->select('id,supplierName')->asArray()->all();
+        $suppliers = ArrayHelper::map($supplier,'id','supplierName');
         return $this->render('create', [
             'model' => $model,
+            'suppliers' => $suppliers
         ]);
     }
 
@@ -107,13 +113,22 @@ class OaSupplierGoodsController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws HttpException if the model cannot be found
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Get purchaser name based on supplier name
+     * @param integer $id
+     * @return mixed
+     */
+    public  function actionGetPurchaser($id) {
+        return OaSupplier::find()->select('purchase')->where(['id'=>$id])->one()->purchase;
     }
 
     /**

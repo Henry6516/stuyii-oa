@@ -40,7 +40,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                 ],
             ],
-            'id',
             'supplier',
             'purchaser',
             'goodsCode',
