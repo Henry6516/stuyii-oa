@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\OaSupplierGoodsSku;
 use Yii;
 use backend\models\OaSupplier;
 use backend\models\OaSupplierGoods;
@@ -77,6 +78,10 @@ class OaSupplierGoodsController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             //TODO save goods detail
+            $goodsCode = $model->goodsCode;
+            $supplierGoodsId = $model->id;
+            $sql = "P_oa_SkuToSupplierGoodsSku '$goodsCode','$supplierGoodsId' ";
+            Yii::$app->db->createCommand($sql)->execute();
             return $this->redirect(['index']);
         }
 
@@ -120,6 +125,18 @@ class OaSupplierGoodsController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * Deletes oaSupplierGoodsSku row by id
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDeleteSku($id)
+    {
+        OaSupplierGoodsSku::findOne(['id'=>$id])->delete();
+
+        return '删除成功！';
     }
 
     /**

@@ -56,11 +56,11 @@ class OaSupplierGoodsSku extends \yii\db\ActiveRecord
             'property2' => '款式2',
             'property3' => '款式3',
             'costPrice' => '成本价',
-            'purchasPrice' => '采购价',
+            'purchasePrice' => '采购价',
             'weight' => '重量',
             'image' => '图片',
             'lowestPrice' => '近三个月最低采购价',
-            'purchasNumber' => '最低价采购数量',
+            'purchaseNumber' => '最低价采购数量',
             'supplierGoodsSku' => '供应商产品SKU',
         ];
     }
