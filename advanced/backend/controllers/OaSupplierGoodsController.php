@@ -8,6 +8,7 @@ use backend\models\OaSupplier;
 use backend\models\OaSupplierGoods;
 use backend\models\OaSupplierGoodsSearch;
 use backend\models\OaSupplierGoodsSkuSearch;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -139,6 +140,32 @@ class OaSupplierGoodsController extends Controller
         return '删除成功！';
     }
 
+    /**
+     * Save sku detail
+     * @return mixed
+     */
+    public function actionSaveSku()
+    {
+        $post = Yii::$app->request->post();
+        $skuDetails = $post['OaSupplierGoodsSkuSearch'];
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($skuDetails as $id=>$row) {
+                $sku = OaSupplierGoodsSku::findOne(['id'=>$id]);
+                $sku->setAttributes($row);
+                if(!$sku->save()) {
+                    throw new Exception('保存失败！');
+                }
+            }
+            $trans->commit();
+            $msg = '保存成功！';
+        }
+        catch (Exception $why) {
+            $msg = '保存失败！';
+        }
+
+        return $msg;
+    }
     /**
      * Get purchaser name based on supplier name
      * @param integer $id

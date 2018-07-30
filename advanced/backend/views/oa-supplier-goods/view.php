@@ -10,7 +10,9 @@ $this->params['breadcrumbs'][] = ['label' => '产品列表', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 
 
-$form = ActiveForm::begin();
+$form = ActiveForm::begin([
+        'id' => 'sku-form'
+]);
 
 try {
     echo TabularForm::widget([
@@ -57,27 +59,39 @@ try {
             'weight' => [ 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'weight'],
             ],
-            'image' => [ 'type' => TabularForm::INPUT_TEXT,
+            'image' => [ 'type' => TabularForm::INPUT_RAW,
                 'options' => ['class' => 'image'],
+                'value' => function($model) {
+                    return Html::img($model->image,['alt'=>'缩略图','width'=>80]);
+                }
             ],
             'lowestPrice' => [ 'type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'lowestPrice'],
+                'options' => ['class' => 'lowestPrice','readonly' => 'true'],
             ],
             'purchaseNumber' => [ 'type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'purchaseNumber'],
+                'options' => ['class' => 'purchaseNumber','readonly' => 'true'],
             ],
             'supplierGoodsSku' => [ 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'supplierGoodsSku'],
             ],
         ],
+        'gridSettings'=>[
+            'panel'=>[
+                'before'=>false,
+                'footer'=>false,
+                'after'=>
+                    Html::button('保存', ['type'=>'button', 'class'=>'btn btn-primary save-sku'])
+            ]
+        ]
     ]);
 }
 catch (Exception $why) {
     throw new \Exception($why);
 }
-
+ActiveForm::end();
 
 $deleteUrl = Url::toRoute(['delete-sku']);
+$saveUrl = Url::toRoute(['save-sku']);
 
 $js = <<< JS
 
@@ -94,9 +108,31 @@ $('.delete-sku').click(function() {
   })
 })
 
+/*
+save sku
+ */
+$('.save-sku').click(function() {
+  $.ajax({
+    url: '$saveUrl',
+    data: $('#sku-form').serialize(),
+    type: 'POST',
+    success:function(res) {
+      alert(res);
+      window.location.reload();
+    }
+  });
+})
 
 JS;
 
 $this->registerJs($js);
 ?>
 
+<style>
+    .content-header {
+        margin-bottom: 1%;
+    }
+   .pull-right {
+    float: left !important;
+   }
+</style>
