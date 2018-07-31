@@ -117,6 +117,20 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
+     * get order from shopElf
+     * @return mixed
+     */
+    public function actionQueryOrder()
+    {
+        $db = Yii::$app->db;
+        if(Yii::$app->request->isPost) {
+            $query = Yii::$app->request->post();
+            return $query;
+        }
+
+    }
+
+    /**
      * Finds the OaSupplierOrder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
