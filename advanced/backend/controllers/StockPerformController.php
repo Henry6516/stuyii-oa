@@ -85,8 +85,8 @@ class StockPerformController extends BaseController
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
-            $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
-            $data['create_end'] = date('Y-m-d');
+            $data['create_start'] = date('Y-m-d',strtotime('-75 days'));
+            $data['create_end'] = date('Y-m-d',strtotime('-15 days'));
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
             $model->cat = $data['cat'];
             $model->create_range = $create_range;
@@ -95,7 +95,7 @@ class StockPerformController extends BaseController
         $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
 
         //缓存数据
-        $cache = Yii::$app->local_cache;
+//        $cache = Yii::$app->local_cache;
 //        $ret = $cache->get($sql);
 //        if($ret !== false){
 //            $result = $ret;
@@ -141,8 +141,8 @@ class StockPerformController extends BaseController
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
-            $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
-            $data['create_end'] = date('Y-m-d');
+            $data['create_start'] = date('Y-m-d',strtotime('-75 days'));
+            $data['create_end'] = date('Y-m-d',strtotime('-15 days'));
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
             $model->cat = $data['cat'];
             $model->create_range = $create_range;
@@ -151,15 +151,14 @@ class StockPerformController extends BaseController
         $sql = "P_oa_Non_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
         //var_dump($sql);exit;
         //缓存数据
-        $cache = Yii::$app->local_cache;
-        //$cache->flush();
-        /*$ret = $cache->get($sql);
-        if($ret !== false){
-            $result = $ret;
-        } else {*/
+//        $cache = Yii::$app->local_cache;
+//        $ret = $cache->get($sql);
+//        if($ret !== false){
+//            $result = $ret;
+//        } else {
             $result = Yii::$app->db->createCommand($sql)->queryAll();
-            //$cache->set($sql,$result,3600*24);
-        //}
+//            $cache->set($sql,$result,3600*24);
+//        }
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
             'pagination' => [
@@ -200,8 +199,8 @@ class StockPerformController extends BaseController
             $model->create_range = $create_range;
         }else{
             $data['cat'] = $sales;
-            $data['create_start'] = date('Y-m-d',strtotime('-60 days'));
-            $data['create_end'] = date('Y-m-d');
+            $data['create_start'] = date('Y-m-d',strtotime('-75 days'));
+            $data['create_end'] = date('Y-m-d', strtotime('-15 days'));
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
             $model->code = $data['code'] = '';
             $model->cat = $data['cat'];
@@ -212,7 +211,7 @@ class StockPerformController extends BaseController
         $sql = "P_oa_sales_Performance '" . $data['code'] . "','" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
         //缓存数据
         $cache = Yii::$app->local_cache;
-//        $ret = $cache->get($sql);
+        $ret = $cache->get($sql);
 //        if($ret !== false){
 //            $result = $ret;
 //        } else {
