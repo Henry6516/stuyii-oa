@@ -117,6 +117,13 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
+     * query order
+     * @return mixed
+     */
+    public function actionQuery() {
+        return $this->render('query');
+    }
+    /**
      * get order from shopElf
      * @return mixed
      */
