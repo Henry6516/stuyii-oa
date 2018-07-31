@@ -44,6 +44,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             [['syncTime', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
             [['totalNumber'], 'integer'],
             [['amt'], 'number'],
+            [['billNumber'], 'required'],
         ];
     }
 

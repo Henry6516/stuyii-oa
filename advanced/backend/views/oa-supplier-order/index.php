@@ -20,10 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div><!-- /input-group -->
             </div><!-- /.col-lg-3 -->
             <div class="col-sm-2">
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon1">下单时间</span>
-                    <input type="text" class="form-control" placeholder="">
-                </div><!-- /input-group -->
+<!--                    <span class="input-group-addon" id="sizing-addon1">下单时间</span>-->
+                    <div class="input-group input-daterange">
+                        <input type="text" class="form-control" value="2012-04-05">
+                        <div class="input-group-addon">下单</div>
+                        <input type="text" class="form-control" value="2012-04-19">
+                    </div>
             </div><!-- /.col-lg-3 -->
             <div class="col-sm-2">
                 <div class="input-group">
@@ -82,31 +84,33 @@ $this->params['breadcrumbs'][] = $this->title;
                     'aria-expanded' => 'false'
 
                 ],
-                'template' => '{view} {update} {sync} {pay} {delivery} {inputExpress} {inputDeliveryOrder} {check} {delete}',
+                'template' => '{view} {update} {sync} {pay} {delivery} {inputExpress} {inputDeliveryOrder} {check} ',
                 'buttons' => [
                     'view' => function ($url, $model) {
-//                        return Html::a('<span class="glyphicon glyphicon-eye-open"
-//                                title="产品明细"></span>', $url, ['data-pjax' => 0, 'target' => '_blank']);
                         return "<li><a target='_blank' href=$url>订单明细</a></li>";
                     },
                     'update' => function ($url, $model) {
-
-//                        return Html::a('<span class="glyphicon glyphicon-pencil"
-//                                title="编辑"></span>',$url, ['data-pjax' => 0, 'target' => '_blank']);
-                        return '<li><a href="#">fef</a></li>';
-                    },
-                    'delete' => function () {
-//                        return Html::a('<span class="delete-row glyphicon glyphicon-trash"
-//                                title= "删除"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
-                        return '<li><a href="#">fe</a></li>';
+                        return "<li><a target='_blank' href=$url>编辑订单</a></li>";
                     },
                     'sync' => function () {
-//                        return Html::a('<span class="delete-row glyphicon glyphicon-share"
-//                                title= "同步"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
-                        return '<li><a href="#">Acfeftion</a></li>';
+                        return '<li><a href="#">同步普源数据</a></li>';
+                    },
+                    'delivery' => function () {
+                        return '<li><a href="#">发货</a></li>';
+                    },
+                    'pay' => function () {
+                        return '<li><a href="#">付款</a></li>';
+                    },
+                    'inputExpress' => function () {
+                        return '<li><a href="#">导入物流单号</a></li>';
+                    },
+                    'check' => function () {
+                        return '<li><a href="#">审核单据</a></li>';
+                    },
+                    'inputDeliveryOrder' => function () {
+                        return '<li><a href="#">导入发货单</a></li>';
                     },
                 ],
-
             ],
             'supplierName',
             'goodsCode',
@@ -125,7 +129,19 @@ $this->params['breadcrumbs'][] = $this->title;
     }
      ?>
 </div>
-<style>
+
+<?php
 
 
-</style>
+$js = <<< JS
+
+$('.input-daterange input').each(function() {
+    $(this).datepicker('clearDates');
+});
+
+
+JS;
+
+$this->registerJs($js);
+
+?>
