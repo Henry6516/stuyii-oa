@@ -85,9 +85,9 @@ class SiteController extends Controller
         $end = date('Y-m-d');
         //$end = '2018-07-01';
         if(substr($end,8,2) !== '01'){
-            echo date('Y-m-d H:i:s')." 当前时间不可更新该项数据，请于管理员联系确认！";exit();
+            echo date('Y-m-d H:i:s')." The data can not be updated at this time. Please contact the administrator!";exit();
         }
-        $start = date('Y-m-d',strtotime('-60 days', strtotime($end)));
+        $start = date('Y-m-d',strtotime('-75 days', strtotime($end)));
 
         //获取数据库数据，查看是否已存在数据
         $checkSql = "SELECT * FROM oa_stock_goods_number 
@@ -95,19 +95,25 @@ class SiteController extends Controller
                     AND isStock='stock'";
         $check = Yii::$app->db->createCommand($checkSql)->queryAll();
         if($check){
-            echo date('Y-m-d H:i:s')." 本月可用备货数量已经更新，请勿重复操作！\n";
+            echo date('Y-m-d H:i:s')." The quantity of stock was updated this month. Do not repeat the operation!\n";
         }else{
-            $sql = "EXEC P_oa_StockPerformance '" . $start . "','" . $end . "','',1";
-            $list = Yii::$app->db->createCommand($sql)->queryAll();
+            $end_time = date('Y-m-d',strtotime('-15 days', strtotime($end)));
+            $sql = "EXEC P_oa_StockPerformance '" . $start . "','" . $end_time . "','',1";
+            $listRes = Yii::$app->db->createCommand($sql)->queryAll();
+            foreach ($listRes as $v){
+                $item = $v;
+                $item['createDate'] = $end;
+                $list[] = $item;
+            }
             $res = Yii::$app->db->createCommand()->batchInsert(
                 'oa_stock_goods_number',
                 ['developer','Number','orderNum','hotStyleNum','exuStyleNum','rate1','rate2','stockNumThisMonth','stockNumLastMonth','createDate','isStock'],
                 $list
             )->execute();
             if($res){
-                echo date('Y-m-d H:i:s')." 开发员的可用备货数量更新成功！\n";
+                echo date('Y-m-d H:i:s')." The stock data update successful\n";
             }else{
-                echo date('Y-m-d H:i:s')." 开发员的可用备货数量更新成功！\n";
+                echo date('Y-m-d H:i:s')." The stock data update failed！\n";
             }
         }
 
@@ -125,9 +131,9 @@ class SiteController extends Controller
         $end = date('Y-m-d');
         //$end = date('2018-07-01');
         if(substr($end,8,2) !== '01'){
-            echo date('Y-m-d H:i:s')." 当前时间不可更新该项数据，请于管理员联系确认！";exit();
+            echo date('Y-m-d H:i:s')." The data can not be updated at this time. Please contact the administrator!";exit();
         }
-        $start = date('Y-m-d',strtotime('-60 days', strtotime($end)));
+        $start = date('Y-m-d',strtotime('-75 days', strtotime($end)));
 
         //获取数据库数据，查看是否已存在数据
         $checkSql = "SELECT * FROM oa_stock_goods_number 
@@ -135,19 +141,25 @@ class SiteController extends Controller
                     AND isStock='nonstock'";
         $check = Yii::$app->db->createCommand($checkSql)->queryAll();
         if($check){
-            echo date('Y-m-d H:i:s')." 本月不备货产品可用数量已经更新，请勿重复操作！\n";
+            echo date('Y-m-d H:i:s')." The quantity of stock was updated this month. Do not repeat the operation!\n";
         }else{
-            $sql = "EXEC P_oa_Non_StockPerformance '" . $start . "','" . $end . "','',1";
-            $list = Yii::$app->db->createCommand($sql)->queryAll();
+            $end_time = date('Y-m-d',strtotime('-15 days', strtotime($end)));
+            $sql = "EXEC P_oa_Non_StockPerformance '" . $start . "','" . $end_time . "','',1";
+            $listRes = Yii::$app->db->createCommand($sql)->queryAll();
+            foreach ($listRes as $v){
+                $item = $v;
+                $item['createDate'] = $end;
+                $list[] = $item;
+            }
             $res = Yii::$app->db->createCommand()->batchInsert(
                 'oa_stock_goods_number',
                 ['developer','Number','orderNum','hotStyleNum','exuStyleNum','rate1','rate2','stockNumThisMonth','stockNumLastMonth','createDate','isStock'],
                 $list
             )->execute();
             if($res){
-                echo date('Y-m-d H:i:s')." 开发员的不备货产品可用数量更新成功！\n";
+                echo date('Y-m-d H:i:s')." The stock data update successful!\n";
             }else{
-                echo date('Y-m-d H:i:s')." 开发员的不备货产品可用数量更新成功！\n";
+                echo date('Y-m-d H:i:s')." The stock data update failed!\n";
             }
         }
 

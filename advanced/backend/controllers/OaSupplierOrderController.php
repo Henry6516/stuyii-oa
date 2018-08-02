@@ -7,11 +7,14 @@ use Yii;
 use backend\models\OaSupplierOrder;
 use backend\models\OaSupplierOrderSearch;
 use backend\models\OaSupplierGoodsSkuSearch;
+use yii\data\ArrayDataProvider;
+use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\unitools\PHPExcelTools;
 use yii\data\ActiveDataProvider;
+
 /**
  * OaSupplierOrderController implements the CRUD actions for OaSupplierOrder model.
  */
@@ -56,8 +59,8 @@ class OaSupplierOrderController extends Controller
     public function actionView($id)
     {
         $orderDetail = new ActiveDataProvider([
-            'query' => OaSupplierOrderDetail::find()->where(['orderId'=>$id]),
-            'pagination' => ['pageSize'=>200]
+            'query' => OaSupplierOrderDetail::find()->where(['orderId' => $id]),
+            'pagination' => ['pageSize' => 200]
         ]);
         return $this->render('view', [
             'dataProvider' => $orderDetail
@@ -120,9 +123,30 @@ class OaSupplierOrderController extends Controller
      * query order
      * @return mixed
      */
-    public function actionQuery() {
-        return $this->render('query');
+    public function actionQuery()
+    {
+        $request = Yii::$app->request->get();
+        if ($request) {
+            $list = OaSupplierOrder::getPyOrderData($request);
+            $dataProvider = new ArrayDataProvider([
+                'allModels' => $list,
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+                'sort' => [
+                    'attributes' => ['BillNumber', 'CHECKfLAG', 'SupplierName', 'MakeDate', 'Recorder', 'DelivDate', 'OrderAmount', 'OrderMoney'],
+                ],
+            ]);
+            return $this->render('query', [
+                'search' => $request,
+                'dataProvider' => $dataProvider,
+            ]);
+
+        } else {
+            return $this->render('query');
+        }
     }
+
     /**
      * get order from shopElf
      * @return mixed
@@ -130,7 +154,7 @@ class OaSupplierOrderController extends Controller
     public function actionQueryOrder()
     {
         $db = Yii::$app->db;
-        if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
             $query = Yii::$app->request->post();
             return $query;
         }
@@ -154,7 +178,6 @@ class OaSupplierOrderController extends Controller
     }
 
 
-
     public function actionExport()
     {
         //表头
@@ -172,8 +195,7 @@ class OaSupplierOrderController extends Controller
         header('Cache-Control: max-age=0');
 
         //一个单元格一个单元格写入表头
-        foreach ($heard_name as $index => $name)
-        {
+        foreach ($heard_name as $index => $name) {
             $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
 
         }
@@ -194,7 +216,7 @@ class OaSupplierOrderController extends Controller
 //
 //        }
 //        $writer =  new \PHPExcel_Writer_Excel5($excel);
-        $writer = \PHPExcel_IOFactory::createWriter($excel,'Excel2007');
+        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
         $writer->save('php://output');
 
     }

@@ -50,7 +50,7 @@ return [
             'timeFormat' => 'php:H:i:s',
         ],
         'request' => [
-            'csrfParam' => '_csrf-backend',
+            'csrfParam' => '_csrf',
         ],
         'user' => [
             'identityClass' => 'backend\models\User',

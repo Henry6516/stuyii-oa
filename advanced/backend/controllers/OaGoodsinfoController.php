@@ -141,6 +141,7 @@ class OaGoodsinfoController extends BaseController
 
         $post = Yii::$app->request->post();
         unset($post['OaGoodsinfo']['stockUp']);
+        unset($post['OaGoodsinfo']['DictionaryName']);
 
         //解析对应销售
         $person = $this->getPerson();
@@ -165,8 +166,10 @@ class OaGoodsinfoController extends BaseController
             $info->SupplierID = $SupplerID['NID'];
 
 
-            if (!empty($updata['DictionaryName'])){
-                $info->DictionaryName = implode(',',$updata['DictionaryName']);
+            if ($updata['OaGoodsinfo']['DictionaryName']){
+                $info->DictionaryName = implode(',',$updata['OaGoodsinfo']['DictionaryName']);
+            }else{
+                $info->DictionaryName = $updata['OaGoodsinfo']['DictionaryName'];
             }
 
             //解析对应销售
@@ -273,6 +276,7 @@ class OaGoodsinfoController extends BaseController
                     'pageSize' => 150,
                 ],
             ]);
+            $info->DictionaryName = explode(',', $info->DictionaryName);
             //设置默认仓库
             if(!$info->StoreName)  $info->StoreName = '义乌仓';
             return $this->render('updetail',[

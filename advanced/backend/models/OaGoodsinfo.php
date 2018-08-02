@@ -36,7 +36,7 @@ class OaGoodsinfo extends GoodsCats
             [['IsLiquid', 'IsPowder', 'isMagnetism', 'IsCharged','goodsid'], 'integer'],
             [['headKeywords','requiredKeywords','randomKeywords','tailKeywords','isVar','completeStatus','picStatus','picCompleteTime',
                 'updateTime','developer','devDatetime','GoodsCode','achieveStatus','description','SupplierName','Season','StoreName',
-                'PackName','DictionaryName','GoodsName'], 'string'],
+                'PackName','GoodsName'], 'string'],
             [['StoreName','GoodsName','SupplierName', 'AliasCnName','AliasEnName','PackName','description',], 'required'],
             [['mapPersons','stockUp','wishtags','completeStatus','DictionaryName','vendor1'],'safe'],
         ];
@@ -80,6 +80,7 @@ class OaGoodsinfo extends GoodsCats
             'wishtags' => '关键词tags',
             'stockUp' => '是否备货',
             'mapPersons' => '对应销售',
+            'DictionaryName' => '禁售平台',
 
 
 

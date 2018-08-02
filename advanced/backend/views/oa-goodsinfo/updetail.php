@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = ['label' => '更新产品', 'url' => ['index']]
 $this->params['breadcrumbs'][] = ['label' => $info->GoodsCode, 'url' => ['view', 'id' => $info->pid]];
 $this->params['breadcrumbs'][] = '更新数据';
 
-$bannedNames = explode(',', $info->DictionaryName);
+//$bannedNames = explode(',', $info->DictionaryName);
 $catNid = $goodsItem->catNid;
 $subCate = $goodsItem->subCate;
 $stock_flag = $info->stockUp ? false : true;
@@ -268,11 +268,11 @@ echo FormGrid::widget([ // continuation fields to row above without labels
 <div class="row" style="margin-left: 8px">
     <div class="row">
         <div class="col-sm-3">
-            <?php echo '<label class="control-label">禁售平台</label>';
-            echo Select2::widget([
+            <?php //echo '<label class="control-label">禁售平台</label>'; ?>
+           <?= $form->field($info, 'DictionaryName')->widget(Select2::classname(),[
                 'name' => 'DictionaryName',
                 'id' => 'dictionary-name',
-                'value' => $bannedNames,
+                //'value' => $bannedNames,
                 'data' => $lock,
                 'maintainOrder' => true,
                 'options' => ['placeholder' => '--可多选--', 'multiple' => true],
