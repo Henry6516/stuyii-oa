@@ -200,8 +200,7 @@ $(function() {
   $(' . query - btn').click(function() {
     var query = $(' . query - form').serialize();
     $.ajax({
-      url:'{
-        $queryUrl}',
+      url:'{$queryUrl}',
       type:'POST',
       data:query,
       success:function(res) {
