@@ -8,7 +8,6 @@ use backend\models\OaSupplierOrder;
 use backend\models\OaSupplierOrderSearch;
 use backend\models\OaSupplierGoodsSkuSearch;
 use yii\data\ArrayDataProvider;
-use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -131,15 +130,25 @@ class OaSupplierOrderController extends Controller
             $dataProvider = new ArrayDataProvider([
                 'allModels' => $list,
                 'pagination' => [
-                    'pageSize' => 20,
+                    'pageSize' => 10,
                 ],
                 'sort' => [
                     'attributes' => ['BillNumber', 'CHECKfLAG', 'SupplierName', 'MakeDate', 'Recorder', 'DelivDate', 'OrderAmount', 'OrderMoney'],
                 ],
             ]);
+            //设置默认显示的订单明细
+            $page = isset($request['page']) ? $request['page'] : 1;
+            $pageSize = isset($request['pre-page']) ? $request['pre-page'] : 10;
+            if ($list && isset($list[$pageSize * ($page - 1) + 1])) {
+                $detailList = OaSupplierOrder::getPyOrderDetail($list[$pageSize * ($page - 1)]['nid']);
+            } else {
+                $detailList = [];
+            }
+            //var_dump($detailList);exit;
             return $this->render('query', [
                 'search' => $request,
                 'dataProvider' => $dataProvider,
+                'detailList' => $detailList,
             ]);
 
         } else {
@@ -148,17 +157,38 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * get order from shopElf
+     * @param $id
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionQueryDetail($id)
+    {
+        //$id = Yii::$app->request->post('id',0);
+        $detailList = OaSupplierOrder::getPyOrderDetail($id);
+        return $this->renderAjax('queryDetail', [
+            'detailList' => $detailList,
+        ]);
+    }
+
+    /**
+     *  同步订单
      * @return mixed
      */
     public function actionQueryOrder()
     {
-        $db = Yii::$app->db;
-        if (Yii::$app->request->isPost) {
-            $query = Yii::$app->request->post();
-            return $query;
+        $ids = Yii::$app->request->post()['ids'];
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            foreach (json_decode($ids) as $id){
+                OaSupplierOrder::syncPyOrders($id);
+            }
+            $trans->commit();
+            $res = '订单同步成功！';
+        } catch (\Exception $e){
+            $trans->rollBack();
+            $res = $e->getMessage();
         }
-
+        return $res;
     }
 
     /**

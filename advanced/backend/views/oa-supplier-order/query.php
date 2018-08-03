@@ -9,7 +9,7 @@ use yii\helpers\Url;
 
 $this->title = '同步采购单';
 $this->params['breadcrumbs'][] = $this->title;
-//var_dump( Yii::$app->request->getCsrfToken());exit;
+//var_dump($dataProvider->allModels);exit;
 ?>
 <div class="oa-supplier-order-query" style="margin-top: 1%;">
     <div class="col-md-12">
@@ -48,35 +48,39 @@ $this->params['breadcrumbs'][] = $this->title;
                     <div class="col-sm-2">
                         <div class="input-group">
                             <span class="input-group-addon" id="sizing-addon1">采购单号</span>
-                            <input name="billNumber" type="text" class="form-control" placeholder=""
-                                   value="<?= isset($search) && $search['billNumber'] ? $search['billNumber'] : '' ?>">
+                            <input type="text" id="_csrf" name="billNumber"
+                                   value="<?= isset($search) && $search['billNumber'] ? $search['billNumber'] : '' ?>"/>
                         </div><!-- /input-group -->
                     </div>
                     <div class="col-sm-1">
-                        <input type="hidden" id="_csrf" name="_csrf"
-                               value="<?php echo Yii::$app->request->getCsrfToken() ?>"/>
                         <button type="submit" class="btn query-btn btn-primary">查询</button>
                     </div>
                 </div><!-- /.row -->
             </form>
-            <button type="button" class="btn btn-danger" style="margin-bottom: 1%;margin-left: 1%">确定同步</button>
+            <button type="button" class="btn btn-danger synchronization" style="margin-bottom: 1%;margin-left: 1%">确定同步</button>
 
             <?php if (isset($dataProvider)): ?>
-
+                <div class="div-data" data-data='<?= json_encode($dataProvider->allModels); ?>'></div>
                 <?= GridView::widget([
                     'dataProvider' => $dataProvider,
                     //'filterModel' => $searchModel,
+                    'id' => 'order-list',
                     'columns' => [
-                        ['class' => 'yii\grid\CheckboxColumn'],
-                        ['class' => 'yii\grid\SerialColumn'],
                         [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{view}',
+                            'class' => 'yii\grid\CheckboxColumn',
+                            /*'filterOptions' => [
+                                'pluginOptions' => ['data-id' => function($model){return $model['nid'];}],
+                            ],*/
                         ],
+                        ['class' => 'yii\grid\SerialColumn'],
                         [
                             'attribute' => 'BillNumber',
                             'label' => '订单编号',
                             'format' => 'raw',
+                            'filterWidgetOptions' => [
+                                'showDefaultPalette' => false,
+                                'pluginOptions' => ['class' => 123],
+                            ],
                         ],
                         [
                             'attribute' => 'SupplierName',
@@ -104,16 +108,16 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'MakeDate',
                             'label' => '订单时间',
                             'format' => 'raw',
-                            'value' => function($model){
-                                return substr($model['MakeDate'],0,19);
+                            'value' => function ($model) {
+                                return substr($model['MakeDate'], 0, 19);
                             }
                         ],
                         [
                             'attribute' => 'DelivDate',
                             'label' => '到货时间',
                             //'format' => ['date', 'Y-m-d'],
-                            'value' => function($model){
-                                return substr($model['DelivDate'],0,10);
+                            'value' => function ($model) {
+                                return substr($model['DelivDate'], 0, 10);
                             }
                         ],
                         [
@@ -129,6 +133,55 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                 ]); ?>
 
+                <div class="col-lg-10">
+                    <h3>订单明细</h3>
+                    <table id="detail-table"
+                           class="table table-striped table-checkable table-bordered table-hover order-column">
+                        <thead>
+                        <tr>
+                            <th> 商品编码</th>
+                            <th> 商品名称</th>
+                            <th> 商品SKU码</th>
+                            <th> 规格</th>
+                            <th> 型号</th>
+                            <th> 款式1</th>
+                            <th> 款式2</th>
+                            <th> 款式3</th>
+                            <th> 单位</th>
+                            <th> 采购数量</th>
+                            <th> 含税单价</th>
+                            <th> 含税金额</th>
+                            <th> 税率</th>
+                            <th> 税额</th>
+                            <th> 金额</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-detail-body" data-data="">
+                        <?php if ($detailList): ?>
+                            <?php foreach ($detailList as $v): ?>
+                                <tr class="odd gradeX">
+                                    <td><?php echo $v['Goodscode']; ?></td>
+                                    <td><?php echo $v['Goodsname']; ?></td>
+                                    <td><?php echo $v['SKU']; ?></td>
+                                    <td><?php echo $v['Class']; ?></td>
+                                    <td><?php echo $v['Model']; ?></td>
+                                    <td><?php echo $v['property1']; ?></td>
+                                    <td><?php echo $v['property2']; ?></td>
+                                    <td><?php echo $v['property3']; ?></td>
+                                    <td><?php echo $v['Unit']; ?></td>
+                                    <td><?php echo $v['amount']; ?></td>
+                                    <td><?php echo $v['price']; ?></td>
+                                    <td><?php echo $v['money']; ?></td>
+                                    <td><?php echo $v['TaxRate']; ?></td>
+                                    <td><?php echo $v['TaxMoney']; ?></td>
+                                    <td><?php echo $v['AllMoney']; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+
             <?php endif; ?>
 
         </div>
@@ -139,12 +192,18 @@ $this->params['breadcrumbs'][] = $this->title;
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
 <?php
 
-$queryUrl = Url::toRoute(['query - order']);
+$queryUrl = Url::toRoute(['query-order']);
+$detailUrl = Url::toRoute(['query-detail']);
 
 
 $js = <<< JS
-  
+
+window.onload = function () {
+            $('table.kv-grid-table>tbody').find("tr").eq(0).addClass("table-color");
+};
+        
 $(function() {
+    
   var start = moment();
   var end = moment();
   function cb(start, end) {
@@ -194,19 +253,63 @@ $(function() {
     
   }, cb);
   
+  //查看订单明细
+  $('table.kv-grid-table>tbody>tr').on('click',function() {
+      $('.table-detail-body>tr').remove();//删除对应的订单详情
+       $('table.kv-grid-table>tbody').find("tr").removeClass("table-color");
+       $(this).addClass("table-color");
+      var index = $(this).data('key');    
+      var list = $('.div-data').data('data');
+      var nid = 0;
+      $.each(list,function(i,item) {
+            if(i == index){
+                nid = item.nid;
+                return false;
+            }
+      });
+      //console.log(nid);
+     $.ajax({
+        url:'{$detailUrl}',
+        type:'GET',
+        data:{'id':nid},
+        success:function(res) {
+            //$('.table-detail-body>tr').remove();
+            $('.table-detail-body').append(res);
+        }
+     });
+  });
+  
+  
   /*
-  query submit
+    同步订单
    */
-  $(' . query - btn').click(function() {
-    var query = $(' . query - form').serialize();
-    $.ajax({
-      url:'{$queryUrl}',
-      type:'POST',
-      data:query,
-      success:function(res) {
-        console.log(res);
+  $('.synchronization').click(function() {
+      var keys = $('#order-list').yiiGridView('getSelectedRows');
+      if(keys.length == 0) {
+          alert("请选择要同步的订单！")
+          return false;
       }
-    });
+      var list = $('.div-data').data('data');
+      var ids = new Array();
+      $.each(keys,function(k,it) {
+          $.each(list,function(i,item) {
+                if(i == it){
+                    ids.push(item.nid);
+                    return false;
+                }
+          });
+      });
+      ids = JSON.stringify(ids);//数组转化成JSON
+      $.ajax({
+        url:'{$queryUrl}',
+        type:'POST',
+        data:{ids:ids},
+        success:function(res) {
+            console.log(res);
+            alert(res);
+            location.reload();
+        }
+      });
   })
 });
 
@@ -215,4 +318,8 @@ JS;
 $this->registerJs($js);
 
 ?>
-
+<style>
+    .table-color {
+        background-color: #00c0ef !important;
+    }
+</style>
