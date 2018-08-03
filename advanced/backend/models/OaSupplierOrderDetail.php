@@ -36,9 +36,11 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['orderId', 'purchaseNumber', 'deliveryNumber'], 'integer'],
-            [['sku', 'image', 'supplierGoodsSku', 'goodsName', 'property1', 'property2', 'property3'], 'string'],
+            [['orderId', 'purchaseNumber', 'deliveryAmt'], 'integer'],
+            [['sku', 'goodsCode', 'image', 'supplierGoodsSku', 'goodsName', 'property1', 'property2', 'property3',
+                'deliveryNumber', 'deliveryStatus', 'paymentStatus'], 'string'],
             [['purchasePrice'], 'number'],
+            [['deliveryTime'], 'safe'],
         ];
     }
 
@@ -49,8 +51,9 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'orderId' => 'Order ID',
+            'orderId' => '订单主表ID',
             'sku' => 'SKU',
+            'goodsCode' => '商品编码',
             'image' => '图片',
             'supplierGoodsSku' => '供应商SKU',
             'goodsName' => '商品名称',
@@ -59,7 +62,11 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
             'property3' => '款式3',
             'purchaseNumber' => '采购数量',
             'purchasePrice' => '采购价格',
-            'deliveryNumber' => '发货数量',
+            'deliveryAmt' => '发货数量',
+            'deliveryNumber' => '物流单号',
+            'deliveryStatus' => '发货状态',
+            'paymentStatus' => '发货状态',
+            'deliveryTime' => '发货时间',
         ];
     }
 }
