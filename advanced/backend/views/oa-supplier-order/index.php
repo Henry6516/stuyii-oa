@@ -94,6 +94,16 @@ $queryUrl = Url::toRoute(['query']);
      ?>
 </div>
 
+<style>
+    .open { /* Display the dropdown on hover */
+        position:absolute;
+    }
+
+    .open > button {
+        position: relative;
+        bottom: 5px;
+    }
+</style>
 
 
 
