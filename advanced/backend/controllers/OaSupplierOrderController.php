@@ -105,11 +105,12 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * Deletes an existing OaSupplierOrder model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -119,8 +120,9 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * query order
-     * @return mixed
+     * 获取普源订单列表
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionQuery()
     {
@@ -139,12 +141,11 @@ class OaSupplierOrderController extends Controller
             //设置默认显示的订单明细
             $page = isset($request['page']) ? $request['page'] : 1;
             $pageSize = isset($request['pre-page']) ? $request['pre-page'] : 10;
-            if ($list && isset($list[$pageSize * ($page - 1) + 1])) {
+            if ($list && isset($list[$pageSize * ($page - 1)])) {
                 $detailList = OaSupplierOrder::getPyOrderDetail($list[$pageSize * ($page - 1)]['nid']);
             } else {
                 $detailList = [];
             }
-            //var_dump($detailList);exit;
             return $this->render('query', [
                 'search' => $request,
                 'dataProvider' => $dataProvider,
@@ -157,13 +158,13 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
+     * AJAX 获取订单明细
      * @param $id
      * @return string
      * @throws \yii\db\Exception
      */
     public function actionQueryDetail($id)
     {
-        //$id = Yii::$app->request->post('id',0);
         $detailList = OaSupplierOrder::getPyOrderDetail($id);
         return $this->renderAjax('queryDetail', [
             'detailList' => $detailList,
@@ -171,8 +172,9 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     *  同步订单
-     * @return mixed
+     * 同步订单
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionQueryOrder()
     {
@@ -208,6 +210,11 @@ class OaSupplierOrderController extends Controller
     }
 
 
+    /**
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Writer_Exception
+     */
     public function actionExport()
     {
         //表头
