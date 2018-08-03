@@ -320,7 +320,7 @@ function centerFormat($name)
                             'class' => 'data-heart',
                             'data-url' => Url::toRoute(['heart'])
                         ];
-                        return Html::a('<span  class="glyphicon glyphicon-heart"></span>', 'javascript:void(0)', $options);
+                        return Html::a('<span  class="glyphicon glyphicon-heart"></span>', '#', $options);
                     }
                 ],
             ],
