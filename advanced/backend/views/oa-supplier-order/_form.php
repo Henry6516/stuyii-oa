@@ -14,8 +14,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'supplierName')->textInput() ?>
 
-    <?= $form->field($model, 'goodsCode')->textInput() ?>
-
     <?= $form->field($model, 'billNumber')->textInput() ?>
 
     <?= $form->field($model, 'billStatus')->textInput() ?>
@@ -34,7 +32,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'orderTime')->textInput() ?>
 
-    <?= $form->field($model, 'createdTime')->textInput() ?>
 
     <?= $form->field($model, 'updatedTime')->textInput() ?>
 

@@ -24,6 +24,7 @@ return [
     'aliases' => [
         '@mdm/admin' => '@vendor/mdmsoft/yii2-admin',
         '@unitools' => '@app/unitools',
+        '@services' => '@app/services',
 //        '@bower' => '@vendor/bower-asset',
 //        '@npm'   => '@vendor/npm-asset',
     ],

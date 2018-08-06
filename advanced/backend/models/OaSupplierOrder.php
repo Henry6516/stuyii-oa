@@ -9,7 +9,7 @@ use Yii;
  *
  * @property int $id
  * @property string $supplierName
- * @property string $goodsCode
+ * @property string $goodsName
  * @property string $billNumber
  * @property string $billStatus
  * @property string $purchaser
@@ -19,7 +19,6 @@ use Yii;
  * @property string $expressNumber
  * @property string $paymentStatus
  * @property string $orderTime
- * @property string $createdTime
  * @property string $updatedTime
  * @property string $expressStatus
  * @property string $deliveryStatus
@@ -40,7 +39,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['supplierName', 'billNumber', 'billStatus', 'deliveryStatus', 'purchaser', 'paymentStatus'], 'string'],
+            [['supplierName','goodsName', 'billNumber','expressNumber', 'billStatus', 'deliveryStatus', 'purchaser', 'paymentStatus'], 'string'],
             [['syncTime', 'orderTime', 'updatedTime'], 'safe'],
             [['totalNumber'], 'integer'],
             [['amt'], 'number'],
@@ -56,6 +55,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'supplierName' => '供应商名称',
+            'goodsName' => '商品名称',
             'billNumber' => '采购单号',
             'billStatus' => '采购单状态',
             'purchaser' => '线下采购',
@@ -63,6 +63,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             'totalNumber' => '总数量',
             'amt' => '总金额',
             'deliveryStatus' => '发货状态',
+            'expressNumber' => '物流单号',
             'paymentStatus' => '支付状态',
             'orderTime' => '下单时间',
             'updatedTime' => '更新时间',
