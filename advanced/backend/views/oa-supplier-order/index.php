@@ -32,20 +32,19 @@ Modal::end();
     </div>
     <div style="margin-top: 1%;margin-bottom: 1%">
 
-        <div class="btn-group">
-            <button type="button" class="btn  btn-info">批量操作</button>
-            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="caret"></span>
-                <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li><?= Html::a('创建订单', ['create'], ['class' => '']) ?></li>
-            </ul>
-        </div>
+<!--        <div class="btn-group">-->
+<!--            <button type="button" class="btn  btn-info">批量操作</button>-->
+<!--            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                <span class="caret"></span>-->
+<!--                <span class="sr-only">Toggle Dropdown</span>-->
+<!--            </button>-->
+<!--            <ul class="dropdown-menu">-->
+<!--                <li><a href="#">Action</a></li>-->
+<!--                <li><a href="#">Another action</a></li>-->
+<!--                <li><a href="#">Something else here</a></li>-->
+<!--                <li role="separator" class="divider"></li>-->
+<!--            </ul>-->
+<!--        </div>-->
         <?= '<a target="_blank" href='. $queryUrl. ' type="button" class="btn btn-danger">同步采购单</a>' ?>
 
     </div>
