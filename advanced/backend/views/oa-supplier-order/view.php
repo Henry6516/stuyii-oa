@@ -39,6 +39,10 @@ $form = ActiveForm::begin();
              'image' => [ 'type' => TabularForm::INPUT_TEXT,
                  'options' => ['class' => 'image'],
              ],
+             'supplierGoodsSku' => [ 'type' => TabularForm::INPUT_TEXT,
+                 'options' => ['class' => 'supplierGoodsSku'],
+             ],
+
              'goodsName' => [ 'type' => TabularForm::INPUT_TEXT,
                  'options' => ['class' => 'goodsName'],
              ],

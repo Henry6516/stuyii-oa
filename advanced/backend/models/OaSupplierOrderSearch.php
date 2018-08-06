@@ -19,7 +19,7 @@ class OaSupplierOrderSearch extends OaSupplierOrder
     {
         return [
             [['id', 'totalNumber'], 'integer'],
-            [['supplierName', 'goodsCode', 'billNumber', 'billStatus', 'purchaser', 'syncTime', 'expressNumber', 'paymentStatus', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
+            [['supplierName', 'goodsName','billNumber','expressNumber','deliveryStatus', 'billStatus', 'purchaser', 'syncTime', 'paymentStatus', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
             [['amt'], 'number'],
         ];
     }
@@ -65,16 +65,16 @@ class OaSupplierOrderSearch extends OaSupplierOrder
             'totalNumber' => $this->totalNumber,
             'amt' => $this->amt,
             'orderTime' => $this->orderTime,
-            'createdTime' => $this->createdTime,
             'updatedTime' => $this->updatedTime,
         ]);
 
         $query->andFilterWhere(['like', 'supplierName', $this->supplierName])
-            ->andFilterWhere(['like', 'goodsCode', $this->goodsCode])
             ->andFilterWhere(['like', 'billNumber', $this->billNumber])
             ->andFilterWhere(['like', 'billStatus', $this->billStatus])
+            ->andFilterWhere(['like', 'goodsName', $this->goodsName])
             ->andFilterWhere(['like', 'purchaser', $this->purchaser])
             ->andFilterWhere(['like', 'expressNumber', $this->expressNumber])
+            ->andFilterWhere(['like', 'deliveryStatus', $this->deliveryStatus])
             ->andFilterWhere(['like', 'paymentStatus', $this->paymentStatus]);
 
         return $dataProvider;

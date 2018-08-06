@@ -6,13 +6,15 @@ use backend\models\OaSupplierOrderDetail;
 use Yii;
 use backend\models\OaSupplierOrder;
 use backend\models\OaSupplierOrderSearch;
-use backend\models\OaSupplierGoodsSkuSearch;
+use backend\models\UploadFile;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\unitools\PHPExcelTools;
 use yii\data\ActiveDataProvider;
+use backend\services\OaSupplierOrderServicel;
+use yii\web\UploadedFile;
 
 /**
  * OaSupplierOrderController implements the CRUD actions for OaSupplierOrder model.
@@ -42,10 +44,11 @@ class OaSupplierOrderController extends Controller
     {
         $searchModel = new OaSupplierOrderSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $file = new UploadFile();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'file' => $file
         ]);
     }
 
@@ -96,7 +99,7 @@ class OaSupplierOrderController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('update', [
@@ -171,7 +174,7 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     *  同步订单
+     *  采购单明细
      * @return mixed
      */
     public function actionQueryOrder()
@@ -191,6 +194,161 @@ class OaSupplierOrderController extends Controller
         return $res;
     }
 
+    /*
+     * @brief 手动同步普源数据到产品中心
+     * @param $id int orderId
+     * @return mixed
+     */
+    public function actionSync($id)
+    {
+        $sql = "p_oa_SupplierOrderSync $id";
+        $db = Yii::$app->db;
+        $res = $db->createCommand($sql)->execute();
+        if(!$res) {
+            return '同步失败!';
+        }
+        return '同步成功!';
+    }
+
+    /*
+     * @brief 付款
+     * @param $id int orderId
+     * @return mixed
+     */
+    public function actionPay($id)
+    {
+        $sql = "update oa_supplierOrder set paymentStatus='已付款' where id=$id";
+        $db = Yii::$app->db;
+        $res = $db->createCommand($sql)->execute();
+        if(!$res) {
+            return '付款失败！';
+        }
+        return '付款成功！';
+    }
+
+    /**
+     * @brief 发货
+     * @param $id int orderId
+     * @return mixed
+     */
+    public function actionDelivery($id)
+    {
+        if(!Yii::$app->request->isPost) {
+            return '请求错误！';
+        }
+        $post = Yii::$app->request->post();
+        $expressNumber = $post['number'];
+        $numbers = explode("\n",trim($expressNumber));
+        $numbers = implode(',',$numbers);
+        $sql = "update oa_supplierOrder set expressNumber='$numbers' where id=$id";
+        $db = Yii::$app->db;
+        $res = $db->createCommand($sql)->execute()  ;
+        if(!$res) {
+            return '发货失败！';
+        }
+        return '发货成功！';
+    }
+
+    /**
+     * @brief 导入物流单号到普源
+     * @param $id int orderId
+     * @return mixed
+     */
+    public function actionInputExpress($id)
+    {
+        $order = OaSupplierOrder::findOne($id);
+        $billNumber = $order->billNumber;
+        $expressNumber = $order->expressNumber;
+        $sql = "update cg_stockOrderM  set logisticOrderNo='$expressNumber' where BillNumber='$billNumber'";
+        $db = Yii::$app->db;
+        $res = $db->createCommand($sql)->execute();
+        if(!$res) {
+            return '导入失败！';
+        }
+        return '导入成功！';
+    }
+
+    /**
+     * @brief 导出采购单明细
+     * @param $id
+     */
+    public function actionExportDetail($id)
+    {
+        $order = OaSupplierOrder::findOne($id);
+        $goodsName = $order->billNumber;
+        $sql = "p_oa_exportOrderDetail $id";
+        $db = Yii::$app->db;
+        $ret = $db->createCommand($sql)->queryAll();
+
+        //表头
+        $heard_name = [
+            '采购单号',
+            'SKU',
+            '供应商SKU',
+            '产品名称',
+            '款式1',
+            '款式2',
+            '款式3',
+            '采购数量',
+            '采购价',
+            '发货数量',
+        ];
+
+        $excel = new \PHPExcel();
+        $file_name = $goodsName .'-'. date('Y-m-d') . '.xlsx';
+        $sheet_num = 0;
+        $excel->getActiveSheetIndex($sheet_num);
+        $excel->getActiveSheet()->setTitle('采购明细');
+        header('Content-type: text/xlsx');
+        header('Content-Disposition: attachment;filename=' . $file_name . ' ');
+        header('Cache-Control: max-age=0');
+
+        //一个单元格一个单元格写入表头
+        foreach ($heard_name as $index => $name) {
+            $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
+
+        }
+
+        //按单元格写入每行数据
+        foreach ($ret as $row_num => $row) {
+            if (!\is_array($row)) {
+                return;
+            }
+
+            $cell_num = 0;
+            foreach ($row as $index => $name) {
+                $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($cell_num) . ($row_num + 2), $name);
+                ++$cell_num;
+            }
+
+        }
+        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $writer->save('php://output');
+    }
+
+
+    /**
+     * @brief 接受发货
+     * @return mixed
+     */
+
+    public function actionInputDeliveryOrder()
+    {
+        $request = Yii::$app->request;
+        if(!$request->isPost) {
+            return;
+        }
+        $file  = new UploadFile();
+        $file->excelFile = UploadedFile::getInstance($file,'excelFile');
+        if ($file->upload()) {
+            return '上传成功！';
+        }
+        return '上传失败！';
+
+
+
+    }
+
     /**
      * Finds the OaSupplierOrder model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -207,47 +365,4 @@ class OaSupplierOrderController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
-    public function actionExport()
-    {
-        //表头
-        $heard_name = [
-            'Parent Unique ID',
-            '*Product Name',
-        ];
-
-        $excel = new \PHPExcel();
-        $file_name = '-contract-' . date('d-m-Y-His') . '.xlsx';
-        $sheet_num = 0;
-        $excel->getActiveSheetIndex($sheet_num);
-        header('Content-type: text/xlsx');
-        header('Content-Disposition: attachment;filename=' . $file_name . ' ');
-        header('Cache-Control: max-age=0');
-
-        //一个单元格一个单元格写入表头
-        foreach ($heard_name as $index => $name) {
-            $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($index) . '1', $name);
-
-        }
-
-        //按单元格写入每行数据
-//        foreach ($ret as $row_num => $row)
-//        {
-//            if(!\is_array($row)){
-//                return;
-//            }
-//
-//            $cell_num = 0;
-//            foreach ($row as $index => $name)
-//            {
-//                $excel->getActiveSheet()->setCellValue(PHPExcelTools::stringFromColumnIndex($cell_num) .($row_num + 2), $name);
-//                ++$cell_num;
-//            }
-//
-//        }
-//        $writer =  new \PHPExcel_Writer_Excel5($excel);
-        $writer = \PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
-        $writer->save('php://output');
-
-    }
 }

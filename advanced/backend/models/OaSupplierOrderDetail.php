@@ -17,6 +17,7 @@ use Yii;
  * @property string $property2
  * @property string $property3
  * @property int $purchaseNumber
+ * @property int $goodsCode
  * @property string $purchasePrice
  * @property int $deliveryNumber
  */

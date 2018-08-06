@@ -19,7 +19,7 @@ class OaSupplierOrderDetailSearch extends OaSupplierOrderDetail
     {
         return [
             [['id', 'orderId', 'purchaseNumber', 'deliveryNumber'], 'integer'],
-            [['sku', 'image', 'supplierGoodsSku', 'goodsName', 'property1', 'property2', 'property3'], 'safe'],
+            [['sku', 'image','goodsName', 'supplierGoodsSku', 'goodsName', 'property1', 'property2', 'property3'], 'safe'],
             [['purchasePrice'], 'number'],
         ];
     }
@@ -63,6 +63,7 @@ class OaSupplierOrderDetailSearch extends OaSupplierOrderDetail
             'id' => $this->id,
             'orderId' => $this->orderId,
             'purchaseNumber' => $this->purchaseNumber,
+            'goodsName' => $this->goodsName,
             'purchasePrice' => $this->purchasePrice,
             'deliveryNumber' => $this->deliveryNumber,
         ]);
