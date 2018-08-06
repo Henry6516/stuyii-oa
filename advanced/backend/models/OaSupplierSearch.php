@@ -45,8 +45,10 @@ class OaSupplierSearch extends OaSupplier
     {
         //获取当前登录用户
         $user = Yii::$app->user->identity->username;
-        $query = OaSupplier::find()
-            ->andWhere(['purchase' => $user]);
+        $query = OaSupplier::find();
+        if($user != 'admin'){
+            $query->andWhere(['purchase' => $user]);
+        }
 
         // add conditions that should always apply here
 
