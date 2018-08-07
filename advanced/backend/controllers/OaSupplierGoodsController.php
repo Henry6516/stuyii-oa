@@ -124,9 +124,16 @@ class OaSupplierGoodsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        try {
+            $this->findModel($id)->delete();
+            $msg = '删除成功！';
+        }
+        catch (\Exception $why) {
+            $msg = '删除失败！';
 
-        return $this->redirect(['index']);
+        }
+
+        return $msg;
     }
 
     /**
