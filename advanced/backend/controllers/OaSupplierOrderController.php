@@ -143,7 +143,7 @@ class OaSupplierOrderController extends Controller
             //设置默认显示的订单明细
             $page = isset($request['page']) ? $request['page'] : 1;
             $pageSize = isset($request['pre-page']) ? $request['pre-page'] : 10;
-            if ($list && isset($list[$pageSize * ($page - 1) + 1])) {
+            if ($list && isset($list[$pageSize * ($page - 1)])) {
                 $detailList = OaSupplierOrder::getPyOrderDetail($list[$pageSize * ($page - 1)]['nid']);
             } else {
                 $detailList = [];
