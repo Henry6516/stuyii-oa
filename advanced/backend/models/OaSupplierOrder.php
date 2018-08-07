@@ -100,11 +100,11 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             $sql .= " AND om.billNumber LIKE '%" . $post['billNumber'] . "%'";
         }
         //筛选商品编码
-        if ($post['supplierName']) {
+        if ($post['goodsCode']) {
             $sql .= " AND b.goodsCode LIKE '%" . $post['goodsCode'] . "%'";
         }
         //筛选SKU
-        if ($post['supplierName']) {
+        if ($post['sku']) {
             $sql .= " AND bs.sku LIKE '%" . $post['sku'] . "%'";
         }
         //过滤为同步的数据
@@ -187,6 +187,13 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
     }
 
 
+    /**
+     * 同步订单保存数据
+     * @param $pyOrderID
+     * @return bool
+     * @throws \Exception
+     * @throws \yii\db\Exception
+     */
     public static function syncPyOrders($pyOrderID)
     {
         //获取订单信息
@@ -208,8 +215,6 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
         $orderModel->totalNumber = (int)$res['totalNumber'];
         $orderModel->purchaser = $purchaser;
         $orderModel->syncTime = date('Y-m-d H:i:s');
-        //$orderModel->deliveryStatus = '';
-        //$orderModel->paymentStatus = '';
         $res = $orderModel->save();
         if(!$res){
             throw new \Exception('Synchronize order data failed!');
@@ -229,7 +234,6 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             $detailModel->purchaseNumber = (int)$v['amount'];
             $detailModel->purchasePrice = $v['price'];
             $result = $detailModel->save();
-            //var_dump($detailModel->getErrors());exit;
             if(!$result){
                 throw new \Exception('Synchronize order detail data failed!');
             }

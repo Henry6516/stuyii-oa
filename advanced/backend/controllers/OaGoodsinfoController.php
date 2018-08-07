@@ -306,7 +306,8 @@ class OaGoodsinfoController extends BaseController
         try{
             if($model && empty($model->completeStatus)){
                 $this->findModel($id)->delete();  //OaGoodsinfo信息删除
-                OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
+               // OaGoods::deleteAll(['nid' => $id]);//OaGoods信息删除
+                OaGoods::deleteAll(['nid' => $model['goodsid']]);//OaGoods信息删除
                 GoodsSKU::deleteAll(['pid' => $id]);//Goodssku信息删除
 
                 OaTemplates::deleteAll(['infoid' => $id]);//eBay平台信息删除
