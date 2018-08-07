@@ -45,7 +45,9 @@ class OaSupplierGoodsSearch extends OaSupplierGoods
 
         // add conditions that should always apply here
         $user = Yii::$app->user->identity->username;
-        $query->andWhere(['purchaser'=>$user]);
+        if ($user !== 'admin') {
+            $query->andWhere(['purchaser'=>$user]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

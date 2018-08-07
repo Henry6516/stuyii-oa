@@ -198,7 +198,7 @@ class OaSupplierGoodsController extends Controller
      */
     private function getSuppliers()
     {
-        $supplier = OaSupplier::find()->select('id,supplierName')->asArray()->all();
-        return ArrayHelper::map($supplier,'id','supplierName');
+        $supplier = OaSupplier::find()->select('supplierName')->distinct()->asArray()->all();
+        return ArrayHelper::map($supplier,'supplierName','supplierName');
     }
 }
