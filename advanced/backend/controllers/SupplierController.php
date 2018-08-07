@@ -170,7 +170,10 @@ class SupplierController extends Controller
             return $out;
         }
 
-        $sql = "SELECT TOP 50 supplierName FROM B_supplier WHERE used=0 AND supplierName LIKE '%{$q}%' ORDER BY supplierName";
+        $sql = "SELECT TOP 50 bs.supplierName FROM B_supplier bs
+                WHERE used=0 AND supplierName LIKE '%{$q}%' 
+                AND NOT EXISTS (SELECT supplierName FROM oa_supplier WHERE RTRIM(LTRIM(oa_supplier.supplierName)) = RTRIM(LTRIM(bs.supplierName)))  
+                ORDER BY supplierName";
         $res = Yii::$app->db->createCommand($sql)->queryAll();
         $out['results'] = array_map([$this, 'format'], $res);
         //print_r($out['results']);exit;

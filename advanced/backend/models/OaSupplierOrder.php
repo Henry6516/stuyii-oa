@@ -100,11 +100,11 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             $sql .= " AND om.billNumber LIKE '%" . $post['billNumber'] . "%'";
         }
         //筛选商品编码
-        if ($post['supplierName']) {
+        if ($post['goodsCode']) {
             $sql .= " AND b.goodsCode LIKE '%" . $post['goodsCode'] . "%'";
         }
         //筛选SKU
-        if ($post['supplierName']) {
+        if ($post['sku']) {
             $sql .= " AND bs.sku LIKE '%" . $post['sku'] . "%'";
         }
         //过滤为同步的数据

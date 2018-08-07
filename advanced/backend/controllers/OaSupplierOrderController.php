@@ -122,8 +122,9 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * query order
-     * @return mixed
+     * 获取普元订单列表
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionQuery()
     {
