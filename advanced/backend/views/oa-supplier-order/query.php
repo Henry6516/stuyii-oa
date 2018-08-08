@@ -57,7 +57,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div><!-- /.row -->
             </form>
-            <button type="button" class="btn btn-danger synchronization" style="margin-bottom: 1%;margin-left: 1%">确定同步</button>
+            <button type="button" class="btn btn-danger synchronization" style="margin-bottom: 1%;margin-left: 1%">
+                确定同步
+            </button>
 
             <?php if (isset($dataProvider)): ?>
                 <div class="div-data" data-data='<?= json_encode($dataProvider->allModels); ?>'></div>
@@ -254,29 +256,37 @@ $(function() {
   }, cb);
   
   //查看订单明细
+  var flag = true;
   $('table.kv-grid-table>tbody>tr').on('click',function() {
-      $('.table-detail-body>tr').remove();//删除对应的订单详情
-       $('table.kv-grid-table>tbody').find("tr").removeClass("table-color");
-       $(this).addClass("table-color");
-      var index = $(this).data('key');    
-      var list = $('.div-data').data('data');
-      var nid = 0;
-      $.each(list,function(i,item) {
-            if(i == index){
-                nid = item.nid;
-                return false;
+      if(flag){
+          $('.table-detail-body>tr').remove();//删除对应的订单详情
+          $('table.kv-grid-table>tbody').find("tr").removeClass("table-color");
+          $(this).addClass("table-color");
+          var index = $(this).data('key');    
+          var list = $('.div-data').data('data');
+          var nid = 0;
+          $.each(list,function(i,item) {
+              if(i == index){
+                  nid = item.nid;
+                  return false;
+              }
+          });
+          flag = false;
+         $.ajax({
+            url:'{$detailUrl}',
+            type:'GET',
+            data:{'id':nid},
+            success:function(res) {
+                //$('.table-detail-body>tr').remove();
+                $('.table-detail-body').append(res);
             }
-      });
-      //console.log(nid);
-     $.ajax({
-        url:'{$detailUrl}',
-        type:'GET',
-        data:{'id':nid},
-        success:function(res) {
-            //$('.table-detail-body>tr').remove();
-            $('.table-detail-body').append(res);
-        }
-     });
+         });
+         setTimeout(function() {
+             flag = true;
+         },2000);
+      }else{
+          return false;
+      }
   });
   
   
