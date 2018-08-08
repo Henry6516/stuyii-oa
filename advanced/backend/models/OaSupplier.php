@@ -43,6 +43,12 @@ class OaSupplier extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [
+                ['purchase'],
+                'unique',
+                'targetAttribute' => ['supplierName', 'purchase'],
+                'comboNotUnique' => '线下采购不能重复添加供应商！'
+            ],
             [['supplierName', 'purchase'], 'required'],
             [['supplierId'], 'integer'],
             [['supplierName', 'contactPerson1', 'phone1', 'contactPerson2', 'phone2', 'address',
