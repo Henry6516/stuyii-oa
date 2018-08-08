@@ -108,11 +108,12 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * Deletes an existing OaSupplierOrder model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -175,8 +176,9 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     *  采购单明细
-     * @return mixed
+     * 采购单明细
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionQueryOrder()
     {
@@ -190,15 +192,17 @@ class OaSupplierOrderController extends Controller
             $res = '订单同步成功！';
         } catch (\Exception $e){
             $trans->rollBack();
-            $res = $e->getMessage();
+            //$res = $e->getMessage();
+            $res = '订单同步失败!';
         }
         return $res;
     }
 
-    /*
-     * @brief 手动同步普源数据到产品中心
-     * @param $id int orderId
-     * @return mixed
+    /**
+     * 手动同步普源数据到产品中心
+     * @param $id
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionSync($id)
     {
@@ -211,10 +215,11 @@ class OaSupplierOrderController extends Controller
         return '同步成功!';
     }
 
-    /*
-     * @brief 付款
-     * @param $id int orderId
-     * @return mixed
+    /**
+     * 付款
+     * @param $id
+     * @return string
+     * @throws \yii\db\Exception
      */
     public function actionPay($id)
     {
