@@ -124,9 +124,16 @@ class OaSupplierGoodsController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        try {
+            $this->findModel($id)->delete();
+            $msg = '删除成功！';
+        }
+        catch (\Exception $why) {
+            $msg = '删除失败！';
 
-        return $this->redirect(['index']);
+        }
+
+        return $msg;
     }
 
     /**
@@ -198,7 +205,7 @@ class OaSupplierGoodsController extends Controller
      */
     private function getSuppliers()
     {
-        $supplier = OaSupplier::find()->select('id,supplierName')->asArray()->all();
-        return ArrayHelper::map($supplier,'id','supplierName');
+        $supplier = OaSupplier::find()->select('supplierName')->distinct()->asArray()->all();
+        return ArrayHelper::map($supplier,'supplierName','supplierName');
     }
 }

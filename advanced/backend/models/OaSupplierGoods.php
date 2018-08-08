@@ -64,7 +64,7 @@ class OaSupplierGoods extends ActiveRecord
             'purchaser' => '线下采购员',
             'goodsCode' => '商品编码',
             'goodsName' => '商品名称',
-            'supplierGoodsCode' => '供应商商品名称',
+            'supplierGoodsCode' => '供应商商品编码',
             'createdTime' => '创建时间',
             'updatedTime' => '更新时间',
         ];
