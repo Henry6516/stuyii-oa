@@ -185,11 +185,24 @@ class OaSupplierGoodsController extends Controller
     }
     /**
      * Get purchaser name based on supplier name
-     * @param integer $id
+     * @param string $supplier
      * @return mixed
      */
-    public function actionGetPurchaser($id) {
-        return OaSupplier::find()->select('purchase')->where(['id'=>$id])->one()->purchase;
+    public function actionGetPurchaser($supplier) {
+        return OaSupplier::find()->select('purchase')->where(['supplierName'=>$supplier])->one()->purchase;
+    }
+
+    /**
+     * @brief get goods name based on goods code
+     * @param string $goodsCode
+     * @return mixed
+     * @throws
+     */
+    public function actionGetGoodsName($goodsCode) {
+        $sql = 'select goodsName from B_Goods where goodsCode=:goodsCode';
+        $db = Yii::$app->db;
+        $ret = $db->createCommand($sql,[':goodsCode'=>$goodsCode])->queryOne();
+        return $ret['goodsName'];
     }
 
     /**
