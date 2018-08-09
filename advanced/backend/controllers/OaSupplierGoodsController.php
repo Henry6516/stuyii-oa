@@ -23,7 +23,7 @@ class OaSupplierGoodsController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
+    public function behaviors() :array
     {
         return [
             'verbs' => [
@@ -54,7 +54,7 @@ class OaSupplierGoodsController extends Controller
      * Displays the OaSupplierGoodsSku.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws
      */
     public function actionView($id)
     {
@@ -72,6 +72,7 @@ class OaSupplierGoodsController extends Controller
      * Creates a new OaSupplierGoods model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
+     * @throws
      */
     public function actionCreate()
     {
@@ -98,7 +99,7 @@ class OaSupplierGoodsController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws
      */
     public function actionUpdate($id)
     {
@@ -120,7 +121,7 @@ class OaSupplierGoodsController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
-     * @throws HttpException if the model cannot be found
+     * @throws
      */
     public function actionDelete($id)
     {
@@ -130,7 +131,6 @@ class OaSupplierGoodsController extends Controller
         }
         catch (\Exception $why) {
             $msg = '删除失败！';
-
         }
 
         return $msg;
@@ -140,11 +140,19 @@ class OaSupplierGoodsController extends Controller
      * Deletes oaSupplierGoodsSku row by id
      * @param integer $id
      * @return mixed
+     * @throws
      */
     public function actionDeleteSku($id)
     {
-        OaSupplierGoodsSku::findOne(['id'=>$id])->delete();
-
+        try {
+            $sku = OaSupplierGoodsSku::findOne(['id'=>$id]);
+            if(!empty($sku)) {
+                $sku->delete();
+            }
+        }
+        catch (\Exception $why) {
+           return '删除失败！';
+        }
         return '删除成功！';
     }
 
@@ -155,14 +163,16 @@ class OaSupplierGoodsController extends Controller
     public function actionSaveSku()
     {
         $post = Yii::$app->request->post();
-        $skuDetails = $post['OaSupplierGoodsSkuSearch'];
+        $skuDetails = \is_array($post['OaSupplierGoodsSkuSearch'])?$post['OaSupplierGoodsSkuSearch']:[];
         $trans = Yii::$app->db->beginTransaction();
         try {
             foreach ($skuDetails as $id=>$row) {
                 $sku = OaSupplierGoodsSku::findOne(['id'=>$id]);
-                $sku->setAttributes($row);
-                if(!$sku->save()) {
-                    throw new Exception('保存失败！');
+                if(!empty($sku)) {
+                    $sku->setAttributes($row);
+                    if(!$sku->save()) {
+                        throw new Exception('保存失败！');
+                    }
                 }
             }
             $trans->commit();
@@ -171,16 +181,28 @@ class OaSupplierGoodsController extends Controller
         catch (Exception $why) {
             $msg = '保存失败！';
         }
-
         return $msg;
     }
     /**
      * Get purchaser name based on supplier name
-     * @param integer $id
+     * @param string $supplier
      * @return mixed
      */
-    public  function actionGetPurchaser($id) {
-        return OaSupplier::find()->select('purchase')->where(['id'=>$id])->one()->purchase;
+    public function actionGetPurchaser($supplier) {
+        return OaSupplier::find()->select('purchase')->where(['supplierName'=>$supplier])->one()->purchase;
+    }
+
+    /**
+     * @brief get goods name based on goods code
+     * @param string $goodsCode
+     * @return mixed
+     * @throws
+     */
+    public function actionGetGoodsName($goodsCode) {
+        $sql = 'select goodsName from B_Goods where goodsCode=:goodsCode';
+        $db = Yii::$app->db;
+        $ret = $db->createCommand($sql,[':goodsCode'=>$goodsCode])->queryOne();
+        return $ret['goodsName'];
     }
 
     /**
@@ -190,7 +212,7 @@ class OaSupplierGoodsController extends Controller
      * @return OaSupplierGoods the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id) :OaSupplierGoods
     {
         if (($model = OaSupplierGoods::findOne($id)) !== null) {
             return $model;
@@ -203,7 +225,7 @@ class OaSupplierGoodsController extends Controller
      * get suppliers
      * @return array
      */
-    private function getSuppliers()
+    private function getSuppliers () :array
     {
         $supplier = OaSupplier::find()->select('supplierName')->distinct()->asArray()->all();
         return ArrayHelper::map($supplier,'supplierName','supplierName');

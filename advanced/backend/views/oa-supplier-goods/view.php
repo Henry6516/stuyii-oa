@@ -62,7 +62,10 @@ try {
             'image' => [ 'type' => TabularForm::INPUT_RAW,
                 'options' => ['class' => 'image'],
                 'value' => function($model) {
-                    return Html::img($model->image,['alt'=>'缩略图','width'=>80]);
+                    return Html::a(Html::img($model->image,[
+                        'alt'=>'缩略图','width'=>50,
+                    ]),$model->image,['target'=>'_blank']
+                    );
                 }
             ],
             'lowestPrice' => [ 'type' => TabularForm::INPUT_TEXT,
@@ -123,10 +126,13 @@ $('.save-sku').click(function() {
   });
 })
 
+ 
+ 
 JS;
 
 $this->registerJs($js);
 ?>
+
 
 <style>
     .content-header {

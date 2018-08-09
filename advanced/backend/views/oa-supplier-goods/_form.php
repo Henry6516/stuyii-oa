@@ -43,14 +43,15 @@ use yii\helpers\Url;
 
 <?php
 $getPurchaserUrl = Url::toRoute(['get-purchaser']);
+$getGoodsNameUrl = Url::toRoute(['get-goods-name']);
 $js = <<< JS
 
 /*
 set purchaser name based on supplier name
  */
 $('.oa-supplier').change(function() {
-  var id = $(this).val();
-  $.get('$getPurchaserUrl',{id:id},function(res) {
+  var supplier = $(this).val();
+  $.get('$getPurchaserUrl',{supplier:supplier},function(res) {
      $('#oasuppliergoods-purchaser').val(res);
   });
 })
@@ -58,8 +59,11 @@ $('.oa-supplier').change(function() {
 /*
 set goods name based on goods name
  */
-$('#oasuppliergoods-goodscode').change(function() { 
-  $('#oasuppliergoods-goodsname').val ('566');
+$('#oasuppliergoods-goodscode').change(function() {
+  var goodsCode = $(this).val();
+  $.get('$getGoodsNameUrl',{goodsCode:goodsCode},function(res) {
+      $('#oasuppliergoods-goodsname').val (res);
+  })
 })
     
 JS;
