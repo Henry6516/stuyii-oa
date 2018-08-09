@@ -8,10 +8,11 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model backend\models\OaGoods */
 /* @var $form yii\widgets\ActiveForm */
-$createUrl = Url::toRoute(['oa-goods/backward-create','type'=>'check', ]);
+$createUrl = Url::toRoute(['oa-goods/backward-create','type'=>'create', ]);
+$createCheckUrl = Url::toRoute(['oa-goods/backward-create','type'=>'check', ]);
 $js = <<<JS
 
-function checkNumber(ele) {
+function checkNumber(ele,url) {
   //ajax 提交表单
   ele.on('click', function() {
   
@@ -23,7 +24,7 @@ function checkNumber(ele) {
   }
   var form = $('#create-form');
   $.ajax({
-      url:'$createUrl',
+      url:url,
       type: 'post',
       data: form.serialize(),
       success: function(ret) {
@@ -36,8 +37,8 @@ function checkNumber(ele) {
 }
 
 //create
-checkNumber($('#create-btn'));
-checkNumber($('#create-to-check'));
+checkNumber($('#create-btn'),'$createUrl');
+checkNumber($('#create-to-check'),'$createCheckUrl');
 
 JS;
 $this->registerJs($js);
