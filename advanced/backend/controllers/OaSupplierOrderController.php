@@ -60,8 +60,9 @@ class OaSupplierOrderController extends Controller
      */
     public function actionView($id)
     {
+//        $detail = OaSupplierOrderDetail::find()->joinWith('oa_SupplierOrder')->where(['orderId' => $id])->creatCommand()->Rawsql;
         $orderDetail = new ActiveDataProvider([
-            'query' => OaSupplierOrderDetail::find()->where(['orderId' => $id]),
+            'query' => OaSupplierOrderDetail::find()->joinWith('oa_SupplierOrder')->where(['orderId' => $id]),
             'pagination' => ['pageSize' => 200]
         ]);
         return $this->render('view', [
@@ -105,6 +106,41 @@ class OaSupplierOrderController extends Controller
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * @brief save order detail
+     * @return mixed
+     * @throws
+     */
+    public function actionSaveOrderDetail()
+    {
+        $request = Yii::$app->request;
+        if (!$request->isPost) {
+            return '错误请求！';
+        }
+        $post = $request->post();
+        $details = $post['OaSupplierOrderDetail'] ?? [];
+        $trans = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($details as $detailId => $row) {
+                $detail = OaSupplierOrderDetail::findOne(['id' => $detailId]);
+                if(!empty($detail)) {
+                    $detail->setAttributes($row);
+                    if (!$detail->save()) {
+                        throw new \Exception('fail to save order details');
+                    }
+                }
+            }
+            $msg = '保存成功！';
+            $trans->commit();
+        }
+        catch (\Exception $why)
+        {
+                $trans->rollBack();
+                $msg = '保存失败！';
+            }
+            return $msg;
     }
 
     /**
@@ -236,6 +272,7 @@ class OaSupplierOrderController extends Controller
      * @brief 发货
      * @param $id int orderId
      * @return mixed
+     * @throws
      */
     public function actionDelivery($id)
     {
@@ -259,6 +296,7 @@ class OaSupplierOrderController extends Controller
      * @brief 导入物流单号到普源
      * @param $id int orderId
      * @return mixed
+     * @throws
      */
     public function actionInputExpress($id)
     {
@@ -277,6 +315,7 @@ class OaSupplierOrderController extends Controller
     /**
      * @brief 导出采购单明细
      * @param $id
+     * @throws
      */
     public function actionExportDetail($id)
     {
@@ -342,7 +381,7 @@ class OaSupplierOrderController extends Controller
     {
         $request = Yii::$app->request;
         if(!$request->isPost) {
-            return;
+            return '';
         }
         $file  = new UploadFile();
         $file->excelFile = UploadedFile::getInstance($file,'excelFile');

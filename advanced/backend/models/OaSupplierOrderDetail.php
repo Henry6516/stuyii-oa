@@ -3,7 +3,6 @@
 namespace backend\models;
 
 use Yii;
-
 /**
  * This is the model class for table "oa_supplierOrderDetail".
  *
@@ -23,6 +22,7 @@ use Yii;
  */
 class OaSupplierOrderDetail extends \yii\db\ActiveRecord
 {
+    public $billNumber;
     /**
      * {@inheritdoc}
      */
@@ -41,7 +41,7 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
             [['sku', 'goodsCode', 'image', 'supplierGoodsSku', 'goodsName', 'property1', 'property2', 'property3',
                 'deliveryNumber', 'deliveryStatus', 'paymentStatus'], 'string'],
             [['purchasePrice'], 'number'],
-            [['deliveryTime'], 'safe'],
+            [['deliveryTime','billNumber'], 'safe'],
         ];
     }
 
@@ -68,6 +68,14 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
             'deliveryStatus' => '发货状态',
             'paymentStatus' => '发货状态',
             'deliveryTime' => '发货时间',
+            'billNumber' => '采购单号',
         ];
+    }
+
+    /**
+     * @brief join with oa_supplierOrder
+     */
+    public function getOa_SupplierOrder() {
+        return $this->hasOne(OaSupplierOrder::className(),['id'=>'orderId']);
     }
 }
