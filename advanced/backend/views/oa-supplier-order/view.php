@@ -39,8 +39,9 @@ $form = ActiveForm::begin([
                  'options' => ['class' => 'sku','readonly'=>true],
              ],
              'billNumber' => ['type' => TabularForm::INPUT_TEXT,
-                 'options' => ['class' => 'billNumber', 'readonly' => true],
-                 'value' => 'oa_supplierOrder.billNumber',
+                 'options' => ['class' => 'billNumber','readonly' => true],
+                 'columnOptions'=>['width'=>'190px'],
+                 'value' => 'billNumber',
                  ],
              'image' => [ 'type' => TabularForm::INPUT_RAW,
                  'options' => ['class' => 'image'],
@@ -104,7 +105,7 @@ $('.save-detail').click(function() {
     url: '$saveOrderDetailUrl',
     data: $('#detail-form').serialize(),
     type: 'POST',
-    succes: function(res) {
+    success: function(res) {
       alert(res);
       window.location.reload(); 
     }

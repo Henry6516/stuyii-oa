@@ -60,11 +60,16 @@ class OaSupplierOrderController extends Controller
      */
     public function actionView($id)
     {
-//        $detail = OaSupplierOrderDetail::find()->joinWith('oa_SupplierOrder')->where(['orderId' => $id])->creatCommand()->Rawsql;
+
         $orderDetail = new ActiveDataProvider([
-            'query' => OaSupplierOrderDetail::find()->joinWith('oa_SupplierOrder')->where(['orderId' => $id]),
+            'query' => OaSupplierOrderDetail::find()->joinWith('oa_SupplierOrder')->where(['orderId' => $id])->select(
+                'oa_SupplierOrderDetail.*,oa_SupplierOrder.billNumber'
+            ),
             'pagination' => ['pageSize' => 200]
         ]);
+        $sort = $orderDetail->sort;
+        $sort->attributes['billNumber'] = ['asc'=>['billNumber'=>SORT_ASC],'desc'=>['billNumber'=>SORT_DESC]];
+        $orderDetail->sort= $sort;
         return $this->render('view', [
             'dataProvider' => $orderDetail
         ]);

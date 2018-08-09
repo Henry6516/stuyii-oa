@@ -102,7 +102,6 @@ Modal::end();
             ],
             'billNumber',
             'supplierName',
-            'goodsName',
             'billStatus',
             'purchaser',
             'syncTime',
