@@ -164,4 +164,23 @@ class SiteController extends Controller
         }
 
     }
+
+
+    /**
+     * 更新普源商品权限
+     * 访问方法: php yii site/update-rights
+     * @throws \yii\db\Exception
+     */
+    public function actionUpdateRights()
+    {
+        $res = Yii::$app->db->createCommand("EXEC z_update_B_goods_rights")->execute();
+        if($res){
+            echo date('Y-m-d H:i:s')." Goods rights update successful!\n";
+        }else{
+            echo date('Y-m-d H:i:s')." Goods rights update failed!\n";
+        }
+    }
+
+
+
 }
