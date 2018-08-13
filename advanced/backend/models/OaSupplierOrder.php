@@ -207,7 +207,8 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
         $purchaser = '';
         if($res['supplierName']){
             $supplierModel = OaSupplier::findOne(['supplierName' => $res['supplierName']]);
-            $purchaser = $supplierModel?$supplierModel['purchaser']:'';
+            //print_r($supplierModel);exit;
+            $purchaser = $supplierModel?$supplierModel['purchase']:'';
         }
 
         $orderModel = new OaSupplierOrder();
