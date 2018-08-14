@@ -80,13 +80,13 @@ class StockPerformController extends BaseController
             $create_range = $get['EntryForm']['create_range'];
             $create = explode(' - ', $create_range);
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
-            $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
+            $data['create_end'] = (!empty($create[1])) ? ($create[1] . ' 23:59:59') : '';
             $model->cat = $data['cat'] = $get['EntryForm']['cat'];
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
             $data['create_start'] = date('Y-m-d',strtotime('-75 days'));
-            $data['create_end'] = date('Y-m-d',strtotime('-15 days'));
+            $data['create_end'] = date('Y-m-d',strtotime('-15 days')) . ' 23:59:59';
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
             $model->cat = $data['cat'];
             $model->create_range = $create_range;
@@ -94,6 +94,7 @@ class StockPerformController extends BaseController
         //获取数据
         $sql = "P_oa_StockPerformance '" . $data['create_start'] . "','" . $data['create_end'] . "','".$data['cat'] . "'";
 
+        //var_dump($sql);exit;
         //缓存数据
 //        $cache = Yii::$app->local_cache;
 //        $ret = $cache->get($sql);
@@ -136,13 +137,13 @@ class StockPerformController extends BaseController
             $create_range = $get['EntryForm']['create_range'];
             $create = explode(' - ', $create_range);
             $data['create_start'] = (!empty($create[0])) ? $create[0] : '';
-            $data['create_end'] = (!empty($create[1])) ? $create[1] : '';
+            $data['create_end'] = (!empty($create[1])) ? ($create[1]  . ' 23:59:59'): '';
             $model->cat = $data['cat'] = $get['EntryForm']['cat'];
             $model->create_range = $create_range;
         }else{
             $data['cat'] = '';
             $data['create_start'] = date('Y-m-d',strtotime('-75 days'));
-            $data['create_end'] = date('Y-m-d',strtotime('-15 days'));
+            $data['create_end'] = date('Y-m-d',strtotime('-15 days')) . ' 23:59:59';
             $create_range = $data['create_start'] . ' - ' . $data['create_end'];
             $model->cat = $data['cat'];
             $model->create_range = $create_range;
