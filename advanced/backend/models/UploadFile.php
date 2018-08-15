@@ -38,9 +38,11 @@ class UploadFile extends Model
             if (!file_exists($path)) {
                 !is_dir($path) && !mkdir($path, 0777) && is_dir($path);
             }
-            $this->excelFile->saveAs($path.$this->excelFile->basename.'.'.$this->excelFile->extension);
-            return true;
+            $pathName = $path.time().$this->excelFile->extension;
+            $pathName = iconv('UTF-8','GB2312',$pathName);
+            $this->excelFile->saveAs($pathName);
+            return $pathName;
         }
-            return false;
+        return false;
     }
 }
