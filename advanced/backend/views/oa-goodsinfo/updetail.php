@@ -529,8 +529,15 @@ echo FormGrid::widget([ // continuation fields to row above without labels
               console.log(typeof(parseInt(num)));
               total += parseInt(num);
             });
-            if(total>50){
-                alert("备货数量超过50，请调整备货数量！")
+            if (total === 0) {
+               alert("请填写备货数量！");
+               button.attr('disabled',false);
+               return false;
+            }
+            else if(total>50){
+                alert("备货数量超过50，请调整备货数量！");
+                button.attr('disabled',false);
+                return false;
             }
             else{
             //生成采购单的动作！
