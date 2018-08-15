@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use backend\models\OaSupplierOrder;
 /**
  * This is the model class for table "oa_supplierOrderDetail".
  *
@@ -77,5 +78,42 @@ class OaSupplierOrderDetail extends \yii\db\ActiveRecord
      */
     public function getOa_SupplierOrder() {
         return $this->hasOne(OaSupplierOrder::className(),['id'=>'orderId']);
+    }
+
+    /**
+     * @brief change order status after saving order detail data
+     * @param $insert bool
+     * @param $changedAttributes array
+     * @return bool;
+     * @throws
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        //update order deliveryStatus
+        $billNumber = $this->billNumber;
+        $order = OaSupplierOrder::findOne(['billNumber'=>$billNumber]);
+        $orderId = $order->id;
+        $totalNumber = (int)$order->totalNumber;
+        $db = Yii::$app->db;
+        $sql = "select sum(deliveryAmt) as realAmt from oa_supplierOrderDetail where orderId=$orderId";
+        $ret = $db->createCommand($sql)->queryOne();
+        $realAmt = (int)$ret['realAmt'];
+        if($realAmt  === 0) {
+            $deliveryStatus = '未发货';
+        }
+        elseif($realAmt < $totalNumber) {
+            $deliveryStatus = '部分发货';
+        }
+        else {
+            $deliveryStatus = '全部发货';
+        }
+        $order->deliveryStatus = $deliveryStatus;
+        if(!$order->save()) {
+            return false;
+        }
+        return true;
+
     }
 }

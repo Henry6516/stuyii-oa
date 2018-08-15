@@ -22,6 +22,7 @@ use Yii;
  * @property string $updatedTime
  * @property string $expressStatus
  * @property string $deliveryStatus
+ * @property string $paymentAmt
  */
 class OaSupplierOrder extends \yii\db\ActiveRecord
 {
@@ -42,7 +43,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             [['supplierName','goodsName', 'billNumber','expressNumber', 'billStatus', 'deliveryStatus', 'purchaser', 'paymentStatus'], 'string'],
             [['syncTime', 'orderTime', 'updatedTime'], 'safe'],
             [['totalNumber'], 'integer'],
-            [['amt'], 'number'],
+            [['amt','paymentAmt'], 'number'],
             [['billNumber'], 'required'],
         ];
     }
@@ -67,7 +68,43 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             'paymentStatus' => '支付状态',
             'orderTime' => '下单时间',
             'updatedTime' => '更新时间',
+            'paymentAmt' => '支付金额'
         ];
+    }
+
+
+    /**
+     * @brief change order status after saving order detail data
+     * @param $insert bool
+     * @param $changedAttributes array
+     * @return bool;
+     * @throws
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        //update order paymentStatus
+        if(!isset($changedAttributes['paymentAmt'])) {
+            return true;
+        }
+        $amt = (int)$this->amt;
+        $paymentAmt = (int)$this->paymentAmt;
+        if($paymentAmt === 0) {
+            $paymentStatus = '未付款';
+        }
+        elseif($paymentAmt < $amt) {
+            $paymentStatus = '部分付款';
+        }
+        else {
+            $paymentStatus = '已付款';
+        }
+
+        $this->paymentStatus = $paymentStatus;
+        if($this->save()) {
+            return true;
+        }
+        return false;
     }
 
 

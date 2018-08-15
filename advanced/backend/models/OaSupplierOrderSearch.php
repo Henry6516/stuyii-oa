@@ -20,7 +20,7 @@ class OaSupplierOrderSearch extends OaSupplierOrder
         return [
             [['id', 'totalNumber'], 'integer'],
             [['supplierName', 'goodsName','billNumber','expressNumber','deliveryStatus', 'billStatus', 'purchaser', 'syncTime', 'paymentStatus', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
-            [['amt'], 'number'],
+            [['amt','paymentAmt'], 'number'],
         ];
     }
 
