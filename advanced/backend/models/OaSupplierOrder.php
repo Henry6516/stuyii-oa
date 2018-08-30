@@ -241,11 +241,14 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
                     WHERE om.nid=" . $pyOrderID;
         $res = Yii::$app->db->createCommand($orderSql)->queryOne();
         //根据订单供应商获取线下采购
-        $purchaser = '';
+        $user = Yii::$app->user->identity->username;
         if($res['supplierName']){
             $supplierModel = OaSupplier::findOne(['supplierName' => $res['supplierName']]);
             //print_r($supplierModel);exit;
             $purchaser = $supplierModel?$supplierModel['purchase']:'';
+            if($purchaser !== $user) {
+                throw new \Exception('非名下供应商，同步失败！');
+            }
         }
 
         $orderModel = new OaSupplierOrder();
@@ -255,7 +258,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
         $orderModel->syncTime = date('Y-m-d H:i:s');
         $res = $orderModel->save();
         if(!$res){
-            throw new \Exception('Synchronize order data failed!');
+            throw new \Exception('同步失败!');
         }
         //保存订单明细
         $detail = self::getPyOrderDetail($pyOrderID);
@@ -273,7 +276,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             $detailModel->purchasePrice = $v['price'];
             $result = $detailModel->save();
             if(!$result){
-                throw new \Exception('Synchronize order detail data failed!');
+                throw new \Exception('同步失败！');
             }
         }
         return true;
