@@ -754,6 +754,7 @@ class OaDataMineController extends BaseController
      * @brief send OaDataMine record to goods-info
      * @param  $stock int
      * @return mixed
+     * @throws \Exception
      */
     public function actionSend($stock=0)
     {
@@ -762,10 +763,9 @@ class OaDataMineController extends BaseController
         $mid = (int)$post['mid'];
         $stock = (int)$stock;
 
-        $mine = OaDataMine::findOne(['id' => $mid]);
         $user = Yii::$app->user->identity->username;
 
-        $send_sql  = 'p_oa_JoomToGoodsInfo @mid=:mid,@dev=:dev,@stock=:stock';
+        $send_sql  = 'p_oa_joomToCheck @mid=:mid,@dev=:dev,@stock=:stock';
         $query = $db->createCommand($send_sql,[':mid'=>$mid,':dev'=>$user,':stock'=>$stock]);
         if($query->execute($send_sql)){
             return '已成功转至开发';

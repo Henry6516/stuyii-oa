@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $nid
  * @property integer $img
+ * @property integer $mineId
  * @property string $cate
  * @property string $devNum
  * @property string $origin1
@@ -19,9 +20,13 @@ use Yii;
  * @property string $checkStatus
  * @property string $createDate
  * @property string $updateDate
+ * @property string $dictionaryName
  */
 class OaGoods extends GoodsCats
 {
+
+    public $dictionaryName;
+
     /**
      * @inheritdoc
      */
@@ -42,7 +47,7 @@ class OaGoods extends GoodsCats
                 'developer','introducer','introReason','devStatus','checkStatus',
                 'salePrice','hopeWeight','hopeRate','hopeSale','hopeCost',
                 'hopeMonthProfit','createDate','updateDate','approvalNote'],'string'],
-            [['cate', 'subCate','salePrice','hopeWeight','hopeRate','hopeSale',],'safe']
+            [['cate', 'subCate','salePrice','hopeWeight','hopeRate','hopeSale','mineId','dictionaryName'],'safe']
 
         ];
     }
@@ -79,11 +84,8 @@ class OaGoods extends GoodsCats
             'updateDate' => '更新时间',
             'approvalNote' => '审批备注',
             'stockUp' => '是否备货',
+            'mineId' => '是否采集',
+            'dictionaryName' => '禁售平台'
         ];
     }
-
-
-
-
-
 }

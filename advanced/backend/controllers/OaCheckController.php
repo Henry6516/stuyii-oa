@@ -13,6 +13,7 @@ use backend\models\User;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 /**
  * OaCheckController implements the CRUD actions for OaGoods model.
  */
@@ -55,12 +56,20 @@ class OaCheckController extends BaseController
      * Action of Pass
      * @param integer $id
      * @return mixed
+     * @throws \Exception
      */
     public function actionPassForm($id)
     {
         $model = $this->findModel($id);
+        $mid = $model->mineId;
+        $db = Yii::$app->db;
+        $sql = 'select dictionaryName from B_Dictionary where CategoryID=8 AND used=0 ORDER BY DictionaryName';
+        $ret = $db->createCommand($sql)->queryAll();
+        $dictionaryName = ArrayHelper::map($ret,'dictionaryName','dictionaryName');
         return $this->renderAjax('passForm',[
-            'model' => $model
+            'model' => $model,
+            'mid' => $mid,
+            'dictionaryName' => $dictionaryName
         ]);
 
     }
@@ -73,12 +82,34 @@ class OaCheckController extends BaseController
         $request = yii::$app->request->post()['OaGoods'];
         $connection = yii::$app->db;
         $id = $request['nid'];
-        $approvalNote = isset($request['approvalNote'])?$request['approvalNote']:'';
         $model = $this->findModel($id);
+        $mid = $model->mineId;
+        if(!empty($mid)) {
+            $dictionaryName = ArrayHelper::getValue($request,'dictionaryName');
+            $dictionaryName[] = 'eBay';
+            $dictionaryName = \array_unique($dictionaryName);
+            $dictionaryName = \implode(',',$dictionaryName);
+
+            $sql = 'p_oa_joomCheckToGoodsInfo @mid=:mid,@dictionaryName=:dictionaryName';
+            $db = Yii::$app->db;
+            try {
+                $check = $db->createCommand($sql)->bindValues([':mid' => $mid, ':dictionaryName' => $dictionaryName]);
+                $check->execute();
+                return '审核成功！';
+            }
+            catch (\Exception $why) {
+                return '审核失败！';
+            }
+        }
+        $approvalNote = ArrayHelper::getValue($request, 'approvalNote');
+
+
+
         $trans = $connection->beginTransaction();
         try{
             $developer = $model->developer;
             $user = User::findOne(['username' => $developer]);
+
             $mapPersons = $user->mapPersons;
             $cate = $model->cate;
             $_model = new OaGoodsinfo();

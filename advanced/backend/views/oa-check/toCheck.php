@@ -282,7 +282,7 @@ function centerFormat($name) {
                 ],
             ],
             centerFormat('img'),
-            [
+             [
                 'attribute' => 'stockUp',
                 'width' => '150px',
                 'format' => 'raw',
@@ -297,6 +297,22 @@ function centerFormat($name) {
                 ],
                 'filterInputOptions' => ['placeholder' => '-请选择-'],
             ],
+            [
+                'attribute' => 'mineId',
+                'width' => '150px',
+                'format' => 'raw',
+                'value' => function ($data) {
+                    $value = $data->mineId?'是':'否';
+                    return "<span class='cell'>" . $value . "</span>";
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => [0 =>'否', 1 => '是'],
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => '-请选择-'],
+            ],
+
             [
                 'attribute' => 'cate',
                 'width' => '150px',
