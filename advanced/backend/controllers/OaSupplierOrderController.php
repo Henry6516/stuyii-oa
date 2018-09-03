@@ -235,7 +235,7 @@ class OaSupplierOrderController extends Controller
         } catch (\Exception $e){
             $trans->rollBack();
             //$res = $e->getMessage();
-            $res = '订单同步失败!';
+            $res = $e->getMessage();
         }
         return $res;
     }
