@@ -167,16 +167,16 @@ class ChannelSearch extends Channel
 
             //过滤禁售平台产品
             if ($roles == 'Wish销售') {
-                $query->andWhere(['not like', 'DictionaryName', 'wish']);
+                $query->andWhere(['not like', 'oa_goodsinfo.DictionaryName', 'wish']);
             }
             if ($roles == 'SMT销售') {
-                $query->andWhere(['not like', 'DictionaryName', 'SMT']);
+                $query->andWhere(['not like', 'oa_goodsinfo.DictionaryName', 'SMT']);
             }
             if ($roles == 'Joom销售') {
-                $query->andWhere(['not like', 'DictionaryName', 'Joom']);
+                $query->andWhere(['not like', 'oa_goodsinfo.DictionaryName', 'Joom']);
             }
             if ($roles == 'eBay销售') {
-                $query->andWhere(['not like', 'DictionaryName', 'eBay']);
+                $query->andWhere(['not like', 'oa_goodsinfo.DictionaryName', 'eBay']);
             }
             //var_dump($roles);exit;
         }
