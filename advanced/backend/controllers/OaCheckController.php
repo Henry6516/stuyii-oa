@@ -156,6 +156,7 @@ class OaCheckController extends BaseController
     /**
      * Action of Pass Lots
      * @return mixed
+     * @throws \Exception
      */
     public function actionPassLots()
     {
@@ -166,6 +167,24 @@ class OaCheckController extends BaseController
         try {
             foreach ($ids as $id) {
                 $model = $this->findModel($id);
+                //判断是否采集
+                $mid = $model->mineId;
+                if(!empty($mid)) {
+                    //$dictionaryName = ArrayHelper::getValue($request,'dictionaryName');
+                    $dictionaryName = 'eBay';
+
+                    $sql = 'p_oa_joomCheckToGoodsInfo @mid=:mid,@dictionaryName=:dictionaryName';
+                    $db = Yii::$app->db;
+                    try {
+                        $check = $db->createCommand($sql)->bindValues([':mid' => $mid, ':dictionaryName' => $dictionaryName]);
+                        $check->execute();
+                        continue;
+                    }
+                    catch (\Exception $why) {
+                        throw new \Exception($why);
+                    }
+                }
+
                 //插入到OagoodsInfo里面
                 $developer = $model->developer;
                 $user = User::findOne(['username' => $developer]);
