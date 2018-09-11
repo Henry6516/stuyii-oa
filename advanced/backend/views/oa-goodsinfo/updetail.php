@@ -45,11 +45,16 @@ if (empty($info->randomKeywords)) {
 }
 $JS = <<<JS
 
-//选中默认主类目
-$("option[value={$catNid}]").attr("selected",true);
-//选中默认子类目
-
-$("option:contains({$subCate})").attr("selected",true);
+    //选中默认主类目
+    var catNid = "{$catNid}";
+    if(catNid){
+        $("option[value={$catNid}]").attr("selected",true);
+    }
+    //选中默认子类目
+    var subCate = "{$subCate}";
+    if(subCate){
+        $("option:contains({$subCate})").attr("selected",true);
+    }
 
 JS;
 
@@ -273,7 +278,8 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 'name' => 'DictionaryName',
                 'id' => 'dictionary-name',
                 //'value' => $bannedNames,
-                'data' => $lock,
+                //'data' => $lock,
+                'data' => ['eBay' => 'eBay','Wish' => 'Wish','Joom' => 'Joom'],
                 'maintainOrder' => true,
                 'options' => ['placeholder' => '--可多选--', 'multiple' => true],
                 'pluginOptions' => [
