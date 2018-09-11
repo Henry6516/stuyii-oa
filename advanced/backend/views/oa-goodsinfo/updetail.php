@@ -278,8 +278,8 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                 'name' => 'DictionaryName',
                 'id' => 'dictionary-name',
                 //'value' => $bannedNames,
-                //'data' => $lock,
-                'data' => ['eBay' => 'eBay','Wish' => 'Wish','Joom' => 'Joom'],
+                'data' => $lock,
+//                'data' => ['eBay' => 'eBay','Wish' => 'Wish','Joom' => 'Joom'],
                 'maintainOrder' => true,
                 'options' => ['placeholder' => '--可多选--', 'multiple' => true],
                 'pluginOptions' => [
