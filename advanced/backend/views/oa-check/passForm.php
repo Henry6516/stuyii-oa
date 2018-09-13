@@ -44,6 +44,8 @@ use kartik\widgets\Select2;
     <?php
     $js = <<<JS
         $('#pass-btn').on('click',function () {
+            //禁用提交按钮
+            $('#pass-btn').attr('disabled','disabled');
             $.post($('#pass-form').attr('action'), $('form').serialize(), function(msg){
                 krajeeDialog.alert(msg, function(res) {
                     location.reload();
