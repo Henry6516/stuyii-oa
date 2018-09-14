@@ -87,7 +87,6 @@ $('.delete-lots').on('click',function() {
 $('.data-heart').on('click',  function () {
   var that = this;
     $(that).attr('disable');
-    debugger;
     $('.modal-body').children('div').remove();
     $.get($('.data-heart').data('url'),  { id: $(this).closest('tr').data('key') },
         function (data) {
