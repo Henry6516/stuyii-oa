@@ -765,6 +765,11 @@ class OaDataMineController extends BaseController
 
         $user = Yii::$app->user->identity->username;
 
+        $mine = OaDataMine::findOne($mid);
+        if($mine->devStatus !=='未开发') {
+            return '该状态下产品不能转至开发';
+        }
+
         $send_sql  = 'p_oa_joomToCheck @mid=:mid,@dev=:dev,@stock=:stock';
         $query = $db->createCommand($send_sql,[':mid'=>$mid,':dev'=>$user,':stock'=>$stock]);
         if($query->execute($send_sql)){

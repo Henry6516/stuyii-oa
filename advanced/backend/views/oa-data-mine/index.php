@@ -144,7 +144,7 @@ $createJobUrl = URl::toRoute('create-job');
                             return Html::a('<span class="delete-row glyphicon glyphicon-trash" title= "删除"></span>', 'javascript:void(0);', ['data-pjax' => 0,]);
                         },
                         'send' => function () {
-                            return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "转至开发"></span>', 'javascript:void(0);', []);
+                            return Html::a('<span class=" send glyphicon glyphicon-share-alt" title= "转至开发"></span>','javascript:void(0);', [[]]);
                         },
                         'bind' => function ($url) {
                             return Html::a('<span class=" bind glyphicon glyphicon-random" title= "关联产品"></span>', $url, ['data-pjax'=>'0','target' => '_blank']);
@@ -471,6 +471,8 @@ $('.set-cat').on('click',function() {
 // send it to developer
 
 $('.send').on('click', function() {
+    var that = this;
+    $(that).css('display','none');
     var mid = $(this).closest('tr').attr('data-key');
     krajeeDialog.prompt({label:'是否备货', type:'checkbox',class:'check'}, function (result) {
         if(result){
@@ -481,14 +483,12 @@ $('.send').on('click', function() {
             data:({mid:mid}),
             success:(function(ret) {
                 alert(ret);
+                $(that).css('display','');
                 })
             });
         }
-        
     });
-    
 })
-
 
 JS;
 

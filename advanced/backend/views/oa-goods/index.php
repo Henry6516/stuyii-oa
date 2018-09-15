@@ -85,14 +85,10 @@ $('.delete-lots').on('click',function() {
 
 //认领对话
 $('.data-heart').on('click',  function () {
-  var that = this;
-    $(that).attr('disable');
     $('.modal-body').children('div').remove();
     $.get($('.data-heart').data('url'),  { id: $(this).closest('tr').data('key') },
         function (data) {
             $('.modal-body').html(data);
-            $(that).removeAttr('disable');
-            
         }
     );
 });
