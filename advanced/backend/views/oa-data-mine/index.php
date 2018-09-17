@@ -463,30 +463,28 @@ $('.set-cat').on('click',function() {
             alert(ret);
         })
     })
-    
 })
 
 
 
 // send it to developer
-
-$('.send').on('click', function() {
+$('.send').one('click', function() {
     var mid = $(this).closest('tr').attr('data-key');
     krajeeDialog.prompt({label:'是否备货', type:'checkbox',class:'check'}, function (result) {
         if(result){
+            //$(".send").attr("href","javascript:return false;");
+            //$(".send").prop("onclick",null).off("click");
            var ret = $('.check').is(':checked')?1:0;
            $.ajax({
             url:'{$sendUrl}' + '?stock=' + ret,
-            type: 'post',
+            type: 'post',               
             data:({mid:mid}),
             success:(function(ret) {
                 alert(ret);
                 })
             });
         }
-        
     });
-    
 })
 
 
