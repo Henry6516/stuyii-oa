@@ -425,15 +425,17 @@ class ChannelController extends BaseController
         $propertyVar = OaTemplatesVar::find()->where(['tid' => $id])->all();
         $columns = [];
         foreach ($propertyVar as $row) {
-            $pro = json_decode($row->property, true);
+            $pro = json_decode($row->property,true);
             $columns['pictureKey'] = $pro['pictureKey'];
             $col = $pro['columns'];
-            foreach ($col as $ele) {
-                foreach ($ele as $key => $value) {
-                    if (array_key_exists($key, $columns)) {
-                        array_push($columns[$key], $value);
-                    } else {
-                        $columns[$key] = [$value];
+            if(\is_array($col) || \is_object($col)) {
+                foreach ($col as $ele) {
+                    foreach ($ele as $key => $value) {
+                        if (array_key_exists($key, $columns)) {
+                            $columns[$key][] = $value;
+                        } else {
+                            $columns[$key] = [$value];
+                        }
                     }
                 }
             }
