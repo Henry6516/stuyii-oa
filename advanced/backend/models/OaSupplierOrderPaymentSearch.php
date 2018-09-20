@@ -10,7 +10,7 @@ use backend\models\OaSupplierOrder;
 /**
  * OaSupplierOrderSearch represents the model behind the search form of `backend\models\OaSupplierOrder`.
  */
-class OaSupplierOrderSearch extends OaSupplierOrder
+class OaSupplierOrderPaymentSearch extends OaSupplierOrderPaymentDetail
 {
     /**
      * {@inheritdoc}
@@ -18,10 +18,9 @@ class OaSupplierOrderSearch extends OaSupplierOrder
     public function rules()
     {
         return [
-            [['id', 'totalNumber'], 'integer'],
-            [['supplierName', 'goodsName','billNumber','expressNumber','deliveryStatus', 'billStatus', 'purchaser',
-                'syncTime', 'paymentStatus', 'orderTime', 'createdTime', 'updatedTime'], 'safe'],
-            [['amt','paymentAmt','unpaidAmt'], 'number'],
+            [['id'], 'integer'],
+            [['paymentStatus', 'billNumber','img', 'comment','requestTime', 'paymentTime'], 'safe'],
+            [['requestAmt', 'paymentAmt', 'unpaidAmt'], 'number'],
         ];
     }
 
@@ -43,7 +42,7 @@ class OaSupplierOrderSearch extends OaSupplierOrder
      */
     public function search($params)
     {
-        $query = OaSupplierOrder::find();
+        $query = OaSupplierOrderPaymentDetail::find();
 
         // add conditions that should always apply here
 
@@ -62,21 +61,15 @@ class OaSupplierOrderSearch extends OaSupplierOrder
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'syncTime' => $this->syncTime,
-            'totalNumber' => $this->totalNumber,
-            'amt' => $this->amt,
+            'requestAmt' => $this->requestAmt,
+            'paymentAmt' => $this->paymentAmt,
             'unpaidAmt' => $this->unpaidAmt,
-            'orderTime' => $this->orderTime,
-            'updatedTime' => $this->updatedTime,
+            'requestTime' => $this->requestTime,
+            'paymentTime' => $this->paymentTime,
         ]);
 
-        $query->andFilterWhere(['like', 'supplierName', $this->supplierName])
-            ->andFilterWhere(['like', 'billNumber', $this->billNumber])
-            ->andFilterWhere(['like', 'billStatus', $this->billStatus])
-            ->andFilterWhere(['like', 'goodsName', $this->goodsName])
-            ->andFilterWhere(['like', 'purchaser', $this->purchaser])
-            ->andFilterWhere(['like', 'expressNumber', $this->expressNumber])
-            ->andFilterWhere(['like', 'deliveryStatus', $this->deliveryStatus])
+        $query->andFilterWhere(['like', 'billNumber', $this->billNumber])
+            ->andFilterWhere(['like', 'comment', $this->comment])
             ->andFilterWhere(['like', 'paymentStatus', $this->paymentStatus]);
 
         return $dataProvider;

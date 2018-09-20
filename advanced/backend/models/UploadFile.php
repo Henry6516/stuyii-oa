@@ -45,4 +45,20 @@ class UploadFile extends Model
         }
         return false;
     }
+
+    public function uploadImg()
+    {
+        if ($this->validate()) {
+            $file_name = date("YmdHis",time()).rand(1000,9999).'.'.$this->excelFile->extension;
+            $savePath = '/uploads/images/'.date("Ymd",time());
+            $model_path = Yii::$app->basePath.'/web/uploads/images/';
+            $path = Yii::$app->basePath.'/web/'.$savePath.'/';
+            if (!file_exists($model_path)) mkdir($model_path,0777);
+            if (!file_exists($path)) mkdir($path,0777);
+            $this->excelFile->saveAs($path.$file_name);
+            return $savePath.'/'.$file_name;
+        }
+        return false;
+    }
+
 }

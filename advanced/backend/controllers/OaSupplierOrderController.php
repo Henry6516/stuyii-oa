@@ -3,6 +3,8 @@
 namespace backend\controllers;
 
 use backend\models\OaSupplierOrderDetail;
+use backend\models\OaSupplierOrderPaymentDetail;
+use backend\models\OaSupplierOrderPaymentSearch;
 use Yii;
 use backend\models\OaSupplierOrder;
 use backend\models\OaSupplierOrderSearch;
@@ -314,7 +316,7 @@ class OaSupplierOrderController extends Controller
     }
 
     /**
-     * 付款
+     * 请求付款
      * @param $id
      * @return string
      * @throws \yii\db\Exception
@@ -326,13 +328,116 @@ class OaSupplierOrderController extends Controller
         }
         $post = Yii::$app->request->post();
         $paymentAmt = (float)trim($post['number']);
-
         $order = OaSupplierOrder::findOne(['id'=>$id]);
-        $order->paymentAmt = $paymentAmt;
-        if(!$order->save()) {
-            return '付款失败！';
+        $payment = new OaSupplierOrderPaymentDetail();
+        //$payment->send($id);
+        $db = Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try {
+            //保存订单付款状态
+            $order->paymentStatus = '请求付款中';
+            //保存付款明细
+            $payment->billNumber = $order->billNumber;
+            $payment->requestAmt = $paymentAmt;
+            $payment->requestTime = date('Y-m-d H:i:s');
+            $payment->paymentStatus = '未付款';
+
+            if(!($order->save() && $payment->save())) {
+                throw new \Exception('fail to save data!');
+            }
+            $trans->commit();
+            //发送邮件给财务
+            $payment->send($id);
+            $msg = '请求付款成功！';
+        } catch (\Exception $why) {
+            $trans->rollBack();
+            $msg = '请求付款失败！';
         }
-        return '付款成功！';
+        return $msg;
+    }
+    /**
+     * 付款明细
+     * @param $id
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function actionPayment($id)
+    {
+        $paymentDetail = new ActiveDataProvider([
+            'query' => OaSupplierOrderPaymentDetail::find()
+                ->joinWith('oa_SupplierOrder')
+                ->where(['oa_SupplierOrder.id' => $id])
+                ->select('oa_SupplierOrderPaymentDetail.*'),
+            'pagination' => ['pageSize' => 200]
+        ]);
+        $sort = $paymentDetail->sort;
+        $sort->attributes['billNumber'] = ['asc'=>['billNumber'=>SORT_ASC],'desc'=>['billNumber'=>SORT_DESC]];
+        $paymentDetail->sort= $sort;
+        $file = new UploadFile();
+        return $this->render('payment', [
+            'dataProvider' => $paymentDetail,
+            'file' => $file
+        ]);
+    }
+
+    /**
+     * 付款明细
+     * @return string
+     */
+    public function actionPaymentList()
+    {
+        $searchModel = new OaSupplierOrderPaymentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        return $this->render('paymentList', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    /**
+     * 财务上传付款凭证（图片）
+     * @return string
+     */
+    public function actionUpload()
+    {
+        $file  = new UploadFile();
+        $file->excelFile = UploadedFile::getInstance($file,'excelFile');
+        $pathName = $file->uploadImg();
+        return json_encode([
+            'code' => $pathName ? 200 : 400,
+            'msg' => $pathName ? '上传成功' : '上传失败',
+            'url' => $pathName,
+        ]);
+    }
+    /**
+     * 财务保存付款结果
+     * @return string
+     */
+    public function actionSavePayment()
+    {
+        $request = Yii::$app->request;
+        if(!$request->isPost) {
+            return '';
+        }
+        $post = $request->post()['OaSupplierOrderPaymentDetail'];
+        $db = Yii::$app->db;
+        $trans = $db->beginTransaction();
+        try{
+            foreach ($post as $value){
+                $model = OaSupplierOrderPaymentDetail::findOne($value['id']);
+                $model->attributes = $value;
+                $model->paymentStatus = '已支付';
+                $model->paymentTime = date('Y-m-d H:i:s');
+                if(!$model->save()){
+                    throw new \Exception('fail to save data!');
+                }
+            }
+            $trans->commit();
+            $msg = '保存成功！';
+        }catch (\Exception $e){
+            $trans->rollBack();
+            $msg = '保存失败！';
+        }
+        return $msg;
     }
 
     /**

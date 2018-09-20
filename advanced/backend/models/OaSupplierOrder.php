@@ -26,6 +26,7 @@ use Yii;
  */
 class OaSupplierOrder extends \yii\db\ActiveRecord
 {
+    public $unpaidAmt;
     /**
      * {@inheritdoc}
      */
@@ -43,7 +44,7 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             [['supplierName','goodsName', 'billNumber','expressNumber', 'billStatus', 'deliveryStatus', 'purchaser', 'paymentStatus'], 'string'],
             [['syncTime', 'orderTime', 'updatedTime'], 'safe'],
             [['totalNumber'], 'integer'],
-            [['amt','paymentAmt'], 'number'],
+            [['amt','paymentAmt','unpaidAmt'], 'number'],
             [['billNumber'], 'required'],
         ];
     }
@@ -68,7 +69,8 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             'paymentStatus' => '支付状态',
             'orderTime' => '下单时间',
             'updatedTime' => '更新时间',
-            'paymentAmt' => '支付金额'
+            'paymentAmt' => '支付金额',
+            'unpaidAmt' => '未支付金额'
         ];
     }
 

@@ -64,7 +64,7 @@ try {
                 'value' => function($model) {
                     return Html::a(Html::img($model->image,[
                         'alt'=>'缩略图','width'=>50,
-                    ]),$model->image,['target'=>'_blank']
+                    ]),$model->image,['target'=>'_blank', 'class' => 'image-view']
                     );
                 }
             ],
@@ -141,4 +141,21 @@ $this->registerJs($js);
    .pull-right {
     float: left !important;
    }
+    .image-view img {
+        /*width: 250px;*/
+        transition: .1s transform;
+        transform: translateZ(0);
+    }
+
+    .image-view a:hover {
+        width: 250px;
+        overflow: visible;
+    }
+    .image-view img:hover {
+        position: absolute;
+        z-index: 1000;
+        transform: scale(3, 3);
+        transition: .3s transform;
+    }
+
 </style>
