@@ -55,7 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attribute' => 'img',
                     'format' => 'raw',
                     'value' => function($model){
-                        return $model->img ?
+                        return $model->img && file_exists($model->img)?
                             Html::a(Html::img($model->img, ['alt' => '缩略图', 'height' => 50]), $model->img, ['target' => '_blank', 'class' => 'image-view'])
                              : Html::a(Html::img(Url::to("@web/img/noImg.jpg"), ['alt' => '缩略图', 'width' => 50]), '#', ['class' => 'image-view']);
                     }
