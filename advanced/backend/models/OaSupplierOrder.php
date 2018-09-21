@@ -62,14 +62,14 @@ class OaSupplierOrder extends \yii\db\ActiveRecord
             'purchaser' => '线下采购',
             'syncTime' => '同步时间',
             'totalNumber' => '总数量',
-            'amt' => '总金额',
+            'amt' => '总金额(￥)',
             'deliveryStatus' => '发货状态',
             'expressNumber' => '物流单号',
             'paymentStatus' => '支付状态',
             'orderTime' => '下单时间',
             'updatedTime' => '更新时间',
-            'paymentAmt' => '支付金额',
-            'unpaidAmt' => '未支付金额'
+            'paymentAmt' => '支付金额(￥)',
+            'unpaidAmt' => '未支付金额(￥)'
         ];
     }
 

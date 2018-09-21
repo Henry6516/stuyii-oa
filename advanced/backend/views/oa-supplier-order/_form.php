@@ -26,10 +26,10 @@ use yii\helpers\Url;
         );
         ?>
         <div class="form-group">
-            <h4 class="col-sm-offset-2"><?php echo '订单总金额：'.$totalAmt ?></h4>
+            <h4 class="col-sm-offset-2"><?php echo '订单总金额(￥)：'.$totalAmt ?></h4>
         </div>
         <div class="form-group">
-            <?php if($model->img){
+            <?php if($model->img && file_exists(Yii::$app->basePath."/web/".$model->img)){
                 echo Html::img($model->img, ['alt' => '缩略图', 'width' => '200px','class' => 'image-view col-sm-offset-2']);
             }else{
                 echo Html::img(Url::to("@web/img/noImg.jpg"), ['alt' => '缩略图', 'width' => '200px','class' => 'image-view col-sm-offset-2']);
