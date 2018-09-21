@@ -364,6 +364,7 @@ class OaSupplierOrderController extends Controller
         $params = Yii::$app->request->queryParams;
         $id = $params['id'] ?? 0;
         $order = OaSupplierOrder::findOne($id);
+        $params['OaSupplierOrderPaymentSearch']['billNumber'] = $order['billNumber'];
         $searchModel = new OaSupplierOrderPaymentSearch();
         $dataProvider = $searchModel->search($params);
         return $this->render('payment', [

@@ -18,7 +18,6 @@ class OaSupplierOrderPaymentSearch extends OaSupplierOrderPaymentDetail
     public function rules()
     {
         return [
-            [['id'], 'integer'],
             [['paymentStatus', 'billNumber','img', 'comment','requestTime', 'paymentTime'], 'safe'],
             [['requestAmt', 'paymentAmt', 'unpaidAmt'], 'number'],
         ];
@@ -60,7 +59,6 @@ class OaSupplierOrderPaymentSearch extends OaSupplierOrderPaymentDetail
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
             'requestAmt' => $this->requestAmt,
             'paymentAmt' => $this->paymentAmt,
             'unpaidAmt' => $this->unpaidAmt,
