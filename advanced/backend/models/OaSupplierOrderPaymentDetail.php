@@ -4,6 +4,7 @@ namespace backend\models;
 
 use console\models\Send;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "oa_supplierOrderPaymentDetail".
@@ -85,5 +86,21 @@ class OaSupplierOrderPaymentDetail extends \yii\db\ActiveRecord
             $id . '</a></p></div>';
         Send::sendEmail($user['username'],$user['email'],$title,$content);
     }
+
+    public function isShowPayButton()
+    {
+        $user_id = yii::$app->user->identity->id;
+        $sql = "SELECT item_name FROM auth_assignment WHERE user_id='{$user_id}'";
+        $roleArr = Yii::$app->db->createCommand($sql)->queryAll();
+        $arr = ArrayHelper::getColumn($roleArr,'item_name');
+        $role = implode(',',$arr);
+        //var_dump($role);exit;
+        if(strpos($role, '财务') || strpos($role, '管理员')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 }

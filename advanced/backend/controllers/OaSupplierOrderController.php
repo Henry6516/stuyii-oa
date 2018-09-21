@@ -11,6 +11,7 @@ use backend\models\OaSupplierOrderSearch;
 use backend\models\UploadFile;
 use yii\data\ArrayDataProvider;
 use yii\db\Exception;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -71,8 +72,8 @@ class OaSupplierOrderController extends Controller
             'pagination' => ['pageSize' => 200]
         ]);
         $sort = $orderDetail->sort;
-        $sort->attributes['billNumber'] = ['asc'=>['billNumber'=>SORT_ASC],'desc'=>['billNumber'=>SORT_DESC]];
-        $orderDetail->sort= $sort;
+        $sort->attributes['billNumber'] = ['asc' => ['billNumber' => SORT_ASC], 'desc' => ['billNumber' => SORT_DESC]];
+        $orderDetail->sort = $sort;
         return $this->render('view', [
             'dataProvider' => $orderDetail
         ]);
@@ -133,7 +134,7 @@ class OaSupplierOrderController extends Controller
         try {
             foreach ($details as $detailId => $row) {
                 $detail = OaSupplierOrderDetail::findOne(['id' => $detailId]);
-                if(!empty($detail)) {
+                if (!empty($detail)) {
                     $detail->setAttributes($row);
                     if (!$detail->save()) {
                         throw new \Exception('fail to save order details');
@@ -142,13 +143,11 @@ class OaSupplierOrderController extends Controller
             }
             $msg = '保存成功！';
             $trans->commit();
+        } catch (\Exception $why) {
+            $trans->rollBack();
+            $msg = '保存失败！';
         }
-        catch (\Exception $why)
-        {
-                $trans->rollBack();
-                $msg = '保存失败！';
-            }
-            return $msg;
+        return $msg;
     }
 
     /**
@@ -229,12 +228,12 @@ class OaSupplierOrderController extends Controller
         $ids = Yii::$app->request->post()['ids'];
         $trans = Yii::$app->db->beginTransaction();
         try {
-            foreach (json_decode($ids) as $id){
+            foreach (json_decode($ids) as $id) {
                 OaSupplierOrder::syncPyOrders($id);
             }
             $trans->commit();
             $res = '订单同步成功！';
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $trans->rollBack();
             //$res = $e->getMessage();
             $res = $e->getMessage();
@@ -248,29 +247,28 @@ class OaSupplierOrderController extends Controller
      * @return string
      * @throws \yii\db\Exception
      */
-    public function actionSync($id=[])
+    public function actionSync($id = [])
     {
         $request = Yii::$app->request;
-        if($request->isGet) {
+        if ($request->isGet) {
             $id = [$id];
         }
-        if($request->isPost) {
+        if ($request->isPost) {
             $id = $request->post()['id'];
         }
         $db = Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-           foreach ($id as $key) {
-               $sql = "p_oa_SupplierOrderSync $key";
-               $res = $db->createCommand($sql)->execute();
-               if(!$res) {
-                   throw new \Exception('同步失败！');
-               }
-           }
-           $trans->commit();
-           $msg = '同步成功！';
-        }
-        catch (\Exception $why) {
+            foreach ($id as $key) {
+                $sql = "p_oa_SupplierOrderSync $key";
+                $res = $db->createCommand($sql)->execute();
+                if (!$res) {
+                    throw new \Exception('同步失败！');
+                }
+            }
+            $trans->commit();
+            $msg = '同步成功！';
+        } catch (\Exception $why) {
             $trans->rollBack();
             $msg = '同步失败！';
         }
@@ -283,32 +281,31 @@ class OaSupplierOrderController extends Controller
      * @return string
      * @throws \yii\db\Exception
      */
-    public function actionCheck($id=[]) :string
+    public function actionCheck($id = []): string
     {
         $request = Yii::$app->request;
-        if($request->isGet) {
+        if ($request->isGet) {
             $id = [$id];
         }
-        if($request->isPost) {
+        if ($request->isPost) {
             $id = $request->post()['id'];
         }
         $db = Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
             foreach ($id as $key) {
-                $order = OaSupplierOrder::findOne(['id'=>$key]);
+                $order = OaSupplierOrder::findOne(['id' => $key]);
                 $billNumber = $order->billNumber;
                 $order->billStatus = '已审核';
                 $sql = 'update CG_StockOrderM  set CheckFlag=1 where BillNumber=:billNumber';
-                $res = $db->createCommand($sql,[':billNumber'=>$billNumber])->execute();
-                if(!$res || !$order->save()) {
+                $res = $db->createCommand($sql, [':billNumber' => $billNumber])->execute();
+                if (!$res || !$order->save()) {
                     throw new \Exception('审核失败！');
                 }
             }
             $trans->commit();
             $msg = '审核成功！';
-        }
-        catch (\Exception $why) {
+        } catch (\Exception $why) {
             $trans->rollBack();
             $msg = '审核失败！';
         }
@@ -323,12 +320,12 @@ class OaSupplierOrderController extends Controller
      */
     public function actionPay($id)
     {
-        if(!Yii::$app->request->isPost) {
+        if (!Yii::$app->request->isPost) {
             return '请求错误！';
         }
         $post = Yii::$app->request->post();
         $paymentAmt = (float)trim($post['number']);
-        $order = OaSupplierOrder::findOne(['id'=>$id]);
+        $order = OaSupplierOrder::findOne(['id' => $id]);
         $payment = new OaSupplierOrderPaymentDetail();
         //$payment->send($id);
         $db = Yii::$app->db;
@@ -342,7 +339,7 @@ class OaSupplierOrderController extends Controller
             $payment->requestTime = date('Y-m-d H:i:s');
             $payment->paymentStatus = '未付款';
 
-            if(!($order->save() && $payment->save())) {
+            if (!($order->save() && $payment->save())) {
                 throw new \Exception('fail to save data!');
             }
             $trans->commit();
@@ -355,33 +352,30 @@ class OaSupplierOrderController extends Controller
         }
         return $msg;
     }
+
     /**
      * 付款明细
      * @param $id
      * @return string
      * @throws \yii\db\Exception
      */
-    public function actionPayment($id)
+    public function actionPayment()
     {
-        $paymentDetail = new ActiveDataProvider([
-            'query' => OaSupplierOrderPaymentDetail::find()
-                ->joinWith('oa_SupplierOrder')
-                ->where(['oa_SupplierOrder.id' => $id])
-                ->select('oa_SupplierOrderPaymentDetail.*'),
-            'pagination' => ['pageSize' => 200]
-        ]);
-        $sort = $paymentDetail->sort;
-        $sort->attributes['billNumber'] = ['asc'=>['billNumber'=>SORT_ASC],'desc'=>['billNumber'=>SORT_DESC]];
-        $paymentDetail->sort= $sort;
-        $file = new UploadFile();
+        $params = Yii::$app->request->queryParams;
+        $id = $params['id'] ?? 0;
+        $order = OaSupplierOrder::findOne($id);
+        $searchModel = new OaSupplierOrderPaymentSearch();
+        $dataProvider = $searchModel->search($params);
         return $this->render('payment', [
-            'dataProvider' => $paymentDetail,
-            'file' => $file
+            'isShowPayButton' => $searchModel->isShowPayButton(),
+            'totalAmt' => $order['amt'],
+            'unpaidAmt' => $order['unpaidAmt'],
+            'dataProvider' => $dataProvider,
         ]);
     }
 
     /**
-     * 付款明细
+     * 付款明细(全部)
      * @return string
      */
     public function actionPaymentList()
@@ -393,51 +387,63 @@ class OaSupplierOrderController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-    /**
-     * 财务上传付款凭证（图片）
-     * @return string
-     */
-    public function actionUpload()
-    {
-        $file  = new UploadFile();
-        $file->excelFile = UploadedFile::getInstance($file,'excelFile');
-        $pathName = $file->uploadImg();
-        return json_encode([
-            'code' => $pathName ? 200 : 400,
-            'msg' => $pathName ? '上传成功' : '上传失败',
-            'url' => $pathName,
-        ]);
-    }
+
     /**
      * 财务保存付款结果
      * @return string
      */
-    public function actionSavePayment()
+    public function actionSavePayment($id)
     {
-        $request = Yii::$app->request;
-        if(!$request->isPost) {
-            return '';
-        }
-        $post = $request->post()['OaSupplierOrderPaymentDetail'];
-        $db = Yii::$app->db;
-        $trans = $db->beginTransaction();
-        try{
-            foreach ($post as $value){
-                $model = OaSupplierOrderPaymentDetail::findOne($value['id']);
-                $model->attributes = $value;
+        $model = OaSupplierOrderPaymentDetail::findOne($id);
+        $oldImg = $model['img'];
+        //查找订单金额
+        $totalAmt = OaSupplierOrder::findOne(['billNumber' => $model['billNumber']])['amt'];
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $db = Yii::$app->db;
+            $trans = $db->beginTransaction();
+            $post = Yii::$app->request->post()['OaSupplierOrderPaymentDetail'];
+            try {
+                $file = new UploadFile();
+                $file->excelFile = UploadedFile::getInstance($model, 'img');
+                $model->img = $file->excelFile ? $file->uploadImg() : $oldImg;
                 $model->paymentStatus = '已支付';
                 $model->paymentTime = date('Y-m-d H:i:s');
-                if(!$model->save()){
-                    throw new \Exception('fail to save data!');
+
+            //var_dump($model);exit;
+                if (!$model->save()) {
+                    var_dump($model->getErrors());exit;
+                    throw new \Exception('fail to save payment data!');
                 }
+                //保存订单信息
+                $order = OaSupplierOrder::findOne(['billNumber' => $model['billNumber']]);
+                //计算未付金额
+                $sql = "SELECT SUM(ISNULL(paymentAmt,0)) AS paymentAmt FROM oa_SupplierOrderPaymentDetail 
+                        WHERE billNumber='{$model['billNumber']}' AND paymentStatus='已支付'";
+                $amt = Yii::$app->db->createCommand($sql)->queryOne();
+                $order->unpaidAmt = $totalAmt - $amt['paymentAmt'] >= 0 ? $totalAmt - $amt['paymentAmt'] : 0;
+                $order->paymentAmt = $amt['paymentAmt'];
+                $order->paymentStatus = $amt['paymentAmt'] >= $totalAmt ? '全部付款' : '部分付款';
+                $order->updatedTime = date('Y-m-d H:i:s');
+            if (!$order->save()) {
+                throw new \Exception('fail to save order data!');
             }
-            $trans->commit();
-            $msg = '保存成功！';
-        }catch (\Exception $e){
-            $trans->rollBack();
-            $msg = '保存失败！';
+
+                $trans->commit();
+                $msg = '保存成功！';
+            } catch (\Exception $e) {
+                $trans->rollBack();
+                $msg = '保存失败！';
+                //$msg = $e;
+            }
+            //return $msg;
+            return $this->redirect('payment?id='.$order->id);
+        }else {
+            return $this->renderAjax('_form', [
+                'model' => $model,
+                'totalAmt' => $totalAmt,
+            ]);
         }
-        return $msg;
+
     }
 
     /**
@@ -448,17 +454,17 @@ class OaSupplierOrderController extends Controller
      */
     public function actionDelivery($id)
     {
-        if(!Yii::$app->request->isPost) {
+        if (!Yii::$app->request->isPost) {
             return '请求错误！';
         }
         $post = Yii::$app->request->post();
         $expressNumber = $post['number'];
-        $numbers = explode("\n",trim($expressNumber));
-        $numbers = implode(',',$numbers);
+        $numbers = explode("\n", trim($expressNumber));
+        $numbers = implode(',', $numbers);
         $sql = "update oa_supplierOrder set expressNumber='$numbers' where id=$id";
         $db = Yii::$app->db;
-        $res = $db->createCommand($sql)->execute()  ;
-        if(!$res) {
+        $res = $db->createCommand($sql)->execute();
+        if (!$res) {
             return '发货失败！';
         }
         return '发货成功！';
@@ -470,7 +476,7 @@ class OaSupplierOrderController extends Controller
      * @return mixed
      * @throws
      */
-    public function actionInputExpress($id=[])
+    public function actionInputExpress($id = [])
     {
         $request = Yii::$app->request;
         if ($request->isGet) {
@@ -482,7 +488,7 @@ class OaSupplierOrderController extends Controller
         $db = Yii::$app->db;
         $trans = $db->beginTransaction();
         try {
-            foreach($ids as $key) {
+            foreach ($ids as $key) {
                 $order = OaSupplierOrder::findOne($key);
                 $billNumber = $order->billNumber;
                 $expressNumber = $order->expressNumber;
@@ -494,8 +500,7 @@ class OaSupplierOrderController extends Controller
             }
             $trans->commit();
             $msg = '导入成功！';
-        }
-        catch (\Exception $why) {
+        } catch (\Exception $why) {
             $trans->rollBack();
             $msg = '导入失败！';
         }
@@ -508,9 +513,9 @@ class OaSupplierOrderController extends Controller
      * @param $id string
      * @throws
      */
-    public function actionExportDetail($id='')
+    public function actionExportDetail($id = '')
     {
-        $ids = explode(',',$id);
+        $ids = explode(',', $id);
         $db = Yii::$app->db;
         $fileName = $sheetName = '采购单明细';
         //表头
@@ -534,7 +539,7 @@ class OaSupplierOrderController extends Controller
                 $outs[] = $row;
             }
         }
-        PHPExcelTools::exportExcel($fileName,$sheetName,$headers,$outs);
+        PHPExcelTools::exportExcel($fileName, $sheetName, $headers, $outs);
     }
 
     /**
@@ -542,23 +547,23 @@ class OaSupplierOrderController extends Controller
      */
     public function actionDeliveryTemplate()
     {
-       $fileName = '发货单模板';
-       $sheetName = '发货单';
-       $headers = [
-           '采购单号',
-           '供应商SKU',
-           '发货数量',
-           '物流单号'
-       ];
-       $data = [
+        $fileName = '发货单模板';
+        $sheetName = '发货单';
+        $headers = [
+            '采购单号',
+            '供应商SKU',
+            '发货数量',
+            '物流单号'
+        ];
+        $data = [
             [
                 'CGD-2018-08-03-0204',
                 'A0001-X',
                 6,
                 'XXXXX',
             ]
-       ];
-       PHPExcelTools::exportExcel($fileName,$sheetName,$headers,$data);
+        ];
+        PHPExcelTools::exportExcel($fileName, $sheetName, $headers, $data);
     }
 
 
@@ -570,11 +575,11 @@ class OaSupplierOrderController extends Controller
     public function actionInputDeliveryOrder()
     {
         $request = Yii::$app->request;
-        if(!$request->isPost) {
+        if (!$request->isPost) {
             return '';
         }
-        $file  = new UploadFile();
-        $file->excelFile = UploadedFile::getInstance($file,'excelFile');
+        $file = new UploadFile();
+        $file->excelFile = UploadedFile::getInstance($file, 'excelFile');
         $pathName = $file->upload();
         if ($pathName) {
             $keys = [
@@ -583,9 +588,9 @@ class OaSupplierOrderController extends Controller
                 'deliveryAmt',
                 'expressNumber'
             ];
-            $rows = PHPExcelTools::readExcel($pathName,$keys);
+            $rows = PHPExcelTools::readExcel($pathName, $keys);
             $ret = $this->updateOrder($rows);
-            return $ret?'上传成功！':'上传失败！';
+            return $ret ? '上传成功！' : '上传失败！';
         }
         return '上传失败！';
     }
@@ -619,27 +624,26 @@ class OaSupplierOrderController extends Controller
         $trans = $db->beginTransaction();
         try {
             foreach ($rows as $row) {
-                $order = OaSupplierOrder::findOne(['billNumber'=>$row['billNumber']]);
+                $order = OaSupplierOrder::findOne(['billNumber' => $row['billNumber']]);
                 $orderId = $order->id;
                 $oldExpressNumber = $order->expressNumber;
-                $orderDeatail = OaSupplierOrderDetail::findOne(['orderId'=>$orderId,'supplierGoodsSku'=>$row['supplierGoodsSku']]);
+                $orderDeatail = OaSupplierOrderDetail::findOne(['orderId' => $orderId, 'supplierGoodsSku' => $row['supplierGoodsSku']]);
                 $orderDeatail->deliveryAmt = $row['deliveryAmt'];
                 $orderDeatail->deliveryTime = date('Y-m-d H:i:s');
-                if(empty($oldExpressNumber)) {
+                if (empty($oldExpressNumber)) {
                     $order->expressNumber = $row['expressNumber'];
                 } else {
-                    if($oldExpressNumber !== $row['expressNumber']) {
-                        $order->expressNumber = $oldExpressNumber.','.$row['expressNumber'];
+                    if ($oldExpressNumber !== $row['expressNumber']) {
+                        $order->expressNumber = $oldExpressNumber . ',' . $row['expressNumber'];
                     }
                 }
-                if(!($orderDeatail->save() && $order->save())) {
+                if (!($orderDeatail->save() && $order->save())) {
                     throw new \Exception('fail to save data!');
                 }
             }
             $trans->commit();
             return true;
-        }
-        catch (\Exception $why) {
+        } catch (\Exception $why) {
             $trans->rollBack();
             return false;
         }

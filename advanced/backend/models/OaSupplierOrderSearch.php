@@ -65,7 +65,7 @@ class OaSupplierOrderSearch extends OaSupplierOrder
             'syncTime' => $this->syncTime,
             'totalNumber' => $this->totalNumber,
             'amt' => $this->amt,
-            'unpaidAmt' => $this->unpaidAmt,
+            //'unpaidAmt' => $this->unpaidAmt,
             'orderTime' => $this->orderTime,
             'updatedTime' => $this->updatedTime,
         ]);

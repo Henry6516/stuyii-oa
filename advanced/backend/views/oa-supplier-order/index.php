@@ -59,7 +59,7 @@ $checkUrl = Url::toRoute(['check']);
             </div>
         </div>
     </div>
-    <?php Pjax::begin(['id' => 'order-table']) ?>
+    <?php //Pjax::begin(['id' => 'order-table']) ?>
     <?php
     Modal::begin([
         'id' => 'express-modal',
@@ -81,7 +81,7 @@ $checkUrl = Url::toRoute(['check']);
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'id' => 'supplier-order-view',
-            'pjax' => 'true',
+            //'pjax' => 'true',
             'options' => ['data-pjax' => 'order-table'],
             'showPageSummary' => true,
             'columns' => [
@@ -117,7 +117,7 @@ $checkUrl = Url::toRoute(['check']);
                             return "<li><a href='#' data-url=$url  class='payment-act payment-mod' data-toggle='modal' data-target='#payment-modal'>请求付款</a></li>";
                         },
                         'payment' => function ($url) {
-                            return "<li><a href='#' data-url=$url  class='payment-act jump' data-toggle='modal' data-target='#payment-detail-modal'>付款明细</a></li>";
+                            return "<li><a href='#' data-url=$url  class='payment-act jump' >付款明细</a></li>";
                         },
                         'input-express' => function ($url) {
                             return "<li><a class='input-express act' data-url=$url href='#'>导入物流单号</a></li>";
@@ -167,10 +167,6 @@ $checkUrl = Url::toRoute(['check']);
                 ],
                 [
                     'attribute' => 'unpaidAmt',
-                    'format' => 'raw',
-                    'value' => function ($model) {
-                        return $model->amt - $model->paymentAmt;
-                    },
                     'pageSummary' => true,
                 ],
                 [
@@ -185,7 +181,7 @@ $checkUrl = Url::toRoute(['check']);
                     'attribute' => 'paymentStatus',
                     'format' => 'raw',
                     'value' => function ($model) {
-                        return Html::a($model->paymentStatus, Url::toRoute(['oa-supplier-order/payment', 'id' => $model->id]));
+                        return Html::a($model->paymentStatus, Url::to(['oa-supplier-order/payment', 'id' => $model->id]),['target' => '_blank']);
                     }
                 ],
             ],
@@ -195,7 +191,7 @@ $checkUrl = Url::toRoute(['check']);
     }
     ?>
 
-    <?php Pjax::end() ?>
+    <?php //Pjax::end() ?>
 
 </div>
 
@@ -263,6 +259,10 @@ function init() {
         $(this).parents('.modal').find ('.close').click(); 
         var url = $(this).data('url');
         var data = $(this).parents('.modal').find('textarea').val();
+        if(data.length == 0){
+            alert('内容不能为空！');
+            return false;
+        }
         //debugger;
         $.ajax({
         url:url,
@@ -279,14 +279,6 @@ function init() {
       $('.payment-mod').click(function() {
         var that = $(this);
         
-        var html = '<textarea placeholder="" class="payment-text">'
-        $('.modal-body').html(html);
-        $('.modal-footer').find('a').attr('data-url',that.data('url'));
-      });
-      
-      /* payment detail mod */
-      $('.payment-detail-mod').click(function() {
-        var that = $(this);
         var html = '<textarea placeholder="" class="payment-text">'
         $('.modal-body').html(html);
         $('.modal-footer').find('a').attr('data-url',that.data('url'));

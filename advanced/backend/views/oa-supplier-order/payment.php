@@ -1,182 +1,133 @@
 <?php
 
-use kartik\widgets\ActiveForm;
-use kartik\builder\TabularForm;
 use yii\helpers\Html;
+use kartik\grid\GridView;
 use yii\helpers\Url;
+use yii\widgets\Pjax;
+use yii\bootstrap\Modal;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\OaSupplierOrder */
+/* @var $searchModel backend\models\OaSupplierOrderSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = '付款明细';
+$this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
-<div class="input-file" style="display: none">
-    <?php $form = ActiveForm::begin(['action' => 'input-delivery-order', 'options' => ['id' => 'upload', 'enctype' => 'multipart/form-data']]) ?>
-    <?= $form->field($file, 'excelFile', ['options' => ['data-id' => 0]])->fileInput() ?>
-    <?php ActiveForm::end() ?>
-</div>
+<div class="oa-supplier-order-index" style="margin-top: 1%;">
 
-<?php
-$form = ActiveForm::begin([
-    'id' => 'payment-form'
-]);
-
-try {
-    echo TabularForm::widget([
-        'dataProvider' => $dataProvider,
-        'id' => 'detail-table',
-        'form' => $form,
-        'actionColumn' => [
-            'class' => '\kartik\grid\ActionColumn',
-            'template' => '{upload} {delete}',
-            'buttons' => [
-                'upload' => function ($url, $model, $key) {
-                    $options = [
-                        'title' => '上传凭证',
-                        'aria-label' => '上传凭证',
-                        'data-id' => $key,
-                        'class' => 'image-upload',
-                    ];
-                    return Html::a('<span  class="glyphicon glyphicon-upload"></span>', '#', $options);
-                },
-                'delete' => function ($url, $model, $key) {
-//                    $delete_url = Url::to(['/goodssku/delete', 'id' => $key]);
-                    $options = [
-                        'title' => '删除',
-                        'aria-label' => '删除',
-                        'data-id' => $key,
-                    ];
-                    return Html::a('<span  class="glyphicon glyphicon-trash"></span>', '#', $options);
-                },
-                'width' => '100px',
-            ],
-        ],
-
-        'attributes' => [
-            'id' => [
-                'label' => '',
-                'type' => TabularForm::INPUT_HIDDEN,
-                'options' => ['class' => 'billNumber', 'readonly' => true],
-            ],
-            'billNumber' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'billNumber', 'readonly' => true],
-                'columnOptions' => ['width' => '190px'],
-                'value' => 'billNumber',
-            ],
-            'requestTime' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'requestTime', 'readonly' => true],
-            ],
-            'requestAmt' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'requestAmt', 'readonly' => true],
-            ],
-            'paymentStatus' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'paymentStatus', 'readonly' => true],
-            ],
-
-            'image' => [
-                'label' => '凭证',
-                'options' => ['class' => 'image', 'style' => 'width:100px'],
-                'type' => TabularForm::INPUT_RAW,
-                'id' => 'image-view',
-                'value' => function ($model) {
-                    return $model->img ?
-                        Html::a(Html::img($model->img, ['alt' => '缩略图', 'width' => 50]), $model->img, ['target' => '_blank', 'class' => 'image-view view-' . $model->id]) :
-                        Html::a(Html::img(Url::to("@web/img/noImg.jpg"), ['alt' => '缩略图', 'width' => 50]), '#', ['class' => 'image-view view-' . $model->id]);
-                }
-            ],
-            'img' => [
-                'label' => '',
-                'type' => TabularForm::INPUT_HIDDEN,
-                'options' => ['class' => 'img', 'readonly' => true],
-            ],
-            'paymentTime' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'paymentTime', 'readonly' => true],
-            ],
-            'comment' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'comment'],
-            ],
-            'paymentAmt' => ['type' => TabularForm::INPUT_TEXT,
-                'options' => ['class' => 'paymentAmt'],
-            ],
-        ],
-        'gridSettings' => [
-            'panel' => [
-                'before' => false,
-                'footer' => false,
-                'after' =>
-                    Html::button('保存', ['type' => 'button', 'class' => ' btn btn-primary save-detail'])
-            ]
-        ]
+    <?php Pjax::begin(['id' => 'order-table']) ?>
+    <?php
+    Modal::begin([
+        'id' => 'payment-modal',
+        'header' => '<h4 class="modal-title">付款</h4>',
+        'footer' => '<a href="#" class="mod-act btn btn-primary" data-dismiss="modal">关闭</a>',
     ]);
-} catch (Exception $why) {
-    throw new Exception($why);
-}
-ActiveForm::end();
-
-$savePaymentUrl = Url::toRoute('save-payment');
-$imgUploadUrl = Url::toRoute('upload');
-$js = <<< JS
-
-/*
-save order detail
- */
-$('.save-detail').click(function() {
-    //锁定保存按钮
-    $(this).attr('disabled','true');
-    krajeeDialog.confirm('确定付款？', function (result) {
-        if(result){
-            $.ajax({
-                url: '$savePaymentUrl',
-                data: $('#payment-form').serialize(),
-                type: 'POST',
-                success: function(res) {
-                    alert(res);
-                    window.location.reload(); 
-                }
-            });
-        }
-    });
-    
-})
-//凭证上传
-$('.image-upload').click(function() {
-    $('#uploadfile-excelfile').data('id',$(this).data('id'));
-    $('#uploadfile-excelfile').click();
-})
-$('#uploadfile-excelfile').change(function() {
-    var id = $(this).data('id');
-    var that = this;
-    var value = $(that).val();
-    if(value.length === 0) {
-        return false;
+    Modal::end();
+    ?>
+    <div class="form-group">
+        <h3 class="col-sm-offset-3"><?php echo '订单总金额：'.$totalAmt ?></h3>
+    </div>
+    <?php try {
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'id' => 'supplier-order-view',
+            'pjax' => 'true',
+            'options' => ['data-pjax' => 'order-table'],
+            'columns' => [
+                ['class' => 'kartik\grid\SerialColumn'],
+                [
+                    'class' => 'kartik\grid\ActionColumn',
+                    'template' => '{payment} ',
+                    'buttons' => [
+                        'payment' => function ($url, $model, $key)use($isShowPayButton) {
+                            return $isShowPayButton ? Html::a('<span class="btn btn-primary">付款</span></a>',
+                                '#',
+                                ['class' => 'payment-btn', 'type' => 'button', 'data-status' => $model->paymentStatus,
+                                    'title' => '付款', 'aria-label' => '付款','data-id'=>$model->id,
+                                    'data-toggle' => 'modal','data-target' => '#payment-modal']) : '';
+                        },
+                    ],
+                ],
+                [
+                    'attribute' => 'img',
+                    'format' => 'raw',
+                    'value' => function($model){
+                        return $model->img ?
+                            Html::a(Html::img($model->img, ['alt' => '缩略图', 'height' => 50]), $model->img, ['target' => '_blank', 'class' => 'image-view'])
+                             : Html::a(Html::img(Url::to("@web/img/noImg.jpg"), ['alt' => '缩略图', 'width' => 50]), '#', ['class' => 'image-view']);
+                    }
+                ],
+                [
+                    'attribute' => 'billNumber',
+                    'pageSummary' => 'pageSummary',
+                ],
+                [
+                    'attribute' => 'requestTime',
+                    'pageSummary' => false,
+                ],
+                [
+                    'attribute' => 'requestAmt',
+                    'pageSummary' => false,
+                ],
+                [
+                    'attribute' => 'paymentStatus',
+                    'pageSummary' => false,
+                ],
+                [
+                    'attribute' => 'comment',
+                    'pageSummary' => false,
+                ],
+                [
+                    'attribute' => 'paymentTime',
+                    'pageSummary' => true,
+                ],
+                [
+                    'attribute' => 'paymentAmt',
+                    'pageSummary' => true,
+                ],
+                [
+                    'attribute' => 'unpaidAmt',
+                    'pageSummary' => true,
+                    'value' => function($unpaidAmt)use ($unpaidAmt){
+                        return $unpaidAmt;
+                    }
+                ],
+            ],
+        ]);
+    } catch (Exception  $why) {
+        throw new \Exception($why);
     }
-    var form = $('#upload')[0];
-    var formData = new FormData(form);
-    $.ajax({
-        url:'{$imgUploadUrl}',
-        type:'post',
-        dataType: 'json',
-        data:formData,
-        processData:false,
-        contentType:false,
-        success:function(res) {
-            alert(res.msg);
-            if(res.code == 200){
-                var img = '<img src="'+res.url+'" width=50>'
-                $('.view-'+id).html(img);
-                $('.view-'+id).attr('href',res.url);
-                $('#oasupplierorderpaymentdetail-'+id+'-img').val(res.url);
-            }else{
-                
-            }
+    ?>
+    <?php Pjax::end() ?>
+    <?php
+    $viewUrl = Url::toRoute(['save-payment']);
+    $js = <<<JS
+    //显示修改输入框
+    $('.payment-btn').on('click',function() {
+        var status = $(this).data('status');
+        if(status === '已支付'){
+            alert('该申请已经付款，请勿重复操作！');
+            return false;
         }
+        $("#payment-modal").modal('hide');
+        $('.modal-body').children('div').remove();
+        $.get('{$viewUrl}',  { id: $(this).data('id') },
+            function (data) {
+                $("#payment-modal").modal('show'); 
+                $('.modal-body').html(data);
+            }
+        );
     });
-});
 
 JS;
-$this->registerJs($js);
-?>
+
+    $this->registerJs($js);
+    ?>
+
+</div>
 
 <style>
     .kv-panel-after {
@@ -201,3 +152,7 @@ $this->registerJs($js);
         transition: .3s transform;
     }
 </style>
+
+
+
+

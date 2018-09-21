@@ -2,50 +2,63 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+
 
 /* @var $this yii\web\View */
-/* @var $model backend\models\OaSupplierOrder */
+/* @var $model backend\models\OaGoods */
 /* @var $form yii\widgets\ActiveForm */
+
 ?>
 
-<div class="oa-supplier-order-form">
+<div class="oa-form">
+    <div class="ibox-content form-horizontal">
+        <?php $form = ActiveForm::begin(
+            [
+                'id' => 'update-form',
+                'method' => 'post',
+                'fieldConfig' => [
+                    'template' => '{label}<div class="col-sm-6">{input}{error}</div>',
+                    'labelOptions' => ['class' => 'col-sm-2 control-label'],
+                    'inputOptions' => ['class' => 'form-control']
+                ]
+            ]
+        );
+        ?>
+        <div class="form-group">
+            <h4 class="col-sm-offset-2"><?php echo '订单总金额：'.$totalAmt ?></h4>
+        </div>
+        <div class="form-group">
+            <?php if($model->img){
+                echo Html::img($model->img, ['alt' => '缩略图', 'width' => '200px','class' => 'image-view col-sm-offset-2']);
+            }else{
+                echo Html::img(Url::to("@web/img/noImg.jpg"), ['alt' => '缩略图', 'width' => '200px','class' => 'image-view col-sm-offset-2']);
+            } ?>
+        </div>
 
-    <?php $form = ActiveForm::begin(); ?>
+        <?php echo $form->field($model, 'img', ['template' => "<font color='red'>{label}</font><div class=\"col-sm-8\">{input}{error}</div>",])->fileInput(['placeholder' => '--必填--']) ?>
+        <?php echo $form->field($model, 'paymentAmt', ['template' => "<font color='red'>{label}</font><div class=\"col-sm-8\">{input}{error}</div>",])->textInput(['placeholder' => '--必填--']) ?>
+        <?php echo $form->field($model, 'comment', ['template' => '{label}<div class="col-sm-8">{input}{error}</div>'])->textInput() ?>
+        <?php echo $form->field($model, 'unpaidAmt', ['template' => '{label}<div class="col-sm-8">{input}{error}</div>'])->textInput(['readonly' => 'true', 'placeholder' => '--自动计算--']) ?>
 
-    <?= $form->field($model, 'supplierName')->textInput() ?>
+        <div class="form-group">
+            <?= Html::submitButton('提交', ['id' => 'create-btn', 'class' => 'btn btn-primary col-sm-offset-2']) ?>
+        </div>
 
-    <?= $form->field($model, 'billNumber')->textInput() ?>
+        <?php ActiveForm::end(); ?>
 
-    <?= $form->field($model, 'billStatus')->textInput() ?>
-
-    <?= $form->field($model, 'purchaser')->textInput() ?>
-
-    <?= $form->field($model, 'syncTime')->textInput() ?>
-
-    <?= $form->field($model, 'totalNumber')->textInput() ?>
-
-    <?= $form->field($model, 'amt')->textInput() ?>
-
-    <?= $form->field($model, 'expressNumber')->textInput() ?>
-
-    <?= $form->field($model, 'paymentStatus')->textInput() ?>
-
-    <?= $form->field($model, 'orderTime')->textInput() ?>
-
-
-    <?= $form->field($model, 'updatedTime')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord?'创建':'更新', ['class' => $model->isNewRecord?'btn btn-success':'btn btn-primary']) ?>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>
 
-<style>
-    div.required label:before {
-        content: "*";
-        color: red;
-    }
-</style>
+<?php
+$createUrl = Url::toRoute(['oa-goods/forward-create', 'type' => 'create',]);
+$createCheckUrl = Url::toRoute(['oa-goods/forward-create', 'type' => 'check',]);
+$js = <<< JS
+//监听备货按钮事件
+
+
+JS;
+
+$this->registerJs($js);
+
+?>

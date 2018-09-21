@@ -26,7 +26,6 @@ use Yii;
  */
 class OaSupplierOrder extends \yii\db\ActiveRecord
 {
-    public $unpaidAmt;
     /**
      * {@inheritdoc}
      */

@@ -34,9 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'template' => '{payment} ',
                     'buttons' => [
                         'payment' => function ($url, $model, $key) {
+                            $id = \backend\models\OaSupplierOrder::findOne(['billNumber' => $model->billNumber])['id'];
                             return Html::a('<span  class="glyphicon glyphicon-flash"></span></a>',
-                                '#',
-                                ['type' => 'button', 'title' => '查看详情', 'aria-label' => '查看详情']);
+                                Url::to('/oa-supplier-order/payment?id='.$id),
+                                ['type' => 'button', 'title' => '前往付款', 'aria-label' => '前往付款']);
                         },
                     ],
                 ],
