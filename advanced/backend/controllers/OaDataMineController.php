@@ -192,7 +192,7 @@ class OaDataMineController extends BaseController
      * @param  $mid int
      * @param  $code string
      * @return mixed
-     *
+     * @throws \Exception
      */
     public function actionSaveBindDetail($mid,$code)
     {
@@ -207,18 +207,13 @@ class OaDataMineController extends BaseController
         try{
             foreach ($details as $key=>$row)
             {
-                $mine_detail = OaDataMineDetail::findOne(['id'=>$key]);
-                if(empty($mine_detail->pySku)){
-                    $bind_ret = $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
-                    if(!$bind_ret) {
-                        throw new \Exception('关联失败！');
-                    }
-                }
                 $update_ret = $con->createCommand($update_sql,[':sku' => $row['pySku'],':childId' => $row['childId']])->execute();
+                if($update_ret === 0) {
+                    $con->createCommand($bind_sql,[':sku' =>$row['pySku'],':childId'=>$row['childId']])->execute();
+                }
                 $detail_ret = $con->createCommand($detail_sql,[':sku' =>$row['pySku'],':id'=>$key])->execute();
-
-                if(!$update_ret || !$detail_ret ) {
-                    throw new \Exception('关联失败！');
+                if(!$detail_ret) {
+                  throw new \Exception('关联失败！');
                 }
             }
 
@@ -230,10 +225,6 @@ class OaDataMineController extends BaseController
             $msg='关联成功！';
         }
         catch (\Exception $why){
-            $trans->rollBack();
-            $msg='关联失败！';
-        }
-        catch (\Throwable $why) {
             $trans->rollBack();
             $msg='关联失败！';
         }
