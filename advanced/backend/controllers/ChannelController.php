@@ -770,11 +770,13 @@ class ChannelController extends BaseController
                 $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 $foos[0][0]['shipping'] = $priceInfo[1];
                 $foos[0][0]['price'] = $totalprice - $priceInfo[1] > 0 ? ceil($totalprice - $priceInfo[1]) : 1;
+                $foos[0][0]['msrp'] = $priceInfo[2];
             } else {
                 $strvariant = '';
                 $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
                 $foos[0][0]['price'] = $goodsSku->price;
                 $foos[0][0]['shipping'] = $goodsSku->shipping;
+                $foos[0][0]['msrp'] = $goodsSku->msrp;
                 //价格判断
                 $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 if ($totalprice <= 2) {
@@ -787,6 +789,7 @@ class ChannelController extends BaseController
                     $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
                     $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
                 }
+
             }
 
             $row = $key + 2;
@@ -918,6 +921,13 @@ class ChannelController extends BaseController
             return;
         }
 
+        // 取最大保留价
+        $maxMsrp = 0;
+        foreach ($variants as $key => $value) {
+            if($value['msrp'] > $maxMsrp) {
+                $maxMsrp = $value['msrp'];
+            }
+        }
         //取最小的运费为运费
         $minPrice = $variants[0]['price'] + $variants[0]['shipping'];
         foreach ($variants as $key => $value) {
@@ -955,7 +965,7 @@ class ChannelController extends BaseController
         }
 
         $strvariant = json_encode($variation, true);
-        return [$strvariant,$shipping];
+        return [$strvariant,$shipping,$maxMsrp];
     }
 
 

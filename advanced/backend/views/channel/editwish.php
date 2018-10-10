@@ -233,9 +233,6 @@ if (empty($sku->randomKeywords)) {
             'template' => "{label}\n<div class=\"col-lg-5\">{input}</div>\n<div class=\"col-lg-9\">{error}</div>",
             'labelOptions' => ['class' => 'col-md-1 control-label']])->textarea(['rows' => 12, 'cols' => 4]); ?>
     <?= $form->field($sku, 'inventory', ['labelOptions' => ['class' => 'col-md-1 control-label']])->textInput(); ?>
-    <?= $form->field($sku, 'price', ['labelOptions' => ['class' => 'col-md-1 control-label']])->textInput(); ?>
-    <?= $form->field($sku, 'msrp', ['labelOptions' => ['class' => 'col-md-1 control-label']])->textInput(); ?>
-    <?= $form->field($sku, 'shipping', ['labelOptions' => ['class' => 'col-md-1 control-label']])->textInput(); ?>
     <?= $form->field($sku, 'shippingtime', ['labelOptions' => ['class' => 'col-md-1 control-label']])->textInput(); ?>
 
 
