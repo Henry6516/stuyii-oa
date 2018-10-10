@@ -767,9 +767,8 @@ class ChannelController extends BaseController
                 $priceInfo = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
                 $strvariant = $priceInfo[0];
                 //价格判断
-                $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 $foos[0][0]['shipping'] = $priceInfo[1];
-                $foos[0][0]['price'] = $totalprice - $priceInfo[1] > 0 ? ceil($totalprice - $priceInfo[1]) : 1;
+                $foos[0][0]['price'] = $priceInfo[3] - $priceInfo[1] > 0 ? ceil($priceInfo[3] - $priceInfo[1]) : 1;
                 $foos[0][0]['msrp'] = $priceInfo[2];
             } else {
                 $strvariant = '';
@@ -920,7 +919,15 @@ class ChannelController extends BaseController
         if (!isset($variants) || empty($variants)) {
             return;
         }
+        //取最大价格
+        $maxPrice = 0;
+        foreach ($variants as $key => $value) {
+            $totalPrice = ceil($value['price'] + $value['shipping']);
+            if($totalPrice > $maxPrice) {
+                $maxPrice = $totalPrice;
+            }
 
+        }
         // 取最大保留价
         $maxMsrp = 0;
         foreach ($variants as $key => $value) {
@@ -965,7 +972,7 @@ class ChannelController extends BaseController
         }
 
         $strvariant = json_encode($variation, true);
-        return [$strvariant,$shipping,$maxMsrp];
+        return [$strvariant,$shipping,$maxMsrp,$maxPrice];
     }
 
 

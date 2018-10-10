@@ -294,7 +294,6 @@ echo '</div>';
         'labelOptions' => ['class' => 'col-lg-1 control-label'],
     ])->textarea(['rows' => 12]); ?>
     <?= $form->field($templates, 'quantity',['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(); ?>
-    <?= $form->field($templates, 'nowPrice',['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(); ?>
     <?= $form->field($templates, 'UPC',['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(['value' => 'Does not apply']); ?>
     <?= $form->field($templates, 'EAN',['labelOptions' => ['class' => 'col-lg-1 control-label'],])->textInput(['value' => 'Does not apply']); ?>
 </div>
