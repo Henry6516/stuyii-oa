@@ -11,6 +11,7 @@ use backend\models\ChannelSearch;
 use backend\models\WishSuffixDictionary;
 use backend\models\OaWishgoods;
 use backend\models\Wishgoodssku;
+use backend\models\OaWishgoodssku;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -682,24 +683,31 @@ class OaDataCenterController extends BaseController
                 ++$count;
             }
 
-            //价格判断
-            $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
-            if ($totalprice <= 2) {
-                $foos[0][0]['price'] = 1;
-                $foos[0][0]['shipping'] = 1;
-            } elseif (2 < $totalprice && $totalprice <= 3) {
-                $foos[0][0]['price'] = 2;
-                $foos[0][0]['shipping'] = 1;
-            } else {
-                $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
-                $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
-
-            }
             //主图用商品编码 拼接
-            if($isVar=='是'){
-                $strvariant = $this->actionVariationWish($id,$value['Suffix'],$value['Rate']);
-            }else{
+            if ($isVar == '是') {
+                $priceInfo = $this->actionVariationWish($id, $value['Suffix'], $value['Rate']);
+                $strvariant = $priceInfo[0];
+                //价格判断
+                $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
+                $foos[0][0]['shipping'] = $priceInfo[1];
+                $foos[0][0]['price'] = $totalprice - $priceInfo[1] > 0 ? ceil($totalprice - $priceInfo[1]) : 1;
+            } else {
                 $strvariant = '';
+                $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
+                $foos[0][0]['price'] = $goodsSku->price;
+                $foos[0][0]['shipping'] = $goodsSku->shipping;
+                //价格判断
+                $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
+                if ($totalprice <= 2) {
+                    $foos[0][0]['price'] = 1;
+                    $foos[0][0]['shipping'] = 1;
+                } elseif (2 < $totalprice && $totalprice <= 3) {
+                    $foos[0][0]['price'] = 2;
+                    $foos[0][0]['shipping'] = 1;
+                } else {
+                    $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
+                    $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
+                }
             }
 
             $row = $key+2;
@@ -825,33 +833,40 @@ class OaDataCenterController extends BaseController
      * 处理多属性
      * @param $id int 商品ID
      */
-    function actionVariationWish($id, $sub, $rate)
+    public function actionVariationWish($id, $sub, $rate)
     {
 
-        $variants = Wishgoodssku::find()->where(['pid' => $id])->all();
+        $variants = Wishgoodssku::find()->where(['pid' => $id])->orderBy('sid')->all();
         $variation = [];
         $varitem = [];
         if (!isset($variants) || empty($variants)) {
             return;
         }
 
+        //取最小的运费为运费
+        $minPrice = $variants[0]['price'] + $variants[0]['shipping'];
+        foreach ($variants as $key => $value) {
+            $totalPrice = ceil($value['price'] + $value['shipping']);
+            if ($totalPrice < $minPrice) {
+                $minPrice = $totalPrice;
+            }
+        }
+        $shipping = 0;
+        if ($minPrice <= 2) {
+            $shipping = 1;
+        } elseif (2 < $minPrice && $minPrice <= 3) {
+            $shipping = 1;
+        }
+        else {
+            $shipping = ceil($minPrice * $rate);
+        }
 
         foreach ($variants as $key => $value) {
 
             //价格判断
-            $totalprice = ceil($value['price'] + $value['shipping']);
-            if ($totalprice <= 2) {
-                $value['price'] = 1;
-                $value['shipping'] = 1;
-            } elseif (2 < $totalprice && $totalprice <= 3) {
-                $value['price'] = 2;
-                $value['shipping'] = 1;
-            } else {
-                $value['shipping'] = ceil($totalprice * $rate);
-                $value['price'] = ceil($totalprice - $value['shipping']);
-
-            }
-
+            $totalPrice = ceil($value['price'] + $value['shipping']);
+            $value['shipping'] = $shipping;
+            $value['price'] = $totalPrice - $shipping < 0 ? 1 : ceil($totalPrice - $shipping);
             $varitem['sku'] = $value['sku'] . $sub;
             $varitem['color'] = $value['color'];
             $varitem['size'] = $value['size'];
@@ -865,7 +880,7 @@ class OaDataCenterController extends BaseController
         }
 
         $strvariant = json_encode($variation, true);
-        return $strvariant;
+        return [$strvariant,$shipping];
     }
 
 
