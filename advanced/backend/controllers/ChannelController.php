@@ -958,7 +958,7 @@ class ChannelController extends BaseController
             //价格判断
             $totalPrice = ceil($value['price'] + $value['shipping']);
             $value['shipping'] = $shipping;
-            $value['price'] = $totalPrice - $shipping < 0 ? 1 : ceil($totalPrice - $shipping);
+            $value['price'] = $totalPrice - $shipping < 1 ? 1 : ceil($totalPrice - $shipping);
             $varitem['sku'] = $value['sku'] . $sub;
             $varitem['color'] = $value['color'];
             $varitem['size'] = $value['size'];
