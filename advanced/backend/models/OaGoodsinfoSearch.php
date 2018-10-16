@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\OaGoodsinfo;
+use yii\helpers\ArrayHelper;
 
 /**
  * OaGoodsinfoSearch represents the model behind the search form about `backend\models\OaGoodsinfo`.
@@ -78,52 +79,55 @@ class OaGoodsinfoSearch extends OaGoodsinfo
         foreach ($result as $user) {
             array_push($users, $user['userName']);
         }
-
+        $role = ArrayHelper::getColumn($role,'item_name');
+        //var_dump($unit);exit;
+        //var_dump($users);exit;
+        //var_dump(in_array('产品开发',$role));exit;
         /*
          * 分模块判断
          *
          */
         if($unit == '产品推荐'){
-            if($role[0]['item_name']=='部门主管'){
+            if(in_array('部门主管',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
+            }elseif(in_array('eBay销售',$role) ||in_array('SMT销售',$role)||in_array('wish销售',$role)||in_array('Joom销售',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
             }
         }elseif($unit == '正向开发'||$unit == '逆向开发'){
-            if($role[0]['item_name']=='部门主管'){
+            if(in_array('部门主管',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
+            }elseif(in_array('eBay销售',$role) ||in_array('SMT销售',$role)||in_array('wish销售',$role)||in_array('Joom销售',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
-            }elseif ($role[0]['item_name']=='产品开发'){
+            }elseif (in_array('产品开发',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发2'){
+            }elseif(in_array('产品开发2',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
         }elseif($unit == '属性信息'){
-            if($role[0]['item_name']=='部门主管'){
+            if(in_array('部门主管',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
+            }elseif(in_array('eBay销售',$role) ||in_array('SMT销售',$role)||in_array('wish销售',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
-            }elseif ($role[0]['item_name']=='产品开发'){
+            }elseif (in_array('产品开发',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发2'){
+            }elseif(in_array('产品开发2',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
         }elseif($unit == '图片信息'){
-            if($role[0]['item_name']=='部门主管'){
+            if(in_array('部门主管',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
+            }elseif(in_array('eBay销售',$role) ||in_array('SMT销售',$role)||in_array('wish销售',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
-            }elseif ($role[0]['item_name']=='产品开发'){
+            }elseif (in_array('产品开发',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发2'){
+            }elseif(in_array('产品开发2',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif ($role[0]['item_name']=='美工'){
+            }elseif (in_array('美工',$role)){
                 $users = \array_merge($users,\array_map(function ($user) {return $user.'-2';}, $users));
                 $query->andWhere(['in', 'possessMan1', $users]);
             }
         }
-
+        //var_dump($query->all());exit;
         // add conditions that should always apply here
 
 
