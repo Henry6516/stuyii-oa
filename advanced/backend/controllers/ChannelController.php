@@ -1379,13 +1379,25 @@ class ChannelController extends BaseController
      * @param string $suffxi
      *
      */
-    public function actionExportLotsJoom($pids, $suffix)
+    public function actionExportLotsJoom($pids, $suffix, $goodscode)
     {
-        if (empty($pids)) {
+        if (empty($pids) && empty($goodscode)) {
             $this->actionExportCsv([], [], 'none');
             return;
         }
-        $pids = explode(',', $pids);
+        if($pids){
+            $pids = explode(',', $pids);
+        }else{
+            $list = explode(',',$goodscode);
+            foreach ($list as $v){
+                $goodModel = OaGoodsinfo::findOne(['goodscode' => $v]);
+                if($goodModel){
+                    $item[] = $goodModel['pid'];
+                }
+            }
+            $pids = $item;
+        }
+
         $procedur = 'P_oa_toVarJoom ';
         $filter_ret = [];
         $header = [];

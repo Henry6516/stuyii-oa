@@ -14,13 +14,13 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
-        'plugins/bootstrap-select/bootstrap-select.min.css'
+        ['plugins/bootstrap-select/bootstrap-select.min.css','position' => View::POS_HEAD]
     ];
     public $js = [
         'plugins/bootbox/bootbox.min.js',
         'plugins/app.min.js',
         'plugins/layer/layer.js',
-        'plugins/bootstrap-select/bootstrap-select.min.js'
+        ['plugins/bootstrap-select/bootstrap-select.min.js','position' => View::POS_HEAD]
         //'js/pageSize.js',
     ];
     public $depends = [
@@ -35,7 +35,7 @@ class AppAsset extends AssetBundle
      * @param $file
      * @param $position
      */
-    public static function addJs($view, $file, $position = View::POS_END)
+    public static function addJs($view, $file, $position = View::POS_HEAD)
     {
         if (is_array($file)) {
             foreach ($file as $v)
