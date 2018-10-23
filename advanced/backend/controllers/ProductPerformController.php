@@ -62,7 +62,12 @@ class ProductPerformController extends BaseController
                 'pageSize' => isset($get['pageSize']) && $get['pageSize'] ? $get['pageSize'] : 20,
             ],
             'sort' => [
-                'attributes' => ['l_AMT', 'l_qty'],
+                'attributes' => [
+                    'l_AMT', 'l_qty',
+                    'GoodsCode','GoodsStatu',
+                    'GoodsName','CreateDate',
+                    'Developer','Introducer'
+                ],
             ],
         ]);
 
