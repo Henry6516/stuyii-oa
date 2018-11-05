@@ -146,7 +146,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
         [
             'attributes' => [
                 'PackName' => [
-                    'label' => '规格',
+                    'label' => '<span style = \'color:red\'>*规格</span>',
                     'items' => $packname,
                     'type' => Form::INPUT_DROPDOWN_LIST,
                     'options' => ['style' => "margin-left: 7px"],
