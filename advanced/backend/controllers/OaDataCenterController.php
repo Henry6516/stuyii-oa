@@ -815,16 +815,18 @@ class OaDataCenterController extends BaseController
         shuffle($random); //摇匀词库
         $random_str1 = [array_shift($random)]; //从摇匀的词库里不放回抽一个
         $random_arr = array_slice($random,0,4);//从剩余的词库里抽四个
-
-        $real_len = strlen(implode(' ',array_merge($random_str1,$random_arr)));
-        for($i=0;$i<4;$i++){
+        $real_len = 0 ;
+        for($i=0;$i<20;$i++){
+            $real_len = strlen(implode(' ',array_merge($random_str1,$random_arr)));
             if($real_len<=$available_len){
                 break;
             }
             else{
                 array_shift($random_arr); //去掉一个随机词
-                $real_len = strlen(implode(' ',array_merge($random_str1,$random_arr)));
             }
+        }
+        if ($real_len > $available_len) {
+            return implode(' ',array_merge($head,$need,$tail));
         }
         shuffle($need);
         return  (implode(' ',array_merge($head,$random_str1,$need,$random_arr,$tail)));
