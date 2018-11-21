@@ -21,6 +21,8 @@ use Yii;
  * @property string $shipping_time
  * @property string $linkurl
  * @property integer $goodsskuid
+ * @property double $joomShipping
+ * @property double $joomPrice
  */
 class Wishgoodssku extends \yii\db\ActiveRecord
 {
@@ -40,7 +42,7 @@ class Wishgoodssku extends \yii\db\ActiveRecord
         return [
             [['pid', 'sid', 'inventory', 'goodsskuid'], 'integer'],
             [['sku', 'pSKU', 'color', 'size', 'shipping_time', 'linkurl'], 'string'],
-            [['price', 'shipping', 'msrp'], 'number'],
+            [['price', 'shipping', 'msrp','joomPrice','joomShipping'], 'number'],
         ];
     }
 

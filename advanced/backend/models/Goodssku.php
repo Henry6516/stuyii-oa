@@ -21,6 +21,8 @@ use yii\helpers\ArrayHelper;
  * @property string $memo2
  * @property string $memo3
  * @property string $memo4
+ * @property double $joomPrice
+ * @property double $joomShipping
  */
 class Goodssku extends \yii\db\ActiveRecord
 {
@@ -40,7 +42,7 @@ class Goodssku extends \yii\db\ActiveRecord
         return [
 //            [['pid'], 'required'],
             [['pid'], 'integer'],
-            [['joomPrice','sku', 'property1', 'property2', 'property3', 'memo1', 'memo2', 'memo3', 'memo4', 'CostPrice', 'Weight', 'RetailPrice', 'linkurl'], 'string'],
+            [['joomShipping','joomPrice','sku', 'property1', 'property2', 'property3', 'memo1', 'memo2', 'memo3', 'memo4', 'CostPrice', 'Weight', 'RetailPrice', 'linkurl'], 'string'],
             [['linkurl', 'stockNum'], 'safe'],
         ];
     }
@@ -65,6 +67,7 @@ class Goodssku extends \yii\db\ActiveRecord
             'memo3' => '备注3',
             'memo4' => '备注4',
             'stockNum' => '备货数量',
+            'joomShipping' => 'joom运费'
         ];
     }
 

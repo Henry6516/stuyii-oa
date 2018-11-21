@@ -20,7 +20,7 @@ class WishgoodsskuSearch extends Wishgoodssku
         return [
             [['itemid', 'pid', 'sid', 'inventory', 'goodsskuid'], 'integer'],
             [['sku', 'pSKU', 'color', 'size', 'shipping_time', 'linkurl'], 'safe'],
-            [['price', 'shipping', 'msrp'], 'number'],
+            [['price', 'shipping', 'msrp','joomPrice','joomShipping'], 'number'],
         ];
     }
 

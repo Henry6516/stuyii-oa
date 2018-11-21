@@ -417,8 +417,11 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             'RetailPrice' => ['label' => '零售价', 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'RetailPrice'],
             ],
-            'joomPrice' => ['label' => 'joom总售价', 'type' => TabularForm::INPUT_TEXT,
+            'joomPrice' => ['label' => 'joom零售价', 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'joomPrice'],
+            ],
+            'joomShipping' => ['label' => 'joom运费', 'type' => TabularForm::INPUT_TEXT,
+                'options' => ['class' => 'joomShipping'],
             ],
             'stockNum' => ['label' => '备货数量', 'type' => TabularForm::INPUT_TEXT,
                 'options' => ['class' => 'stockNum', 'readonly' => $stock_flag],
@@ -442,8 +445,10 @@ echo FormGrid::widget([ // continuation fields to row above without labels
                     Html::button('重量确定', ['id' => 'Weight-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::input('text', 'RetailPrice', '', ['class' => 'RetailPrice-replace', 'placeholder' => '零售价$']) . ' ' .
                     Html::button('价格确定', ['id' => 'RetailPrice-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
-                    Html::input('text', 'joomPrice', '', ['class' => 'joomPrice-replace', 'placeholder' => 'joom总售价$']) . ' ' .
+                    Html::input('text', 'joomPrice', '', ['class' => 'joomPrice-replace', 'placeholder' => 'joom零售价$']) . ' ' .
                     Html::button('价格确定', ['id' => 'joomPrice-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
+                    Html::input('text', 'joomShipping', '', ['class' => 'joomShipping-replace', 'placeholder' => 'joom运费$']) . ' ' .
+                    Html::button('价格确定', ['id' => 'joomShipping-set', 'type' => 'button', 'class' => 'btn']) . ' ' .
                     Html::button('一键生成SKU', ['id' => 'sku-set', 'type' => 'button', 'class' => 'btn btn-success']) . ' ' .
                     Html::button('保存当前数据', ['id' => 'save-only', 'type' => 'button', 'class' => 'btn btn-info',
                         'data-href' => Url::to(['/goodssku/save-only', 'pid' => $pid, 'type' => 'goods-info'])]) . ' ' .
@@ -818,6 +823,13 @@ echo FormGrid::widget([ // continuation fields to row above without labels
     $('#joomPrice-set').on('click',function(){
        var newJoomPrice = $('.joomPrice-replace').val(); 
        $('.joomPrice').each(function(){
+           $(this).val(newJoomPrice);
+       });  
+    });
+     //joom运费
+    $('#joomShipping-set').on('click',function(){
+       var newJoomPrice = $('.joomShipping-replace').val(); 
+       $('.joomShipping').each(function(){
            $(this).val(newJoomPrice);
        });  
     });
