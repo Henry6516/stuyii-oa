@@ -680,7 +680,7 @@ echo FormGrid::widget([ // continuation fields to row above without labels
             
             //循环添加循环框
             var inputNames= ['sku','property1','property2',
-            'property3','CostPrice','Weight','RetailPrice','joomPrice','stockNum']
+            'property3','CostPrice','Weight','RetailPrice','joomPrice','joomShipping','stockNum']
             for (var i=3; i<inputNames.length + 3;i++){
                 if(inputNames[i-3] == 'stockNum'){
                     if ({$make_flag} == 0){
