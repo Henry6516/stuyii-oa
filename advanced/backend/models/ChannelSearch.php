@@ -153,7 +153,13 @@ class ChannelSearch extends Channel
 
         if ($unit == '销售产品列表') {
             //过滤销售员产品
-            if (strpos($roles, '开发') !== false) {
+            if (strpos($roles, '销售') !== false) {
+                $map[0] = 'or';
+                foreach ($users as $k => $username) {
+                    $map[$k + 1] = ['like', 'mapPersons', $username];
+                }
+                $query->andWhere($map);
+            } elseif (strpos($roles, '开发') !== false) {
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
                 $query->andWhere(['<>', "ISNULL(mapPersons,'')", '']);
             }else{
