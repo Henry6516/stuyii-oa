@@ -112,6 +112,7 @@ class WishgoodsskuController extends BaseController
                         $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
                         $sku_model->price = isset($value['price']) ? $value['price'] : '';
                         $sku_model->joomPrice = isset($value['joomPrice']) ? $value['joomPrice'] : '';
+                        $sku_model->joomShipping = isset($value['joomShipping']) ? $value['joomShipping'] : '';
                         $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
                         $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
                         $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
@@ -141,6 +142,8 @@ class WishgoodsskuController extends BaseController
                                 $sku_model->inventory = isset($value['inventory']) ? $value['inventory'] : '';
                                 $sku_model->price = isset($value['price']) ? $value['price'] : '';
                                 $sku_model->shipping = isset($value['shipping']) ? $value['shipping'] : '';
+                                $sku_model->joomPrice = isset($value['joomPrice']) ? $value['joomPrice'] : '';
+                                $sku_model->joomShipping = isset($value['joomShipping']) ? $value['joomShipping'] : '';
                                 $sku_model->msrp = isset($value['msrp']) ? $value['msrp'] : '';
                                 $sku_model->shipping_time = isset($value['shipping_time']) ? $value['shipping_time'] : '';
                                 $sku_model->linkurl = isset($value['linkurl']) ? $value['linkurl'] : '';
