@@ -885,7 +885,11 @@ class ChannelController extends BaseController
         $unchanged_len = \strlen(implode(' ', array_merge($head, $need, $tail)));
         if ($unchanged_len > $max_length) {
             shuffle($need);
-            $real_len = implode(' ', array_merge($head, $need, $tail));
+            $ret = array_merge($head,$need,$tail);
+            while (\strlen(implode(' ',$ret)) > $max_length) {
+                array_pop($ret);
+            }
+            $real_len = implode(' ', $ret);
             return $real_len;
         }
         //可用长度
