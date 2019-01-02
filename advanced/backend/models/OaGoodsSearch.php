@@ -3,6 +3,8 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+
 /**
  * OaGoodsSearch represents the model behind the search form about `backend\models\OaGoods`.
  */
@@ -47,9 +49,8 @@ class OaGoodsSearch extends OaGoods
         $role_sql = yii::$app->db->createCommand("SELECT t2.item_name FROM [user] t1,[auth_assignment] t2 
                     WHERE  t1.id=t2.user_id and
                     username='$user'
-                    ");
-        $role = $role_sql
-            ->queryAll();
+                    ")->queryAll();
+        $role = ArrayHelper::getColumn($role_sql,'item_name');
 
         // 返回当前用户管辖下的用户
         $sql = "oa_P_users '{$user}'";
@@ -96,11 +97,11 @@ class OaGoodsSearch extends OaGoods
          */
 
         if($unit == '产品推荐'){
-            //print_r($role[0]['item_name']);
+            //var_dump($role);exit;
             //print_r($users);exit;
-            if(strpos($role[0]['item_name'], '产品开发') !== false){
+            if(in_array('产品开发',$role) !== false){
                 $query->andWhere(['OR',['developer' => $users],["ISNULL(developer,'')" => '']]);
-            }elseif ($role[0]['item_name']=='美工'){
+            }elseif (in_array('美工',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
             }
             /*if($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
@@ -115,13 +116,13 @@ class OaGoodsSearch extends OaGoods
             }
 
         }elseif($unit == '正向开发'||$unit == '逆向开发'){
-            if($role[0]['item_name']=='部门主管'){
+            if(in_array('部门主管',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='eBay销售'||$role[0]['item_name']=='SMT销售'||$role[0]['item_name']=='wish销售'){
+            }elseif(in_array('eBay销售',$role)||in_array('SMT销售',$role)||in_array('wish销售',$role)){
                 $query->andWhere(['in', 'introducer', $users]);
-            }elseif ($role[0]['item_name']=='产品开发'){
+            }elseif (in_array('产品开发',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
-            }elseif($role[0]['item_name']=='产品开发组长'){
+            }elseif(in_array('产品开发2',$role)){
                 $query->andWhere(['in', 'oa_goods.developer', $users]);
             }
             //设置显示的数据  默认显示 待审核和待提交数据
