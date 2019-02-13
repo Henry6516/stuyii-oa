@@ -627,31 +627,30 @@ class OaDataCenterController extends BaseController
     //导出数据 wish平台
     public function actionExport($id)
     {
-
         $objPHPExcel = new \PHPExcel();
         $sheet = 0;
         $objPHPExcel->setActiveSheetIndex($sheet);
-        $foos[0] = OaWishgoods::find()->where(['infoid'=>$id])->all();
-        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid='.$id.')';
-        $back_sql = ' select categoryParentName as cate from b_goods as bgs LEFT  JOIN b_goodsCats as bc on bgs.goodscategoryId = bc.nid where bgs.nid=(SELECT Bgoodsid FROM oa_goodsinfo WHERE pid='.$id.')';
+        $foos[0] = OaWishgoods::find()->where(['infoid' => $id])->all();
+        $sql = ' SELECT cate FROM oa_goods WHERE nid=(SELECT goodsid FROM oa_goodsinfo WHERE pid=' . $id . ')';
+        $back_sql = ' select categoryParentName as cate from b_goods as bgs LEFT  JOIN b_goodsCats as bc on bgs.goodscategoryId = bc.nid where bgs.nid=(SELECT Bgoodsid FROM oa_goodsinfo WHERE pid=' . $id . ')';
 
         $db = yii::$app->db;
         $query = $db->createCommand($sql);
         $cate = $query->queryAll();
-        if(empty($cate)){
+        if (empty($cate)) {
             $query = $db->createCommand($back_sql);
             $cate = $query->queryAll();
         }
-        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid='.$id;
+        $sql_GoodsCode = 'select GoodsCode,isVar from oa_goodsinfo WHERE pid=' . $id;
         $dataGoodsCode = $db->createCommand($sql_GoodsCode)
             ->queryAll();
         $GoodsCode = $dataGoodsCode[0]['GoodsCode'];
         $isVar = $dataGoodsCode[0]['isVar'];
 
-        $columnNum = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'];
+        $columnNum = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P','Q','R','S'];
         $colName = [
             'sku', 'selleruserid', 'name', 'inventory', 'price', 'msrp', 'shipping', 'shipping_time', 'main_image', 'extra_images',
-            'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc'];
+            'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc','local_price','local_shippingfee','local_currency'];
         $combineArr = array_combine($columnNum, $colName);
         $sub = 1;
         foreach ($columnNum as $key => $value) {
@@ -666,21 +665,19 @@ class OaDataCenterController extends BaseController
             ->orWhere("ParentCategory is null")
             ->addParams([':cate' => '%' . $cate[0]['cate'] . '%'])
             ->all();
-        $data =  $this->actionNameTags($id,'oa_wishgoods');
+        $data = $this->actionNameTags($id, 'oa_wishgoods');
 
         $title_list = [];
-        foreach($suffixAll as $key=>$value){
+        foreach ($suffixAll as $key => $value) {
             //标题关键字
-            $count = 0;
-            while($count < 100){
-                $title = $this->actionNonOrder($data,'Wish');
-                if(!in_array($title,$title_list)||empty($title)){
+            while (true) {
+                $title = $this->actionNonOrder($data, 'Wish');
+                if (!in_array($title, $title_list) || empty($title)) {
                     $name = $title;
-                    array_push($title_list,$title);
+                    array_push($title_list, $title);
                     break;
 
                 }
-                ++$count;
             }
 
             //主图用商品编码 拼接
@@ -691,12 +688,19 @@ class OaDataCenterController extends BaseController
                 $foos[0][0]['shipping'] = $priceInfo[1];
                 $foos[0][0]['price'] = $priceInfo[3] - $priceInfo[1] > 0 ? ceil($priceInfo[3] - $priceInfo[1]) : 1;
                 $foos[0][0]['msrp'] = $priceInfo[2];
+                $foos[0][0]['local_price'] = ceil($foos[0][0]['price'] * 6.25);
+                $foos[0][0]['local_shippingfee'] = ceil($foos[0][0]['shipping'] * 6.25);
+                $foos[0][0]['local_currency'] = 'CNY';
+
             } else {
                 $strvariant = '';
                 $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
                 $foos[0][0]['price'] = $goodsSku->price;
                 $foos[0][0]['shipping'] = $goodsSku->shipping;
                 $foos[0][0]['msrp'] = $goodsSku->msrp;
+                $foos[0][0]['local_price'] = ceil($foos[0][0]['price'] * 6.25);
+                $foos[0][0]['local_shippingfee'] = ceil($foos[0][0]['shipping'] * 6.25);
+                $foos[0][0]['local_currency'] = 'CNY';
                 //价格判断
                 $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 if ($totalprice <= 2) {
@@ -709,26 +713,30 @@ class OaDataCenterController extends BaseController
                     $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
                     $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
                 }
+
             }
 
-            $row = $key+2;
-            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/'.$GoodsCode.'-_'.$value['MainImg'].'_.jpg' ;
-            $objPHPExcel->getActiveSheet()->setCellValue('A'.$row,$foos[0][0]['SKU'].$value['Suffix']);
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.$row,$value['IbaySuffix']);
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.$row,$name);
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.$row,$foos[0][0]['inventory']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.$row,$foos[0][0]['price']);
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.$row,$foos[0][0]['msrp']);
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.$row,$foos[0][0]['shipping']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.$row,'7-21');
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.$row,$foos[0][0]['main_image']);
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.$row,$foos[0][0]['extra_images']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.$row,$strvariant);
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.$row,'');
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.$row,$foos[0][0]['wishtags']);
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.$row,$foos[0][0]['description']);
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.$row,'');
-            $objPHPExcel->getActiveSheet()->setCellValue('P'.$row,'');
+            $row = $key + 2;
+            $foos[0][0]['main_image'] = 'https://www.tupianku.com/view/full/10023/' . $GoodsCode . '-_' . $value['MainImg'] . '_.jpg';
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $row, $foos[0][0]['SKU'] . $value['Suffix']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $row, $value['IbaySuffix']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $row, $name);
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $row, $foos[0][0]['inventory']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $row, $foos[0][0]['price']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $row, $foos[0][0]['msrp']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $row, $foos[0][0]['shipping']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $row, '7-21');
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $row, $foos[0][0]['main_image']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J' . $row, $foos[0][0]['extra_images']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K' . $row, $strvariant);
+            $objPHPExcel->getActiveSheet()->setCellValue('L' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('M' . $row, $foos[0][0]['wishtags']);
+            $objPHPExcel->getActiveSheet()->setCellValue('N' . $row, $foos[0][0]['description']);
+            $objPHPExcel->getActiveSheet()->setCellValue('O' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('P' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('Q' . $row, $foos[0][0]['local_price']);
+            $objPHPExcel->getActiveSheet()->setCellValue('R' . $row, $foos[0][0]['local_shippingfee']);
+            $objPHPExcel->getActiveSheet()->setCellValue('S' . $row, $foos[0][0]['local_currency']);
 
         }
 
@@ -845,7 +853,6 @@ class OaDataCenterController extends BaseController
         if (!isset($variants) || empty($variants)) {
             return;
         }
-
         //取最大价格
         $maxPrice = 0;
         foreach ($variants as $key => $value) {
@@ -855,7 +862,6 @@ class OaDataCenterController extends BaseController
             }
 
         }
-
         // 取最大保留价
         $maxMsrp = 0;
         foreach ($variants as $key => $value) {
@@ -863,7 +869,6 @@ class OaDataCenterController extends BaseController
                 $maxMsrp = $value['msrp'];
             }
         }
-
         //取最小的运费为运费
         $minPrice = $variants[0]['price'] + $variants[0]['shipping'];
         foreach ($variants as $key => $value) {
@@ -887,7 +892,7 @@ class OaDataCenterController extends BaseController
             //价格判断
             $totalPrice = ceil($value['price'] + $value['shipping']);
             $value['shipping'] = $shipping;
-            $value['price'] = $totalPrice - $shipping < 0 ? 1 : ceil($totalPrice - $shipping);
+            $value['price'] = $totalPrice - $shipping < 1 ? 1 : ceil($totalPrice - $shipping);
             $varitem['sku'] = $value['sku'] . $sub;
             $varitem['color'] = $value['color'];
             $varitem['size'] = $value['size'];
@@ -897,6 +902,8 @@ class OaDataCenterController extends BaseController
             $varitem['msrp'] = $value['msrp'];
             $varitem['shipping_time'] = $value['shipping_time'];
             $varitem['main_image'] = $value['linkurl'];
+            $varitem['localized_currency_code'] = 'CNY';
+            $varitem['localized_price'] = ceil($value['price'] * 6.25);
             $variation[] = $varitem;
         }
 
