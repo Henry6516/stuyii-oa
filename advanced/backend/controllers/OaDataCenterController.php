@@ -688,8 +688,8 @@ class OaDataCenterController extends BaseController
                 $foos[0][0]['shipping'] = $priceInfo[1];
                 $foos[0][0]['price'] = $priceInfo[3] - $priceInfo[1] > 0 ? ceil($priceInfo[3] - $priceInfo[1]) : 1;
                 $foos[0][0]['msrp'] = $priceInfo[2];
-                $foos[0][0]['local_price'] = ceil($foos[0][0]['price'] * 6.25);
-                $foos[0][0]['local_shippingfee'] = ceil($foos[0][0]['shipping'] * 6.25);
+                $foos[0][0]['local_price'] = floor($foos[0][0]['price'] * 6.25);
+                $foos[0][0]['local_shippingfee'] = floor($foos[0][0]['shipping'] * 6.25);
                 $foos[0][0]['local_currency'] = 'CNY';
 
             } else {
@@ -698,9 +698,7 @@ class OaDataCenterController extends BaseController
                 $foos[0][0]['price'] = $goodsSku->price;
                 $foos[0][0]['shipping'] = $goodsSku->shipping;
                 $foos[0][0]['msrp'] = $goodsSku->msrp;
-                $foos[0][0]['local_price'] = ceil($foos[0][0]['price'] * 6.25);
-                $foos[0][0]['local_shippingfee'] = ceil($foos[0][0]['shipping'] * 6.25);
-                $foos[0][0]['local_currency'] = 'CNY';
+
                 //价格判断
                 $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 if ($totalprice <= 2) {
@@ -713,6 +711,9 @@ class OaDataCenterController extends BaseController
                     $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
                     $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
                 }
+                $foos[0][0]['local_price'] = floor($foos[0][0]['price'] * 6.25);
+                $foos[0][0]['local_shippingfee'] = floor($foos[0][0]['shipping'] * 6.25);
+                $foos[0][0]['local_currency'] = 'CNY';
 
             }
 
@@ -903,7 +904,7 @@ class OaDataCenterController extends BaseController
             $varitem['shipping_time'] = $value['shipping_time'];
             $varitem['main_image'] = $value['linkurl'];
             $varitem['localized_currency_code'] = 'CNY';
-            $varitem['localized_price'] = ceil($value['price'] * 6.25);
+            $varitem['localized_price'] = (string)floor($value['price'] * 6.25);
             $variation[] = $varitem;
         }
 
