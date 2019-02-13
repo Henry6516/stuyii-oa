@@ -31,6 +31,15 @@ class OaWishgoods extends \yii\db\ActiveRecord
         return '{{%oa_wishgoods}}';
     }
 
+    public function attributes ()
+    {
+        $attributes = parent::attributes();
+        $attributes[] = 'local_price';
+        $attributes[] = 'local_shippingfee';
+        $attributes[] = 'local_currency';
+        return $attributes;
+    }
+
     /**
      * @inheritdoc
      */
