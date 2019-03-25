@@ -154,7 +154,15 @@ try{
                        
                     </div>
                     <div class="row" style="margin-top: 1%">
-                 <div class="col-sm-2 col-md-push-10">
+                    <div class="col-sm-2">
+                            <div class="input-group">
+                                 <input type="text" class="form-control weight-replace" placeholder="--重量设置--">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default" id="weight-set" type="button">确定</button>
+                                     </span>
+                            </div><!-- /input-group -->
+                        </div>
+                 <div class="col-sm-2 col-md-push-8">
                     <button class="btn btn-danger">删除行</button>
                     <button id="save-detail" class="btn btn-info">保存</button>
                   </div>
@@ -213,14 +221,25 @@ add-row
 var counter = 1;
 $('#add-detail').on('click',function() {
     var row_num = $('.x-row').val();
-    row_num = row_num ? row_num :1;
+    row_num = row_num ? parseInt(row_num) :1;
     var table= $('table');
     var row = $('.kv-tabform-row:last')
+    var previousCode = row.find('td').find('.childId').first().val();
+    var codeHeader = '';
+    var codeTail = '';
+    if (previousCode) {
+      var codeHeader = previousCode.split('_')[0];
+      var codeTail = parseInt(previousCode.split('_')[1]);
+    }
     var key = row.attr('data-key');
     while(row_num>0){
         var new_key = 'New-' + counter; 
         var new_row = row.clone(true);
+        codeTail += 1;
+        var code = codeTail < 10 ? '0' + codeTail : codeTail; 
         new_row.children('td:first').text(new_key);
+        new_row.find('td').find('.childId').first().attr('value',codeHeader + '_' + code);
+        debugger;
         new_row.attr('data-key',new_key);
         var rep = new RegExp(key,'g');
         new_row.html(new_row.html().replace(rep,new_key));
@@ -247,6 +266,15 @@ $('#shipping-set').on('click',function(){
     $('.shipping').each(function() {
         $(this).val(shipping);
     })
+})
+
+//weight-set
+$('#weight-set').on('click',function() {
+  var weight = $('.weight-replace').val();
+  $('.shippingWeight').each(function() {
+    $(this).val(weight);
+  })
+  
 })
 
 //msrp-set
