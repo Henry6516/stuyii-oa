@@ -59,9 +59,9 @@ class OaDataMineDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['mid', 'quantity', 'shipping'], 'integer'],
+            [['mid', 'quantity'], 'integer'],
             [['MainImage', 'parentId', 'proName', 'description', 'tags', 'childId', 'color', 'proSize', 'shippingTime', 'varMainImage', 'extra_image0', 'extra_image1', 'extra_image2', 'extra_image3', 'extra_image4', 'extra_image5', 'extra_image6', 'extra_image7', 'extra_image8', 'extra_image9', 'extra_image10'], 'string'],
-            [['price', 'msrPrice', 'shippingWeight'], 'number'],
+            [['price', 'msrPrice', 'shippingWeight','shipping'], 'number'],
             [['cat', 'subCat','spAttribute'], 'safe'],
         ];
     }
