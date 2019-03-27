@@ -32,7 +32,7 @@ $js = <<<JS
 
 //通过对话框
 $('.data-pass').on('click',function() {
-  debugger;
+  //debugger;
     $('.modal-body').children('div').remove();
     $.get('{$passUrl}',  { id: $(this).closest('tr').data('key') },
             function (data) {
