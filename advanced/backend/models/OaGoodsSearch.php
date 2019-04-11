@@ -97,9 +97,8 @@ class OaGoodsSearch extends OaGoods
          */
 
         if($unit == '产品推荐'){
-            //var_dump($role);exit;
-            //print_r($users);exit;
-            if(in_array('产品开发',$role) !== false){
+            //if(in_array('产品开发',$role) !== false || in_array('产品开发2',$role) !== false){
+            if(strpos(implode(',',$role),'产品开发') !== false){
                 $query->andWhere(['OR',['developer' => $users],["ISNULL(developer,'')" => '']]);
             }elseif (in_array('美工',$role)){
                 $query->andWhere(['in', 'introducer', $users]);

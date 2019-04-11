@@ -53,6 +53,8 @@ class OaDataMineSearch extends OaDataMine
 
         $connection = Yii::$app->db;
         $user = yii::$app->user->identity->username;
+        $joomSaler = "SELECT users.userName FROM [user] users ,auth_assignment roles WHERE  users.id=roles.user_id and users.username=:username and item_name like '%Joom销售%'";
+        $isJoomSaler = $connection->createCommand($joomSaler)->bindParam(':username',$user)->queryAll();
         $developer_sql = "SELECT users.userName FROM [user] users ,auth_assignment roles WHERE  users.id=roles.user_id and item_name like '%开发%'";
         $developer_ret = $connection->createCommand($developer_sql)->queryAll();
         $developers = [];
@@ -61,7 +63,7 @@ class OaDataMineSearch extends OaDataMine
         }
 
 
-        if (!\in_array($user, $developers,true)){
+        if (!empty($isJoomSaler) || !\in_array($user, $developers,true)){
             // 返回当前用户管辖下的用户
             $sql = "oa_P_users '{$user}'";
 

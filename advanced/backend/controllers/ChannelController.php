@@ -729,10 +729,10 @@ class ChannelController extends BaseController
         $GoodsCode = $dataGoodsCode[0]['GoodsCode'];
         $isVar = $dataGoodsCode[0]['isVar'];
 
-        $columnNum = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+        $columnNum = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P','Q','R','S'];
         $colName = [
             'sku', 'selleruserid', 'name', 'inventory', 'price', 'msrp', 'shipping', 'shipping_time', 'main_image', 'extra_images',
-            'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc'];
+            'variants', 'landing_page_url', 'tags', 'description', 'brand', 'upc','local_price','local_shippingfee','local_currency'];
         $combineArr = array_combine($columnNum, $colName);
         $sub = 1;
         foreach ($columnNum as $key => $value) {
@@ -770,12 +770,17 @@ class ChannelController extends BaseController
                 $foos[0][0]['shipping'] = $priceInfo[1];
                 $foos[0][0]['price'] = $priceInfo[3] - $priceInfo[1] > 0 ? ceil($priceInfo[3] - $priceInfo[1]) : 1;
                 $foos[0][0]['msrp'] = $priceInfo[2];
+                $foos[0][0]['local_price'] = floor($foos[0][0]['price'] * 6.88);
+                $foos[0][0]['local_shippingfee'] = floor($foos[0][0]['shipping'] * 6.88);
+                $foos[0][0]['local_currency'] = 'CNY';
+
             } else {
                 $strvariant = '';
                 $goodsSku = OaWishgoodssku::findOne(['pid'=>$id]);
                 $foos[0][0]['price'] = $goodsSku->price;
                 $foos[0][0]['shipping'] = $goodsSku->shipping;
                 $foos[0][0]['msrp'] = $goodsSku->msrp;
+
                 //价格判断
                 $totalprice = ceil($foos[0][0]['price'] + $foos[0][0]['shipping']);
                 if ($totalprice <= 2) {
@@ -788,6 +793,10 @@ class ChannelController extends BaseController
                     $foos[0][0]['shipping'] = ceil($totalprice * $value['Rate']);
                     $foos[0][0]['price'] = ceil($totalprice - $foos[0][0]['shipping']);
                 }
+
+                $foos[0][0]['local_price'] = floor($foos[0][0]['price'] * 6.88);
+                $foos[0][0]['local_shippingfee'] = floor($foos[0][0]['shipping'] * 6.88);
+                $foos[0][0]['local_currency'] = 'CNY';
 
             }
 
@@ -809,6 +818,9 @@ class ChannelController extends BaseController
             $objPHPExcel->getActiveSheet()->setCellValue('N' . $row, $foos[0][0]['description']);
             $objPHPExcel->getActiveSheet()->setCellValue('O' . $row, '');
             $objPHPExcel->getActiveSheet()->setCellValue('P' . $row, '');
+            $objPHPExcel->getActiveSheet()->setCellValue('Q' . $row, $foos[0][0]['local_price']);
+            $objPHPExcel->getActiveSheet()->setCellValue('R' . $row, $foos[0][0]['local_shippingfee']);
+            $objPHPExcel->getActiveSheet()->setCellValue('S' . $row, $foos[0][0]['local_currency']);
 
         }
 
@@ -885,7 +897,11 @@ class ChannelController extends BaseController
         $unchanged_len = \strlen(implode(' ', array_merge($head, $need, $tail)));
         if ($unchanged_len > $max_length) {
             shuffle($need);
-            $real_len = implode(' ', array_merge($head, $need, $tail));
+            $ret = array_merge($head,$need,$tail);
+            while (\strlen(implode(' ',$ret)) > $max_length) {
+                array_pop($ret);
+            }
+            $real_len = implode(' ', $ret);
             return $real_len;
         }
         //可用长度
@@ -968,6 +984,8 @@ class ChannelController extends BaseController
             $varitem['msrp'] = $value['msrp'];
             $varitem['shipping_time'] = $value['shipping_time'];
             $varitem['main_image'] = $value['linkurl'];
+            $varitem['localized_currency_code'] = 'CNY';
+            $varitem['localized_price'] = (string)floor(($value['price'] * 6.88));
             $variation[] = $varitem;
         }
 

@@ -34,6 +34,8 @@ class Wishgoodssku extends \yii\db\ActiveRecord
         return '{{%oa_wishgoodssku}}';
     }
 
+
+
     /**
      * @inheritdoc
      */
