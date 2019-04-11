@@ -1,0 +1,6 @@
+{
+    "require": {
+        "2amigos/yii2-multi-select-widget": "*",
+        "hguenot/yii2-gftp": "*"
+    }
+}
