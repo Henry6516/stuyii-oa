@@ -1408,7 +1408,7 @@ class ChannelController extends BaseController
         }else{
             $list = explode(',',$goodscode);
             foreach ($list as $v){
-                $goodModel = OaGoodsinfo::findOne(['goodsCode' => $v]);
+                $goodModel = OaGoodsinfo::findOne(['GoodsCode' => $v]);
                 if($goodModel){
                     $item[] = $goodModel['pid'];
                 }
