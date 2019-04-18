@@ -1005,12 +1005,36 @@ class OaDataCenterController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            $weight = $joom['Shipping weight'] * 1000 ;
-            foreach ($adjust_ret as $adjust) {
-                if ($weight >= $adjust['greater_equal'] && $weight <  $adjust['less'] ) {
-                    $joom['*Price'] += $adjust['added_price'] ;
-                    break;
+            if (!empty($joom['joomPrice'])) {
+                $joom['*Price'] = $joom['joomPrice'];
+            }
+            else {
+                $weight = $joom['Shipping weight'] * 1000;
+                foreach ($adjust_ret as $adjust) {
+                    if ($weight >= $adjust['greater_equal'] && $weight < $adjust['less']) {
+                        $joom['*Price'] += $adjust['added_price'];
+                        break;
+                    }
                 }
+            }
+            // 单独计算joom申报价格
+            if( $joom['*Price'] > 0 && $joom['*Price'] <= 1) {
+                $joom['Declared Value'] = 0.1;
+            }
+            if($joom['*Price'] > 1 && $joom['*Price'] <= 2) {
+                $joom['Declared Value'] = 1;
+            }
+            if($joom['*Price'] > 2 && $joom['*Price'] <= 5) {
+                $joom['Declared Value'] = 2;
+            }
+            if($joom['*Price'] > 5 && $joom['*Price'] <= 10) {
+                $joom['Declared Value'] = 5;
+            }
+            if($joom['*Price'] > 10 && $joom['*Price'] <= 15) {
+                $joom['Declared Value'] = 8;
+            }
+            if($joom['*Price'] > 15) {
+                $joom['Declared Value'] = 10;
             }
             $filter_ret[] = $joom;
         }
