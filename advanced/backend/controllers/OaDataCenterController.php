@@ -1005,7 +1005,7 @@ class OaDataCenterController extends BaseController
         // adjust price according to weight
         $filter_ret = [];
         foreach ($joomRes as $joom) {
-            if (!empty($joom['joomPrice'])) {
+            if (!empty($joom['joomPrice']) && $joom['joomPrice'] > 0) {
                 $joom['*Price'] = $joom['joomPrice'];
             }
             else {
