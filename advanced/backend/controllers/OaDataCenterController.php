@@ -1027,14 +1027,11 @@ class OaDataCenterController extends BaseController
             if($joom['*Price'] > 2 && $joom['*Price'] <= 5) {
                 $joom['Declared Value'] = 2;
             }
-            if($joom['*Price'] > 5 && $joom['*Price'] <= 10) {
+            if($joom['*Price'] > 5 && $joom['*Price'] <= 20) {
+                $joom['Declared Value'] = 3;
+            }
+            if($joom['*Price'] > 20 ) {
                 $joom['Declared Value'] = 5;
-            }
-            if($joom['*Price'] > 10 && $joom['*Price'] <= 15) {
-                $joom['Declared Value'] = 8;
-            }
-            if($joom['*Price'] > 15) {
-                $joom['Declared Value'] = 10;
             }
             $filter_ret[] = $joom;
         }
