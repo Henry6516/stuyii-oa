@@ -78,28 +78,28 @@ $this->title = '类别表现';
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
-                'attribute' => 'GoodsCode',
+                'attribute' => 'goodsCode',
                 'header' => '商品编码',
                 'width' => '310px',
                 'value' => function ($model, $key, $index, $widget) {
-                    return $model['GoodsCode'];
+                    return $model['goodsCode'];
                 },
                 'group' => true,  // enable grouping
                 'pageSummary' => 'Page Summary',
                 'pageSummaryOptions' => ['class' => 'text-right text-warning'],
             ],
             [
-                'attribute' => 'GoodsName',
+                'attribute' => 'goodsName',
                 'label' => '商品名称',
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'CreateDate',
+                'attribute' => 'createDate',
                 'label' => '开发日期',
                 'pageSummary' => true,
             ],
             [
-                'attribute' => 'Developer',
+                'attribute' => 'developer',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 2],
@@ -108,7 +108,7 @@ $this->title = '类别表现';
                 'pageSummaryFunc' => GridView::F_AVG
             ],
             [
-                'attribute' => 'Introducer',
+                'attribute' => 'introducer',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 0],
@@ -116,7 +116,7 @@ $this->title = '类别表现';
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'GoodsStatus',
+                'attribute' => 'goodsStatus',
                 'width' => '150px',
                 'hAlign' => 'right',
                 //'format' => ['decimal', 0],
@@ -132,7 +132,7 @@ $this->title = '类别表现';
                 'pageSummary' => true
             ],
             [
-                'attribute' => 'l_AMT',
+                'attribute' => 'l_amt',
                 'width' => '150px',
                 'hAlign' => 'right',
                 'format' => ['decimal', 0],

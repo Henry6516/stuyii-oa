@@ -44,19 +44,18 @@ class CatPerformController extends BaseController
             $result = Yii::$app->db->createCommand($sql)->queryAll();
             $cache->set($today, $result, 86400);
         }
+        //echo '<pre>';
+        //var_dump($result);exit;
         foreach ($result as $key => $value) {
-            if ($value['Distinguished'] == 'catNum') {
-                $va['value'] = (int)$value['value'];
-                $va['name'] = $value['name'];
-                $Data['catNum'][] = $va;
-            } else {
-                $va['value'] = (int)$value['value'];
-                $va['name'] = $value['name'];
-                $Data['catAmt'][] = $va;
-            }
+            $va['value'] = (int)$value['amt'];
+            $item['value'] = (int)$value['num'];
+            $va['name'] = $item['name'] = $value['category'];
+            $Data['catAmt'][] = $va;
+            $Data['catNum'][] = $item;
         }
-        $Data['maxValue'] = max(ArrayHelper::getColumn($result,'value'));
+        $Data['maxValue'] = max(ArrayHelper::getColumn($result,'amt'));
         $Data['name'] = array_column($Data['catNum'], 'name');
+        //print_r($Data);exit;
         echo json_encode($Data);
     }
 
@@ -87,6 +86,8 @@ class CatPerformController extends BaseController
             $result = Yii::$app->db->createCommand($sql)->queryAll();
             $cache->set($sql,$result,2592000);
         }
+        //echo '<pre>';
+        //var_dump($result);exit;
         //选择了主目录，重组结果数组
         if($data['cat']){
             foreach ($result as $v){

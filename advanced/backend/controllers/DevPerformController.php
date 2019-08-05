@@ -46,17 +46,19 @@ class DevPerformController extends BaseController
             $result = Yii::$app->db->createCommand($sql)->queryAll();
             $cache->set($sql,$result,86400);
         }
+        //echo '<pre>';
+        //var_dump($result);exit;
         //获取销量和销售额图表数据
-        $sale['name'] = $saleNum['name'] = ArrayHelper::getColumn($result,'SalerName');
+        $sale['name'] = $saleNum['name'] = ArrayHelper::getColumn($result,'salerName');
         $arr1 = $arr2 = [];
         foreach ($result as $k => $v){
-            $arr1[$k] = ['name' => $v['SalerName'], 'value' => $v['codeNum']];
-            $arr2[$k] = ['name' => $v['SalerName'], 'value' => $v['l_AMT']];
+            $arr1[$k] = ['name' => $v['salerName'], 'value' => $v['amt']];
+            $arr2[$k] = ['name' => $v['salerName'], 'value' => $v['amt']];
         }
         $saleNum['data'] = $arr1;
-        $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'codeNum'));
+        $saleNum['maxValue'] = max(ArrayHelper::getColumn($result,'amt'));
         $sale['data'] = $arr2;
-        $sale['maxValue'] = max(ArrayHelper::getColumn($result,'l_AMT'));
+        $sale['maxValue'] = max(ArrayHelper::getColumn($result,'amt'));
 
         //获取开发员开发产品款数(不受订单影响)
         $numSql = 'SELECT SalerName AS name,count(GoodsCode) AS value FROM B_Goods b 
